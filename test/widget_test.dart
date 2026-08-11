@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:wordimposter/core/theme/app_theme.dart';
 import 'package:wordimposter/data/categories.dart';
 import 'package:wordimposter/game/game_engine.dart';
+import 'package:wordimposter/l10n/app_localizations.dart';
 import 'package:wordimposter/main.dart';
 import 'package:wordimposter/models/player.dart';
 import 'package:wordimposter/screens/offline/imposter_guess_screen.dart';
@@ -38,11 +40,23 @@ GameEngine _engine({WordSource? wordSource}) {
   );
 }
 
-Widget _wrap(GameEngine engine) {
+Widget _localizedApp(Widget home) {
   return MaterialApp(
     theme: AppTheme.dark(),
-    home: ImposterGuessScreen(engine: engine),
+    locale: const Locale('en'),
+    supportedLocales: const [Locale('en')],
+    localizationsDelegates: const [
+      AppLocalizations.delegate,
+      GlobalMaterialLocalizations.delegate,
+      GlobalWidgetsLocalizations.delegate,
+      GlobalCupertinoLocalizations.delegate,
+    ],
+    home: home,
   );
+}
+
+Widget _wrap(GameEngine engine) {
+  return _localizedApp(ImposterGuessScreen(engine: engine));
 }
 
 void main() {
@@ -107,10 +121,7 @@ void main() {
       (tester) async {
     final engine = _engine();
     await engine.startRound(categories.first);
-    await tester.pumpWidget(MaterialApp(
-      theme: AppTheme.dark(),
-      home: RoleRevealScreen(engine: engine),
-    ));
+    await tester.pumpWidget(_localizedApp(RoleRevealScreen(engine: engine)));
     await tester.pumpAndSettle();
 
     // First player must explicitly confirm before their role is shown.

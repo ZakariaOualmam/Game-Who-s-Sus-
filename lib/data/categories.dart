@@ -1,4 +1,5 @@
-/// A selectable word category. Words live in `assets/data/<id>/words.txt`.
+/// A selectable word category. Words live in
+/// `assets/data/<language>/<id>/words.txt`.
 class WordCategory {
   const WordCategory({
     required this.id,
@@ -13,8 +14,6 @@ class WordCategory {
 
   /// If true, the category picks from a random other category at runtime.
   final bool isRandom;
-
-  String get assetPath => 'assets/data/$id/words.txt';
 }
 
 /// Registry of all categories. Add new categories here.

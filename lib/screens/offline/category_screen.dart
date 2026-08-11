@@ -5,6 +5,8 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 import '../../data/categories.dart';
 import '../../game/game_engine.dart';
+import '../../l10n/app_localizations.dart';
+import '../../l10n/category_localizations.dart';
 import '../../widgets/game_scaffold.dart';
 import 'role_reveal_screen.dart';
 
@@ -23,7 +25,28 @@ class _CategoryScreenState extends State<CategoryScreen> {
   Future<void> _select(WordCategory category) async {
     if (_loading) return;
     setState(() => _loading = true);
-    await widget.engine.startRound(category);
+    try {
+      debugPrint('Starting round for category "${category.id}"');
+      await widget.engine.startRound(category);
+    } catch (error, stackTrace) {
+      debugPrint('Failed to start round for category "${category.id}": $error');
+      debugPrint(stackTrace.toString());
+      if (!mounted) return;
+      final l10n = AppLocalizations.of(context);
+      setState(() => _loading = false);
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text(l10n.couldNotLoadCategories),
+            action: SnackBarAction(
+              label: l10n.tryAgain.toUpperCase(),
+              onPressed: () => _select(category),
+            ),
+          ),
+        );
+      return;
+    }
     if (!mounted) return;
     setState(() => _loading = false);
     Navigator.of(context).pushReplacement(
@@ -33,13 +56,14 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return GameScaffold(
-      title: 'CATEGORY',
+      title: l10n.categoryTitle.toUpperCase(),
       onBack: () => Navigator.of(context).pop(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text('Pick a word category', style: AppTypography.title(context)),
+          Text(l10n.pickWordCategory, style: AppTypography.title(context)),
           const SizedBox(height: 20),
           if (_loading)
             const Padding(
@@ -90,6 +114,7 @@ class _CategoryCardState extends State<_CategoryCard> {
   @override
   Widget build(BuildContext context) {
     final category = widget.category;
+    final l10n = AppLocalizations.of(context);
     return GestureDetector(
       onTapDown: (_) => setState(() => _pressed = true),
       onTapUp: (_) => setState(() => _pressed = false),
@@ -114,7 +139,7 @@ class _CategoryCardState extends State<_CategoryCard> {
             children: [
               Text(category.emoji, style: const TextStyle(fontSize: 42)),
               const SizedBox(height: 10),
-              Text(category.name, style: AppTypography.title(context)),
+              Text(l10n.categoryName(category), style: AppTypography.title(context)),
             ],
           ),
         ),

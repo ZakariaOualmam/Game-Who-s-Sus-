@@ -6,6 +6,7 @@ import '../../core/router.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 import '../../game/game_engine.dart';
+import '../../l10n/app_localizations.dart';
 import '../../models/player.dart';
 import '../../widgets/game_button.dart';
 import '../../widgets/game_scaffold.dart';
@@ -19,13 +20,14 @@ class VoteResultsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final counts = engine.voteCounts;
     final maxCount = counts.values.fold(0, max);
     final accused = engine.accusedPlayer;
     final isTie = accused == null;
 
     return GameScaffold(
-      title: 'VOTES',
+      title: l10n.votesTitle.toUpperCase(),
       canPop: false,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -39,7 +41,7 @@ class VoteResultsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Text(
-              'IT\u2019S A TIE!',
+              l10n.itsATie.toUpperCase(),
               textAlign: TextAlign.center,
               style: AppTypography.display(context).copyWith(
                 fontSize: 48,
@@ -48,13 +50,13 @@ class VoteResultsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'No one gets voted out',
+              l10n.noOneVotedOut,
               textAlign: TextAlign.center,
               style: AppTypography.caption(context).copyWith(fontSize: 15),
             ),
           ] else ...[
             Text(
-              'Most suspected',
+              l10n.mostSuspected,
               textAlign: TextAlign.center,
               style: AppTypography.caption(context).copyWith(letterSpacing: 2),
             ),
@@ -81,7 +83,7 @@ class VoteResultsScreen extends StatelessWidget {
           ],
           const SizedBox(height: 32),
           GameButton(
-            label: 'REVEAL THE IMPOSTER',
+            label: l10n.revealTheImposter.toUpperCase(),
             icon: Icons.visibility,
             colors: AppColors.imposterGradient,
             onPressed: () => Navigator.of(context).pushReplacement(
@@ -135,7 +137,7 @@ class _VoteBar extends StatelessWidget {
                 color: AppColors.surfaceHigh,
                 borderRadius: BorderRadius.circular(12),
               ),
-              alignment: Alignment.centerLeft,
+              alignment: AlignmentDirectional.centerStart,
               child: FractionallySizedBox(
                 widthFactor: value,
                 child: Container(

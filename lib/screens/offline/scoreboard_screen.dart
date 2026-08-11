@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core/router.dart';
 import '../../core/theme/app_colors.dart';
 import '../../game/game_engine.dart';
+import '../../l10n/app_localizations.dart';
 import '../../models/player.dart';
 import '../../screens/home/home_screen.dart';
 import '../../widgets/game_button.dart';
@@ -32,11 +33,12 @@ class ScoreboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final sorted = [...engine.players]
       ..sort((a, b) => b.score.compareTo(a.score));
 
     return GameScaffold(
-      title: 'SCORES',
+      title: l10n.scoresTitle.toUpperCase(),
       onBack: () => _goHome(context),
       canPop: false,
       onPopBlocked: () => _goHome(context),
@@ -54,14 +56,14 @@ class ScoreboardScreen extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           GameButton(
-            label: 'PLAY AGAIN',
+            label: l10n.playAgain.toUpperCase(),
             icon: Icons.replay,
             colors: AppColors.crewGradient,
             onPressed: () => _playAgain(context),
           ),
           const SizedBox(height: 12),
           GameButton(
-            label: 'HOME',
+            label: l10n.homeButton.toUpperCase(),
             colors: const [AppColors.surfaceHigh, AppColors.surfaceHigh],
             onPressed: () => _goHome(context),
           ),

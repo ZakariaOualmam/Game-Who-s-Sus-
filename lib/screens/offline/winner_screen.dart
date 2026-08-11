@@ -5,6 +5,7 @@ import '../../core/router.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 import '../../game/game_engine.dart';
+import '../../l10n/app_localizations.dart';
 import '../../models/round_result.dart';
 import '../../widgets/confetti_burst.dart';
 import '../../widgets/game_button.dart';
@@ -31,6 +32,7 @@ class _WinnerScreenState extends State<WinnerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final result = widget.engine.lastRound!;
     final isCrewWin = result.crewWins;
     final imposterPoints = result.scoreChanges[result.imposter.id] ?? 0;
@@ -76,7 +78,9 @@ class _WinnerScreenState extends State<WinnerScreen> {
                           FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text(
-                              isCrewWin ? 'CREW WINS!' : 'IMPOSTER WINS!',
+                              isCrewWin
+                                  ? l10n.crewWins.toUpperCase()
+                                  : l10n.imposterWins.toUpperCase(),
                               textAlign: TextAlign.center,
                               style: AppTypography.display(context).copyWith(
                                 fontSize: 54,
@@ -88,7 +92,7 @@ class _WinnerScreenState extends State<WinnerScreen> {
                           ),
                           const SizedBox(height: 14),
                           Text(
-                            _subtitle(result),
+                            _subtitle(l10n, result),
                             textAlign: TextAlign.center,
                             style: AppTypography.body(context),
                           ),
@@ -105,12 +109,17 @@ class _WinnerScreenState extends State<WinnerScreen> {
                             child: Column(
                               children: [
                                 Text(
-                                  _pointsTitle(result, isCrewWin),
+                                  _pointsTitle(l10n, result, isCrewWin),
                                   style: AppTypography.title(context),
                                 ),
                                 const SizedBox(height: 6),
                                 Text(
-                                  _pointsDetail(result, isCrewWin, imposterPoints),
+                                  _pointsDetail(
+                                    l10n,
+                                    result,
+                                    isCrewWin,
+                                    imposterPoints,
+                                  ),
                                   textAlign: TextAlign.center,
                                   style: AppTypography.caption(context),
                                 ),
@@ -130,7 +139,7 @@ class _WinnerScreenState extends State<WinnerScreen> {
                             child: Column(
                               children: [
                                 Text(
-                                  'THE WORD WAS',
+                                  l10n.theWordWas.toUpperCase(),
                                   style: AppTypography.caption(context)
                                       .copyWith(letterSpacing: 2),
                                 ),
@@ -147,8 +156,8 @@ class _WinnerScreenState extends State<WinnerScreen> {
                                 const SizedBox(height: 8),
                                 Text(
                                   result.guessedCorrectly
-                                      ? 'The imposter guessed it!'
-                                      : "The imposter didn't guess it",
+                                      ? l10n.guessedIt
+                                      : l10n.didntGuessIt,
                                   textAlign: TextAlign.center,
                                   style: AppTypography.caption(context),
                                 ),
@@ -157,7 +166,7 @@ class _WinnerScreenState extends State<WinnerScreen> {
                           ),
                           const Spacer(),
                           GameButton(
-                            label: 'SEE SCOREBOARD',
+                            label: l10n.seeScoreboard.toUpperCase(),
                             icon: Icons.leaderboard,
                             onPressed: () => Navigator.of(context)
                                 .pushReplacement(
@@ -178,33 +187,38 @@ class _WinnerScreenState extends State<WinnerScreen> {
     );
   }
 
-  String _subtitle(RoundResult result) {
+  String _subtitle(AppLocalizations l10n, RoundResult result) {
     if (result.crewWins) {
       return result.guessedCorrectly
-          ? 'The imposter almost made it… but the crew caught them!'
-          : 'The imposter was caught and missed the word!';
+          ? l10n.subtitleAlmostMadeIt
+          : l10n.subtitleCaughtMissed;
     }
     if (result.guessedCorrectly) {
-      return 'The imposter guessed the word!';
+      return l10n.subtitleGuessedWord;
     }
-    return 'The imposter escaped the vote!';
+    return l10n.subtitleEscaped;
   }
 
-  String _pointsTitle(RoundResult result, bool isCrewWin) {
-    if (isCrewWin) return 'Every crew member +1';
-    if (result.guessedCorrectly) return 'Imposter +1';
-    return 'Imposter +2';
+  String _pointsTitle(
+    AppLocalizations l10n,
+    RoundResult result,
+    bool isCrewWin,
+  ) {
+    if (isCrewWin) return l10n.pointsCrewPlusOne;
+    if (result.guessedCorrectly) return l10n.pointsImposterPlusOne;
+    return l10n.pointsImposterPlusTwo;
   }
 
   String _pointsDetail(
+    AppLocalizations l10n,
     RoundResult result,
     bool isCrewWin,
     int imposterPoints,
   ) {
-    if (isCrewWin) return 'Imposter was caught and missed the word';
+    if (isCrewWin) return l10n.detailCaughtMissed;
     if (result.guessedCorrectly) {
-      return 'Discovered but guessed the word';
+      return l10n.detailDiscoveredGuessed;
     }
-    return 'Survived the vote';
+    return l10n.detailSurvived;
   }
 }

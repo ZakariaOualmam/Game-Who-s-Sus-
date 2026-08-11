@@ -5,6 +5,7 @@ import '../../core/router.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 import '../../game/game_engine.dart';
+import '../../l10n/app_localizations.dart';
 import '../../widgets/game_button.dart';
 import '../../widgets/game_scaffold.dart';
 import 'imposter_guess_screen.dart';
@@ -30,13 +31,14 @@ class _ImposterRevealScreenState extends State<ImposterRevealScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final engine = widget.engine;
     final imposter = engine.imposter!;
     final caught = engine.isImposterCaught;
     final isTie = engine.accusedPlayer == null;
 
     return GameScaffold(
-      title: 'IMPOSTER',
+      title: l10n.imposterTitle.toUpperCase(),
       canPop: false,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -49,7 +51,7 @@ class _ImposterRevealScreenState extends State<ImposterRevealScreen> {
           ),
           const SizedBox(height: 12),
           Text(
-            'THE IMPOSTER WAS',
+            l10n.theImposterWas.toUpperCase(),
             textAlign: TextAlign.center,
             style: AppTypography.caption(context).copyWith(letterSpacing: 2),
           ),
@@ -74,7 +76,7 @@ class _ImposterRevealScreenState extends State<ImposterRevealScreen> {
           ),
           const SizedBox(height: 24),
           Text(
-            _outcomeText(caught: caught, isTie: isTie),
+            _outcomeText(l10n, caught: caught, isTie: isTie),
             textAlign: TextAlign.center,
             style: AppTypography.bodyBold(context),
           ),
@@ -92,7 +94,7 @@ class _ImposterRevealScreenState extends State<ImposterRevealScreen> {
                 const SizedBox(width: 12),
                 Flexible(
                   child: Text(
-                    'The imposter gets one final guess',
+                    l10n.finalGuessHint,
                     textAlign: TextAlign.center,
                     style: AppTypography.bodyBold(context),
                   ),
@@ -102,7 +104,7 @@ class _ImposterRevealScreenState extends State<ImposterRevealScreen> {
           ),
           const SizedBox(height: 34),
           GameButton(
-            label: 'FINAL CHANCE',
+            label: l10n.finalChance.toUpperCase(),
             icon: Icons.emoji_objects,
             colors: AppColors.imposterGradient,
             onPressed: () => Navigator.of(context).pushReplacement(
@@ -114,9 +116,13 @@ class _ImposterRevealScreenState extends State<ImposterRevealScreen> {
     );
   }
 
-  String _outcomeText({required bool caught, required bool isTie}) {
-    if (caught) return 'The crew caught the imposter!';
-    if (isTie) return 'The vote was a tie — the imposter got away!';
-    return 'The imposter fooled everyone!';
+  String _outcomeText(
+    AppLocalizations l10n, {
+    required bool caught,
+    required bool isTie,
+  }) {
+    if (caught) return l10n.outcomeCrewCaught;
+    if (isTie) return l10n.outcomeTieGotAway;
+    return l10n.outcomeFooledEveryone;
   }
 }

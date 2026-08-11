@@ -1,0 +1,130 @@
+{
+  "@@locale": "en",
+  "appName": "Word Imposter",
+  "appNameWord": "WORD",
+  "appNameImposter": "IMPOSTER",
+  "splashTagline": "party word game",
+
+  "homeTagline": "Find the imposter among your friends",
+  "homeOffline": "OFFLINE",
+  "homeOnlineComingSoon": "ONLINE  ·  COMING SOON",
+  "homeHowToPlay": "HOW TO PLAY",
+  "howToPlayTitle": "HOW TO PLAY",
+  "rule1": "Everyone gets the same secret word — except the imposter.",
+  "rule2": "Describe the word without ever saying it.",
+  "rule3": "Spot who doesn’t know the word, then vote them out.",
+  "rule4": "The imposter gets one final guess.",
+  "gotIt": "GOT IT",
+
+  "playersTitle": "PLAYERS",
+  "addPlayers": "Add players",
+  "playerNameHint": "Player name",
+  "addPlayerButton": "ADD PLAYER",
+  "nameAlreadyAdded": "Name already added",
+  "maximumPlayers": "Maximum {count} players",
+  "@maximumPlayers": {
+    "description": "Shown when trying to add more than the maximum number of players.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "addPlayersToStart": "Add {min}–{max} players to start",
+  "@addPlayersToStart": {
+    "description": "Empty-state hint on the player setup screen.",
+    "placeholders": {
+      "min": { "type": "int" },
+      "max": { "type": "int" }
+    }
+  },
+  "pickCategoryButton": "PICK CATEGORY",
+  "addPlayersMinButton": "ADD {count}+ PLAYERS",
+  "@addPlayersMinButton": {
+    "description": "Primary button label while below the minimum player count.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "categoryTitle": "CATEGORY",
+  "pickWordCategory": "Pick a word category",
+  "couldNotLoadCategories": "Couldn't load categories",
+  "tryAgain": "TRY AGAIN",
+  "categoryFood": "Food",
+  "categoryAnimals": "Animals",
+  "categorySports": "Sports",
+  "categoryMovies": "Movies",
+  "categoryPlaces": "Places",
+  "categoryJobs": "Jobs",
+  "categoryObjects": "Objects",
+  "categoryGames": "Games",
+  "categoryCelebrities": "Celebrities",
+  "categoryRandom": "Random",
+
+  "secretRoleTitle": "SECRET ROLE",
+  "passThePhone": "PASS THE PHONE",
+  "noPeeking": "No peeking at the next player",
+  "passPhoneTo": "Pass the phone to",
+  "imReady": "I'M READY",
+  "startDiscussion": "START THE DISCUSSION",
+  "yourSecretWordIs": "YOUR SECRET WORD IS",
+  "dontSayTheWord": "Don't say the word",
+  "youAreTheImposter": "YOU ARE THE\nIMPOSTER",
+  "blendInDontGetCaught": "Blend in. Don't get caught.",
+
+  "discussTitle": "DISCUSS",
+  "discuss": "DISCUSS!",
+  "figureOutWhosImp": "Figure out who doesn't know the word",
+  "startVoting": "START VOTING",
+
+  "votingTitle": "VOTING",
+  "whoIsTheImposter": "Who is the imposter?",
+  "voteInSecret": "Vote in secret",
+  "tapAPlayerToVote": "Tap a player to vote",
+  "change": "CHANGE",
+  "voteForName": "VOTE FOR {name}",
+  "@voteForName": {
+    "description": "Confirmation button for a vote targeting a specific player.",
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+
+  "votesTitle": "VOTES",
+  "itsATie": "IT'S A TIE!",
+  "noOneVotedOut": "No one gets voted out",
+  "mostSuspected": "Most suspected",
+  "revealTheImposter": "REVEAL THE IMPOSTER",
+
+  "imposterTitle": "IMPOSTER",
+  "theImposterWas": "THE IMPOSTER WAS",
+  "finalGuessHint": "The imposter gets one final guess",
+  "finalChance": "FINAL CHANCE",
+  "outcomeCrewCaught": "The crew caught the imposter!",
+  "outcomeTieGotAway": "The vote was a tie — the imposter got away!",
+  "outcomeFooledEveryone": "The imposter fooled everyone!",
+
+  "pickSecretWord": "Pick the secret word",
+
+  "crewWins": "CREW WINS!",
+  "imposterWins": "IMPOSTER WINS!",
+  "subtitleAlmostMadeIt": "The imposter almost made it… but the crew caught them!",
+  "subtitleCaughtMissed": "The imposter was caught and missed the word!",
+  "subtitleGuessedWord": "The imposter guessed the word!",
+  "subtitleEscaped": "The imposter escaped the vote!",
+  "theWordWas": "THE WORD WAS",
+  "guessedIt": "The imposter guessed it!",
+  "didntGuessIt": "The imposter didn't guess it",
+  "pointsCrewPlusOne": "Every crew member +1",
+  "pointsImposterPlusOne": "Imposter +1",
+  "pointsImposterPlusTwo": "Imposter +2",
+  "detailCaughtMissed": "Imposter was caught and missed the word",
+  "detailDiscoveredGuessed": "Discovered but guessed the word",
+  "detailSurvived": "Survived the vote",
+  "seeScoreboard": "SEE SCOREBOARD",
+
+  "scoresTitle": "SCORES",
+  "playAgain": "PLAY AGAIN",
+  "homeButton": "HOME",
+
+  "language": "Language"
+}

@@ -30,6 +30,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: any
+  shared_preferences: ^2.2.0
   google_fonts: ^8.2.1
 
 
@@ -54,6 +58,10 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
 
+  # Enable the codegen of the AppLocalizations class from the ARB files in
+  # lib/l10n (see l10n.yaml).
+  generate: true
+
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -64,7 +72,46 @@ flutter:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
   assets:
-    - assets/data/
+    # Word data is organized per language and category:
+    # assets/data/<languageCode>/<category>/words.txt.
+    # Note: Flutter directory entries are NOT recursive, so every category
+    # subdirectory must be declared explicitly. Each path below exists.
+    - assets/data/en/animals/
+    - assets/data/en/celebrities/
+    - assets/data/en/food/
+    - assets/data/en/games/
+    - assets/data/en/jobs/
+    - assets/data/en/movies/
+    - assets/data/en/objects/
+    - assets/data/en/places/
+    - assets/data/en/sports/
+    - assets/data/fr/animals/
+    - assets/data/fr/celebrities/
+    - assets/data/fr/food/
+    - assets/data/fr/games/
+    - assets/data/fr/jobs/
+    - assets/data/fr/movies/
+    - assets/data/fr/objects/
+    - assets/data/fr/places/
+    - assets/data/fr/sports/
+    - assets/data/ar/animals/
+    - assets/data/ar/celebrities/
+    - assets/data/ar/food/
+    - assets/data/ar/games/
+    - assets/data/ar/jobs/
+    - assets/data/ar/movies/
+    - assets/data/ar/objects/
+    - assets/data/ar/places/
+    - assets/data/ar/sports/
+    - assets/data/ary/animals/
+    - assets/data/ary/celebrities/
+    - assets/data/ary/food/
+    - assets/data/ary/games/
+    - assets/data/ary/jobs/
+    - assets/data/ary/movies/
+    - assets/data/ary/objects/
+    - assets/data/ary/places/
+    - assets/data/ary/sports/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

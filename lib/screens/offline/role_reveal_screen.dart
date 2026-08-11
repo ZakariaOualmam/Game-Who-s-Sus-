@@ -7,6 +7,7 @@ import '../../core/router.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 import '../../game/game_engine.dart';
+import '../../l10n/app_localizations.dart';
 import '../../models/player.dart';
 import '../../widgets/game_button.dart';
 import '../../widgets/game_scaffold.dart';
@@ -65,15 +66,16 @@ class _RoleRevealScreenState extends State<RoleRevealScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final player = engine.playerAtRevealStep();
     final showingRole = engine.isRoleShownAtCurrentStep;
     final isLast = engine.revealStep == engine.players.length * 2 - 1;
 
     return GameScaffold(
-      title: 'SECRET ROLE',
+      title: l10n.secretRoleTitle.toUpperCase(),
       canPop: false,
       body: _covering
-          ? const _PassCover()
+          ? _PassCover(l10n: l10n)
           : AnimatedSwitcher(
               duration: const Duration(milliseconds: 220),
               child: showingRole
@@ -96,7 +98,9 @@ class _RoleRevealScreenState extends State<RoleRevealScreen> {
 }
 
 class _PassCover extends StatelessWidget {
-  const _PassCover();
+  const _PassCover({required this.l10n});
+
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
@@ -111,13 +115,13 @@ class _PassCover extends StatelessWidget {
         ),
         const SizedBox(height: 28),
         Text(
-          'PASS THE PHONE',
+          l10n.passThePhone.toUpperCase(),
           textAlign: TextAlign.center,
           style: AppTypography.display(context).copyWith(fontSize: 44),
         ),
         const SizedBox(height: 14),
         Text(
-          'No peeking at the next player',
+          l10n.noPeeking,
           textAlign: TextAlign.center,
           style: AppTypography.caption(context),
         ),
@@ -134,13 +138,14 @@ class _PassView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return _AnimatedReveal(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const SizedBox(height: 48),
           Text(
-            'Pass the phone to',
+            l10n.passPhoneTo,
             textAlign: TextAlign.center,
             style: AppTypography.caption(context).copyWith(fontSize: 16),
           ),
@@ -161,7 +166,7 @@ class _PassView extends StatelessWidget {
           ),
           const SizedBox(height: 56),
           GameButton(
-            label: "I'M READY",
+            label: l10n.imReady.toUpperCase(),
             onPressed: onReady,
           ),
         ],
@@ -188,6 +193,7 @@ class _RoleView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return _AnimatedReveal(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -205,7 +211,9 @@ class _RoleView extends StatelessWidget {
             _WordCard(word: word),
           const SizedBox(height: 44),
           GameButton(
-            label: isLast ? 'START THE DISCUSSION' : 'PASS THE PHONE',
+            label: isLast
+                ? l10n.startDiscussion.toUpperCase()
+                : l10n.passThePhone.toUpperCase(),
             colors: isImposter
                 ? AppColors.imposterGradient
                 : AppColors.primaryGradient,
@@ -224,6 +232,7 @@ class _WordCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 36),
       decoration: BoxDecoration(
@@ -238,7 +247,7 @@ class _WordCard extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            'YOUR SECRET WORD IS',
+            l10n.yourSecretWordIs,
             style: AppTypography.caption(context).copyWith(letterSpacing: 3),
           ),
           const SizedBox(height: 18),
@@ -252,7 +261,7 @@ class _WordCard extends StatelessWidget {
           ),
           const SizedBox(height: 18),
           Text(
-            'Don\u2019t say the word',
+            l10n.dontSayTheWord,
             textAlign: TextAlign.center,
             style: AppTypography.caption(context),
           ),
@@ -267,6 +276,7 @@ class _ImposterCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 36),
       decoration: BoxDecoration(
@@ -283,7 +293,7 @@ class _ImposterCard extends StatelessWidget {
           const Text('🕶️', style: TextStyle(fontSize: 52)),
           const SizedBox(height: 14),
           Text(
-            'YOU ARE THE\nIMPOSTER',
+            l10n.youAreTheImposter,
             textAlign: TextAlign.center,
             style: AppTypography.headline(context).copyWith(
               color: AppColors.danger,
@@ -293,7 +303,7 @@ class _ImposterCard extends StatelessWidget {
           ),
           const SizedBox(height: 14),
           Text(
-            'Blend in. Don\u2019t get caught.',
+            l10n.blendInDontGetCaught,
             textAlign: TextAlign.center,
             style: AppTypography.caption(context),
           ),

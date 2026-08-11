@@ -3,14 +3,17 @@ import 'package:flutter/material.dart';
 import '../../core/router.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
+import '../../l10n/app_localizations.dart';
 import '../../widgets/game_button.dart';
 import '../../widgets/game_scaffold.dart';
+import '../../widgets/language_selector.dart';
 import '../offline/offline_setup_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   void _showHowToPlay(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: AppColors.surface,
@@ -24,18 +27,18 @@ class HomeScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              'HOW TO PLAY',
+              l10n.howToPlayTitle,
               textAlign: TextAlign.center,
               style: AppTypography.headline(context),
             ),
             const SizedBox(height: 20),
-            const _Rule(number: '1', text: 'Everyone gets the same secret word — except the imposter.'),
-            const _Rule(number: '2', text: 'Describe the word without ever saying it.'),
-            const _Rule(number: '3', text: 'Spot who doesn\u2019t know the word, then vote them out.'),
-            const _Rule(number: '4', text: 'The imposter gets one final guess.'),
+            _Rule(number: '1', text: l10n.rule1),
+            _Rule(number: '2', text: l10n.rule2),
+            _Rule(number: '3', text: l10n.rule3),
+            _Rule(number: '4', text: l10n.rule4),
             const SizedBox(height: 24),
             GameButton(
-              label: 'GOT IT',
+              label: l10n.gotIt,
               height: 52,
               onPressed: () => Navigator.of(context).pop(),
             ),
@@ -47,31 +50,37 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return GameScaffold(
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SizedBox(height: 40),
+          const SizedBox(height: 8),
+          const Align(
+            alignment: AlignmentDirectional.centerEnd,
+            child: LanguageSelector(),
+          ),
+          const SizedBox(height: 24),
           Text(
-            'WORD',
+            l10n.appNameWord,
             textAlign: TextAlign.center,
             style: AppTypography.display(context)
                 .copyWith(color: AppColors.primary, fontSize: 60),
           ),
           Text(
-            'IMPOSTER',
+            l10n.appNameImposter,
             textAlign: TextAlign.center,
             style: AppTypography.display(context).copyWith(fontSize: 60),
           ),
           const SizedBox(height: 10),
           Text(
-            'Find the imposter among your friends',
+            l10n.homeTagline,
             textAlign: TextAlign.center,
             style: AppTypography.caption(context),
           ),
           const SizedBox(height: 48),
           GameButton(
-            label: 'OFFLINE',
+            label: l10n.homeOffline,
             icon: Icons.sports_esports,
             colors: AppColors.primaryGradient,
             onPressed: () => Navigator.of(context).push(
@@ -79,15 +88,15 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          const GameButton(
-            label: 'ONLINE  ·  COMING SOON',
+          GameButton(
+            label: l10n.homeOnlineComingSoon,
             icon: Icons.language,
-            colors: [AppColors.surfaceHigh, AppColors.surfaceHigh],
+            colors: const [AppColors.surfaceHigh, AppColors.surfaceHigh],
             onPressed: null,
           ),
           const SizedBox(height: 16),
           GameButton(
-            label: 'HOW TO PLAY',
+            label: l10n.homeHowToPlay,
             icon: Icons.help_outline,
             colors: const [AppColors.surfaceHigh, AppColors.surfaceHigh],
             onPressed: () => _showHowToPlay(context),

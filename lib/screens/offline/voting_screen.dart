@@ -5,6 +5,7 @@ import '../../core/router.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 import '../../game/game_engine.dart';
+import '../../l10n/app_localizations.dart';
 import '../../models/player.dart';
 import '../../widgets/game_button.dart';
 import '../../widgets/game_scaffold.dart';
@@ -55,18 +56,19 @@ class _VotingScreenState extends State<VotingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final targets = engine.players.where((p) => p.id != _voter.id).toList();
     final selected = _selectedId == null ? null : engine.playerById(_selectedId!);
 
     return GameScaffold(
-      title: 'VOTING',
+      title: l10n.votingTitle.toUpperCase(),
       canPop: false,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const SizedBox(height: 12),
           Text(
-            'Pass the phone to',
+            l10n.passPhoneTo,
             textAlign: TextAlign.center,
             style: AppTypography.caption(context).copyWith(fontSize: 15),
           ),
@@ -100,13 +102,13 @@ class _VotingScreenState extends State<VotingScreen> {
           ),
           const SizedBox(height: 24),
           Text(
-            'Who is the imposter?',
+            l10n.whoIsTheImposter,
             textAlign: TextAlign.center,
             style: AppTypography.title(context),
           ),
           const SizedBox(height: 6),
           Text(
-            'Vote in secret',
+            l10n.voteInSecret,
             textAlign: TextAlign.center,
             style: AppTypography.caption(context),
           ),
@@ -125,7 +127,7 @@ class _VotingScreenState extends State<VotingScreen> {
         duration: const Duration(milliseconds: 180),
         child: selected == null
             ? Text(
-                'Tap a player to vote',
+                l10n.tapAPlayerToVote,
                 key: const ValueKey('hint'),
                 textAlign: TextAlign.center,
                 style: AppTypography.caption(context),
@@ -138,12 +140,12 @@ class _VotingScreenState extends State<VotingScreen> {
                     style: TextButton.styleFrom(
                       foregroundColor: AppColors.textSecondary,
                     ),
-                    child: const Text('CHANGE'),
+                    child: Text(l10n.change.toUpperCase()),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: GameButton(
-                      label: 'VOTE FOR ${selected.name.toUpperCase()}',
+                      label: l10n.voteForName(selected.name.toUpperCase()),
                       height: 56,
                       fontSize: 16,
                       onPressed: _confirm,

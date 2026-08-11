@@ -4,6 +4,7 @@ import '../../core/router.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 import '../../game/game_engine.dart';
+import '../../l10n/app_localizations.dart';
 import '../../models/game_settings.dart';
 import '../../models/player.dart';
 import '../../services/word_repository.dart';
@@ -24,14 +25,15 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
   final List<String> _names = [];
 
   void _addName() {
+    final l10n = AppLocalizations.of(context);
     final name = _nameController.text.trim();
     if (name.isEmpty) return;
     if (_names.contains(name)) {
-      _showMessage('Name already added');
+      _showMessage(l10n.nameAlreadyAdded);
       return;
     }
     if (_names.length >= GameSettings.maxPlayers) {
-      _showMessage('Maximum ${GameSettings.maxPlayers} players');
+      _showMessage(l10n.maximumPlayers(GameSettings.maxPlayers));
       return;
     }
     setState(() => _names.add(name));
@@ -47,8 +49,12 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
   }
 
   void _continue() {
+    final l10n = AppLocalizations.of(context);
     if (_names.length < GameSettings.minPlayers) {
-      _showMessage('Add at least ${GameSettings.minPlayers} players');
+      _showMessage(l10n.addPlayersToStart(
+        GameSettings.minPlayers,
+        GameSettings.maxPlayers,
+      ));
       return;
     }
     final stamp = DateTime.now().microsecondsSinceEpoch;
@@ -56,9 +62,10 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
       for (var i = 0; i < _names.length; i++)
         Player(id: 'p$stamp-$i', name: _names[i]),
     ];
+    final locale = Localizations.localeOf(context);
     final engine = GameEngine(
       players: players,
-      wordSource: WordRepository.instance,
+      wordSource: WordRepository.instanceFor(locale),
     );
     Navigator.of(context).push(appRoute(CategoryScreen(engine: engine)));
   }
@@ -71,16 +78,17 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final canContinue = _names.length >= GameSettings.minPlayers;
     return GameScaffold(
-      title: 'PLAYERS',
+      title: l10n.playersTitle.toUpperCase(),
       onBack: () => Navigator.of(context).pop(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
             children: [
-              Text('Add players', style: AppTypography.title(context)),
+              Text(l10n.addPlayers, style: AppTypography.title(context)),
               const Spacer(),
               Container(
                 padding:
@@ -102,16 +110,16 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
             controller: _nameController,
             textCapitalization: TextCapitalization.words,
             maxLength: 18,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               counterText: '',
-              hintText: 'Player name',
-              prefixIcon: Icon(Icons.person, color: AppColors.textMuted),
+              hintText: l10n.playerNameHint,
+              prefixIcon: const Icon(Icons.person, color: AppColors.textMuted),
             ),
             onSubmitted: (_) => _addName(),
           ),
           const SizedBox(height: 10),
           GameButton(
-            label: 'ADD PLAYER',
+            label: l10n.addPlayerButton.toUpperCase(),
             icon: Icons.add,
             colors: const [AppColors.surfaceHigh, AppColors.surfaceHigh],
             height: 52,
@@ -123,8 +131,10 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 32),
               child: Text(
-                'Add ${GameSettings.minPlayers}–${GameSettings.maxPlayers} '
-                'players to start',
+                l10n.addPlayersToStart(
+                  GameSettings.minPlayers,
+                  GameSettings.maxPlayers,
+                ),
                 textAlign: TextAlign.center,
                 style: AppTypography.caption(context),
               ),
@@ -155,7 +165,9 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
         ],
       ),
       bottomBar: GameButton(
-        label: canContinue ? 'PICK CATEGORY' : 'ADD ${GameSettings.minPlayers}+ PLAYERS',
+        label: canContinue
+            ? l10n.pickCategoryButton
+            : l10n.addPlayersMinButton(GameSettings.minPlayers),
         onPressed: canContinue ? _continue : null,
       ),
     );

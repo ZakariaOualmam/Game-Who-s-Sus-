@@ -1,0 +1,45 @@
+Parapluie
+Ordinateur portable
+Sac à dos
+Vélo
+Télécommande
+Brosse à dents
+Oreiller
+Miroir
+Horloge
+Appareil photo
+Téléphone
+Portefeuille
+Clés
+Lampe
+Chaise
+Table
+Frigo
+Grille-pain
+Mixeur
+Guitare
+Piano
+Ballon
+Bougie
+Bouteille
+Cuillère
+Ciseaux
+Marteau
+Lampe torche
+Lunettes
+Chapeau
+Chaussures
+Couverture
+Serviette
+Boîte
+Livre
+Stylo
+Trombone
+Bouilloire
+Aspirateur
+Micro-ondes
+Montre
+Casque
+Enceinte
+Chargeur
+Armoire

@@ -7,6 +7,7 @@ import '../../core/router.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 import '../../game/game_engine.dart';
+import '../../l10n/app_localizations.dart';
 import '../../models/player.dart';
 import '../../widgets/game_button.dart';
 import '../../widgets/game_scaffold.dart';
@@ -60,11 +61,12 @@ class _ImposterGuessScreenState extends State<ImposterGuessScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final engine = widget.engine;
     final options = _options;
 
     return GameScaffold(
-      title: 'FINAL CHANCE',
+      title: l10n.finalChance.toUpperCase(),
       canPop: false,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -80,7 +82,7 @@ class _ImposterGuessScreenState extends State<ImposterGuessScreen> {
             ),
             const SizedBox(height: 12),
             Text(
-              'Pick the secret word',
+              l10n.pickSecretWord,
               textAlign: TextAlign.center,
               style: AppTypography.headline(context).copyWith(fontSize: 34),
             ),
@@ -124,12 +126,13 @@ class _PassToImposter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         const SizedBox(height: 28),
         Text(
-          'Pass the phone to',
+          l10n.passPhoneTo,
           textAlign: TextAlign.center,
           style: AppTypography.caption(context).copyWith(fontSize: 16),
         ),
@@ -150,7 +153,7 @@ class _PassToImposter extends StatelessWidget {
         ),
         const SizedBox(height: 56),
         GameButton(
-          label: "I'M READY",
+          label: l10n.imReady.toUpperCase(),
           onPressed: onReady,
         ),
       ],

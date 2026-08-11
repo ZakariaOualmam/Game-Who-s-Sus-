@@ -1,0 +1,51 @@
+Pizza
+Sushi
+Tacos
+Burger
+Pâtes
+Ramen
+Pancakes
+Chocolat
+Glace
+Popcorn
+Hot-dog
+Sandwich
+Salade
+Curry
+Raviolis
+Poulet frit
+Fromage
+Barbecue
+Purée
+Nachos
+Donut
+Gaufres
+Tarte aux pommes
+Steak
+Burrito
+Chawarma
+Paella
+Croissant
+Bagel
+Lasagnes
+Sashimi
+Tempura
+Kimchi
+Mac and Cheese
+Toast à l'avocat
+Croque-monsieur
+Frites
+Milkshake
+Cupcake
+Brownie
+Guimauve
+Bretzel
+Salade de fruits
+Miel
+Céréales
+Omelette
+Pain à l'ail
+Boulettes
+Saucisse
+Nems
+Salade de chou

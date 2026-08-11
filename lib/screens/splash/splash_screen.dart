@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../core/router.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
+import '../../l10n/app_localizations.dart';
 import '../home/home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -36,6 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Center(
@@ -45,16 +47,16 @@ class _SplashScreenState extends State<SplashScreen> {
             const Text('🎭', style: TextStyle(fontSize: 64)),
             const SizedBox(height: 20),
             Text(
-              'WORD',
+              l10n.appNameWord,
               style: AppTypography.display(context)
                   .copyWith(color: AppColors.primary, fontSize: 64),
             ),
             Text(
-              'IMPOSTER',
+              l10n.appNameImposter,
               style: AppTypography.display(context).copyWith(fontSize: 64),
             ),
             const SizedBox(height: 10),
-            Text('party word game', style: AppTypography.caption(context)),
+            Text(l10n.splashTagline, style: AppTypography.caption(context)),
             const SizedBox(height: 44),
             const SizedBox(
               width: 22,
