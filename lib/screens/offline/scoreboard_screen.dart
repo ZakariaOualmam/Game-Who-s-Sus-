@@ -4,6 +4,7 @@ import '../../core/router.dart';
 import '../../core/theme/app_colors.dart';
 import '../../game/game_engine.dart';
 import '../../models/player.dart';
+import '../../screens/home/home_screen.dart';
 import '../../widgets/game_button.dart';
 import '../../widgets/game_scaffold.dart';
 import '../../widgets/player_card.dart';
@@ -23,15 +24,22 @@ class ScoreboardScreen extends StatelessWidget {
   }
 
   void _goHome(BuildContext context) {
-    Navigator.of(context).popUntil((route) => route.isFirst);
+    Navigator.of(context).pushAndRemoveUntil(
+      appRoute(const HomeScreen()),
+      (route) => false,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final sorted = [...engine.players]..sort((a, b) => b.score.compareTo(a.score));
+    final sorted = [...engine.players]
+      ..sort((a, b) => b.score.compareTo(a.score));
 
     return GameScaffold(
       title: 'SCORES',
+      onBack: () => _goHome(context),
+      canPop: false,
+      onPopBlocked: () => _goHome(context),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

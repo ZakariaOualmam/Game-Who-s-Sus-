@@ -19,6 +19,7 @@ class DiscussionScreen extends StatelessWidget {
     final category = engine.category!;
     return GameScaffold(
       title: 'DISCUSS',
+      canPop: false,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

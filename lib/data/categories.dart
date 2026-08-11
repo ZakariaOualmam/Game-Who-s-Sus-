@@ -19,14 +19,14 @@ class WordCategory {
 
 /// Registry of all categories. Add new categories here.
 const List<WordCategory> categories = [
-  WordCategory(id: 'food', name: 'Food', emoji: '🍕'),
-  WordCategory(id: 'animals', name: 'Animals', emoji: '🐘'),
+  WordCategory(id: 'food', name: 'Food', emoji: '🍔'),
+  WordCategory(id: 'animals', name: 'Animals', emoji: '🐶'),
   WordCategory(id: 'sports', name: 'Sports', emoji: '⚽'),
   WordCategory(id: 'movies', name: 'Movies', emoji: '🎬'),
-  WordCategory(id: 'places', name: 'Places', emoji: '🗺️'),
+  WordCategory(id: 'places', name: 'Places', emoji: '✈️'),
   WordCategory(id: 'jobs', name: 'Jobs', emoji: '💼'),
+  WordCategory(id: 'games', name: 'Games', emoji: '🎮'),
   WordCategory(id: 'objects', name: 'Objects', emoji: '📦'),
-  WordCategory(id: 'games', name: 'Games', emoji: '🎲'),
   WordCategory(id: 'celebrities', name: 'Celebrities', emoji: '⭐'),
-  WordCategory(id: 'random', name: 'Random', emoji: '🎰', isRandom: true),
+  WordCategory(id: 'random', name: 'Random', emoji: '🎲', isRandom: true),
 ];

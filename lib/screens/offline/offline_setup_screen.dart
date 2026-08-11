@@ -109,18 +109,14 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
             ),
             onSubmitted: (_) => _addName(),
           ),
-          const SizedBox(height: 8),
-          Align(
-            alignment: Alignment.centerRight,
-            child: GameButton(
-              label: 'ADD',
-              icon: Icons.add,
-              colors: const [AppColors.surfaceHigh, AppColors.surfaceHigh],
-              height: 48,
-              fontSize: 16,
-              borderRadius: 24,
-              onPressed: _addName,
-            ),
+          const SizedBox(height: 10),
+          GameButton(
+            label: 'ADD PLAYER',
+            icon: Icons.add,
+            colors: const [AppColors.surfaceHigh, AppColors.surfaceHigh],
+            height: 52,
+            fontSize: 16,
+            onPressed: _addName,
           ),
           const SizedBox(height: 18),
           if (_names.isEmpty)
@@ -140,7 +136,7 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
               physics: const NeverScrollableScrollPhysics(),
               mainAxisSpacing: 10,
               crossAxisSpacing: 10,
-              childAspectRatio: 3.2,
+              childAspectRatio: 2.0,
               children: [
                 for (var i = 0; i < _names.length; i++)
                   PlayerCard(

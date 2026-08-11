@@ -11,19 +11,34 @@ class _FakeWordSource implements WordSource {
   Future<String> randomWord(WordCategory category) async => 'secretword';
 
   @override
-  Future<List<String>> loadWords(WordCategory category) async => ['secretword'];
+  Future<List<String>> loadWords(WordCategory category) async =>
+      ['secretword', 'decoy'];
+
+  @override
+  Future<List<String>> decoyWords({
+    required WordCategory category,
+    required String correctWord,
+    required int count,
+  }) async =>
+      ['decoy1', 'decoy2', 'decoy3'].take(count).toList();
 }
 
-GameEngine _engine() {
+GameEngine _engine([int playerCount = 4]) {
   return GameEngine(
     players: [
-      Player(id: 'a', name: 'Anna'),
-      Player(id: 'b', name: 'Bob'),
-      Player(id: 'c', name: 'Cara'),
-      Player(id: 'd', name: 'Dan'),
+      for (var i = 0; i < playerCount; i++)
+        Player(id: 'p$i', name: 'Player $i'),
     ],
     wordSource: _FakeWordSource(),
   );
+}
+
+/// Everyone except [targetId] votes for [targetId].
+void _voteAgainst(GameEngine engine, String targetId) {
+  for (final player in engine.players) {
+    if (player.id == targetId) continue;
+    engine.castVote(voterId: player.id, targetId: targetId);
+  }
 }
 
 void main() {
@@ -34,9 +49,24 @@ void main() {
 
       expect(engine.secretWord, 'secretword');
       expect(engine.imposter, isNotNull);
+      expect(engine.players, contains(engine.imposter));
       expect(engine.players.where((p) => p.isImposter).length, 1);
       expect(engine.players.where((p) => p.isCrew).length, 3);
       expect(engine.phase, GamePhase.roleReveal);
+    });
+
+    test('exactly one imposter with 5 players', () async {
+      final engine = _engine(5);
+      await engine.startRound(categories.first);
+      expect(engine.players.where((p) => p.isImposter).length, 1);
+      expect(engine.players.where((p) => p.isCrew).length, 4);
+    });
+
+    test('exactly one imposter with 8 players', () async {
+      final engine = _engine(8);
+      await engine.startRound(categories.first);
+      expect(engine.players.where((p) => p.isImposter).length, 1);
+      expect(engine.players.where((p) => p.isCrew).length, 7);
     });
 
     test('reveal sequence walks each player in order', () async {
@@ -56,24 +86,50 @@ void main() {
       await engine.startRound(categories.first);
 
       expect(engine.allPlayersVoted, isFalse);
-      engine.castVote(voterId: 'a', targetId: 'b');
-      engine.castVote(voterId: 'b', targetId: 'c');
-      engine.castVote(voterId: 'c', targetId: 'd');
+      engine.castVote(voterId: 'p0', targetId: 'p1');
+      engine.castVote(voterId: 'p1', targetId: 'p2');
+      engine.castVote(voterId: 'p2', targetId: 'p3');
       expect(engine.allPlayersVoted, isFalse);
-      engine.castVote(voterId: 'd', targetId: 'a');
+      engine.castVote(voterId: 'p3', targetId: 'p0');
       expect(engine.allPlayersVoted, isTrue);
+    });
+
+    test('a player can never double their vote', () async {
+      final engine = _engine();
+      await engine.startRound(categories.first);
+
+      engine.castVote(voterId: 'p0', targetId: 'p1');
+      engine.castVote(voterId: 'p0', targetId: 'p2');
+
+      expect(engine.votes.length, 1);
+      expect(engine.voteCounts['p2'], 1);
+      expect(engine.voteCounts.containsKey('p1'), isFalse);
+      expect(engine.accusedPlayer?.id, 'p2');
     });
 
     test('accused player is the one with the most votes', () async {
       final engine = _engine();
       await engine.startRound(categories.first);
 
-      engine.castVote(voterId: 'a', targetId: 'c');
-      engine.castVote(voterId: 'b', targetId: 'c');
-      engine.castVote(voterId: 'c', targetId: 'a');
-      engine.castVote(voterId: 'd', targetId: 'c');
+      engine.castVote(voterId: 'p0', targetId: 'p2');
+      engine.castVote(voterId: 'p1', targetId: 'p2');
+      engine.castVote(voterId: 'p2', targetId: 'p0');
+      engine.castVote(voterId: 'p3', targetId: 'p2');
 
-      expect(engine.accusedPlayer!.id, 'c');
+      expect(engine.accusedPlayer!.id, 'p2');
+    });
+
+    test('a tie at the top means no one is accused', () async {
+      final engine = _engine();
+      await engine.startRound(categories.first);
+
+      engine.castVote(voterId: 'p0', targetId: 'p1');
+      engine.castVote(voterId: 'p1', targetId: 'p2');
+      engine.castVote(voterId: 'p2', targetId: 'p1');
+      engine.castVote(voterId: 'p3', targetId: 'p2');
+
+      expect(engine.accusedPlayer, isNull);
+      expect(engine.isImposterCaught, isFalse);
     });
 
     test('crew wins when imposter is accused and guesses wrong', () async {
@@ -81,10 +137,7 @@ void main() {
       await engine.startRound(categories.first);
       final imposter = engine.imposter!;
 
-      for (final player in engine.players) {
-        if (player.id == imposter.id) continue;
-        engine.castVote(voterId: player.id, targetId: imposter.id);
-      }
+      _voteAgainst(engine, imposter.id);
       engine.submitImposterGuess('wrongguess');
 
       final result = engine.finishRound();
@@ -102,10 +155,7 @@ void main() {
       final imposter = engine.imposter!;
       final scapegoat = engine.players.firstWhere((p) => !p.isImposter);
 
-      for (final player in engine.players) {
-        if (player.id == imposter.id) continue;
-        engine.castVote(voterId: player.id, targetId: scapegoat.id);
-      }
+      _voteAgainst(engine, scapegoat.id);
       engine.submitImposterGuess('wrongguess');
 
       final result = engine.finishRound();
@@ -114,16 +164,30 @@ void main() {
       expect(scapegoat.score, 0);
     });
 
-    test('imposter wins even when caught if they guess the word', () async {
+    test('imposter caught but guesses the word correctly gets +1', () async {
       final engine = _engine();
       await engine.startRound(categories.first);
       final imposter = engine.imposter!;
 
-      for (final player in engine.players) {
-        if (player.id == imposter.id) continue;
-        engine.castVote(voterId: player.id, targetId: imposter.id);
-      }
+      _voteAgainst(engine, imposter.id);
       engine.submitImposterGuess('SECRETWORD');
+
+      final result = engine.finishRound();
+      expect(result.guessedCorrectly, isTrue);
+      expect(result.crewWins, isFalse);
+      expect(imposter.score, 1);
+      expect(engine.players.where((p) => p.isCrew).every((p) => p.score == 0),
+          isTrue);
+    });
+
+    test('imposter not caught but guesses correctly gets +2', () async {
+      final engine = _engine();
+      await engine.startRound(categories.first);
+      final imposter = engine.imposter!;
+      final scapegoat = engine.players.firstWhere((p) => !p.isImposter);
+
+      _voteAgainst(engine, scapegoat.id);
+      engine.submitImposterGuess('secretword');
 
       final result = engine.finishRound();
       expect(result.guessedCorrectly, isTrue);
@@ -134,11 +198,7 @@ void main() {
     test('resetForNewRound keeps scores but clears round state', () async {
       final engine = _engine();
       await engine.startRound(categories.first);
-      final imposter = engine.imposter!;
-      for (final player in engine.players) {
-        if (player.id == imposter.id) continue;
-        engine.castVote(voterId: player.id, targetId: imposter.id);
-      }
+      _voteAgainst(engine, engine.imposter!.id);
       engine.submitImposterGuess('wrong');
       engine.finishRound();
 
@@ -152,13 +212,30 @@ void main() {
       expect(engine.players.where((p) => p.score > 0).length, 3);
     });
 
+    test('play again keeps scores across a new round', () async {
+      final engine = _engine();
+      await engine.startRound(categories.first);
+      _voteAgainst(engine, engine.imposter!.id);
+      engine.submitImposterGuess('wrong');
+      engine.finishRound();
+      final scoreBefore =
+          engine.players.fold(0, (sum, p) => sum + p.score);
+
+      engine.resetForNewRound();
+      await engine.startRound(categories.first);
+      final scoreAfter =
+          engine.players.fold(0, (sum, p) => sum + p.score);
+
+      expect(scoreAfter, scoreBefore);
+      expect(engine.players.where((p) => p.isImposter).length, 1);
+    });
+
     test('roles are randomly reassigned each round', () async {
       final engine = _engine();
       await engine.startRound(categories.first);
       engine.resetForNewRound();
       await engine.startRound(categories.first);
-      // Statistically unlikely to be identical, but this mainly guards
-      // against roles persisting across rounds.
+      // This mainly guards against roles persisting across rounds.
       expect(engine.imposter, isNotNull);
       expect(engine.players.where((p) => p.isImposter).length, 1);
     });

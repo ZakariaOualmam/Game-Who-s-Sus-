@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show HapticFeedback;
 
 import '../core/theme/app_colors.dart';
 import '../core/theme/app_typography.dart';
 
-/// Big, rounded, gradient action button with press feedback.
+/// Big, rounded, gradient action button with press feedback and haptics.
 class GameButton extends StatefulWidget {
   const GameButton({
     super.key,
@@ -37,10 +38,15 @@ class _GameButtonState extends State<GameButton> {
 
   bool get _enabled => widget.onPressed != null && !widget.loading;
 
+  void _onTapDown(_) {
+    HapticFeedback.lightImpact();
+    setState(() => _pressed = true);
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTapDown: _enabled ? (_) => setState(() => _pressed = true) : null,
+      onTapDown: _enabled ? _onTapDown : null,
       onTapUp: _enabled ? (_) => setState(() => _pressed = false) : null,
       onTapCancel: _enabled ? () => setState(() => _pressed = false) : null,
       onTap: _enabled ? widget.onPressed : null,
@@ -91,14 +97,17 @@ class _GameButtonState extends State<GameButton> {
                           const SizedBox(width: 10),
                         ],
                         Flexible(
-                          child: Text(
-                            widget.label,
-                            textAlign: TextAlign.center,
-                            style: AppTypography.title(context).copyWith(
-                              color: widget.textColor,
-                              fontSize: widget.fontSize,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: 0.6,
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              widget.label,
+                              textAlign: TextAlign.center,
+                              style: AppTypography.title(context).copyWith(
+                                color: widget.textColor,
+                                fontSize: widget.fontSize,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 0.6,
+                              ),
                             ),
                           ),
                         ),

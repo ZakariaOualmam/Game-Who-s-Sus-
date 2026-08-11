@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import '../core/theme/app_colors.dart';
 import '../core/theme/app_typography.dart';
 
-/// Reusable screen shell: dark gradient background, optional header, scrollable body.
+/// Reusable screen shell: dark gradient background, optional header, scrollable
+/// body, and pop protection for in-game screens.
 class GameScaffold extends StatelessWidget {
   const GameScaffold({
     super.key,
@@ -12,6 +13,8 @@ class GameScaffold extends StatelessWidget {
     this.onBack,
     this.bottomBar,
     this.padding = const EdgeInsets.all(24),
+    this.canPop = true,
+    this.onPopBlocked,
   });
 
   final Widget body;
@@ -20,39 +23,51 @@ class GameScaffold extends StatelessWidget {
   final Widget? bottomBar;
   final EdgeInsets padding;
 
+  /// When false, system back gestures are intercepted.
+  final bool canPop;
+
+  /// Invoked when a back attempt is blocked (see [canPop]).
+  final VoidCallback? onPopBlocked;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF181833),
-              AppColors.background,
-              Color(0xFF0A0A16),
-            ],
-            stops: [0, 0.5, 1],
+      body: PopScope(
+        canPop: canPop,
+        onPopInvokedWithResult: (didPop, result) {
+          if (!didPop) onPopBlocked?.call();
+        },
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF181833),
+                AppColors.background,
+                Color(0xFF0A0A16),
+              ],
+              stops: [0, 0.5, 1],
+            ),
           ),
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              if (title != null || onBack != null)
-                _Header(title: title, onBack: onBack),
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: padding,
-                  child: body,
+          child: SafeArea(
+            child: Column(
+              children: [
+                if (title != null || onBack != null)
+                  _Header(title: title, onBack: onBack),
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: padding,
+                    child: body,
+                  ),
                 ),
-              ),
-              if (bottomBar != null)
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
-                  child: bottomBar,
-                ),
-            ],
+                if (bottomBar != null)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+                    child: bottomBar,
+                  ),
+              ],
+            ),
           ),
         ),
       ),

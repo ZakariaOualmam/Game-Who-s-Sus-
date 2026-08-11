@@ -92,19 +92,19 @@ class GameEngine {
     return counts;
   }
 
-  /// The player with the most votes, or null when nothing has been voted.
+  /// The player with the most votes, or null when there is a tie at the top
+  /// (or nothing has been voted). A tie means nobody gets voted out.
   Player? get accusedPlayer {
+    if (votes.isEmpty) return null;
     final counts = voteCounts;
-    Player? top;
     var topVotes = 0;
     for (final player in players) {
       final count = counts[player.id] ?? 0;
-      if (count > topVotes) {
-        topVotes = count;
-        top = player;
-      }
+      if (count > topVotes) topVotes = count;
     }
-    return top;
+    final top = players.where((p) => (counts[p.id] ?? 0) == topVotes).toList();
+    if (top.length != 1) return null;
+    return top.first;
   }
 
   bool get isImposterCaught => accusedPlayer?.id == imposter?.id;
@@ -130,11 +130,16 @@ class GameEngine {
     final crewWins = caught && !correct;
 
     final changes = <String, int>{};
-    if (crewWins) {
+    if (caught && correct) {
+      // Imposter discovered but correctly guessed the word.
+      changes[imp.id] = 1;
+    } else if (caught) {
+      // Crew correctly identified the imposter.
       for (final player in players) {
         if (player.isCrew) changes[player.id] = 1;
       }
     } else {
+      // Imposter survived the vote.
       changes[imp.id] = 2;
     }
     for (final entry in changes.entries) {

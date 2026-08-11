@@ -74,33 +74,49 @@ class _CategoryScreenState extends State<CategoryScreen> {
   }
 }
 
-class _CategoryCard extends StatelessWidget {
+class _CategoryCard extends StatefulWidget {
   const _CategoryCard({required this.category, required this.onTap});
 
   final WordCategory category;
   final VoidCallback onTap;
 
   @override
+  State<_CategoryCard> createState() => _CategoryCardState();
+}
+
+class _CategoryCardState extends State<_CategoryCard> {
+  bool _pressed = false;
+
+  @override
   Widget build(BuildContext context) {
+    final category = widget.category;
     return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [AppColors.surface, AppColors.surfaceHigh],
+      onTapDown: (_) => setState(() => _pressed = true),
+      onTapUp: (_) => setState(() => _pressed = false),
+      onTapCancel: () => setState(() => _pressed = false),
+      onTap: widget.onTap,
+      child: AnimatedScale(
+        scale: _pressed ? 0.94 : 1.0,
+        duration: const Duration(milliseconds: 100),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [AppColors.surface, AppColors.surfaceHigh],
+            ),
+            borderRadius: BorderRadius.circular(24),
+            border:
+                Border.all(color: AppColors.primary.withValues(alpha: 0.25)),
           ),
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: AppColors.primary.withValues(alpha: 0.25)),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(category.emoji, style: const TextStyle(fontSize: 42)),
-            const SizedBox(height: 10),
-            Text(category.name, style: AppTypography.title(context)),
-          ],
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(category.emoji, style: const TextStyle(fontSize: 42)),
+              const SizedBox(height: 10),
+              Text(category.name, style: AppTypography.title(context)),
+            ],
+          ),
         ),
       ),
     );

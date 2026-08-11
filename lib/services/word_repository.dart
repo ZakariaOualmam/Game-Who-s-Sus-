@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart' show AssetBundle, rootBundle;
 
 import '../data/categories.dart';
 
@@ -11,12 +11,21 @@ import '../data/categories.dart';
 abstract class WordSource {
   Future<List<String>> loadWords(WordCategory category);
   Future<String> randomWord(WordCategory category);
+
+  /// Up to [count] plausible alternative words from the same category, used
+  /// as decoys for the imposter's multiple-choice guess.
+  Future<List<String>> decoyWords({
+    required WordCategory category,
+    required String correctWord,
+    required int count,
+  });
 }
 
 /// Loads and caches word lists bundled in `assets/data/<category>/words.txt`.
 class WordRepository implements WordSource {
-  WordRepository({List<WordCategory>? allCategories})
-      : _randomPool = List.unmodifiable(
+  WordRepository({List<WordCategory>? allCategories, AssetBundle? bundle})
+      : _bundle = bundle ?? rootBundle,
+        _randomPool = List.unmodifiable(
           allCategories ?? categories.where((c) => !c.isRandom).toList(),
         );
 
@@ -24,6 +33,7 @@ class WordRepository implements WordSource {
   static final WordRepository instance = WordRepository();
 
   final List<WordCategory> _randomPool;
+  final AssetBundle _bundle;
   final Map<String, List<String>> _cache = {};
 
   @override
@@ -39,7 +49,7 @@ class WordRepository implements WordSource {
     final cached = _cache[path];
     if (cached != null) return cached;
 
-    final content = await rootBundle.loadString(path);
+    final content = await _bundle.loadString(path);
     final words = content
         .split('\n')
         .map((line) => line.trim())
@@ -56,5 +66,20 @@ class WordRepository implements WordSource {
       throw StateError('No words available for category "${category.name}".');
     }
     return words[Random().nextInt(words.length)];
+  }
+
+  @override
+  Future<List<String>> decoyWords({
+    required WordCategory category,
+    required String correctWord,
+    required int count,
+  }) async {
+    final words = await loadWords(category);
+    final pool = words
+        .where((w) => w.toLowerCase() != correctWord.toLowerCase())
+        .toList()
+      ..shuffle();
+    if (pool.length <= count) return pool;
+    return pool.take(count).toList();
   }
 }
