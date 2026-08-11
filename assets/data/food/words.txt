@@ -1,0 +1,51 @@
+Pizza
+Sushi
+Tacos
+Burger
+Pasta
+Ramen
+Pancakes
+Chocolate
+Ice Cream
+Popcorn
+Hot Dog
+Sandwich
+Salad
+Curry
+Dumplings
+Fried Chicken
+Cheese
+Barbecue
+Mashed Potatoes
+Nachos
+Donut
+Waffles
+Apple Pie
+Steak
+Burrito
+Shawarma
+Paella
+Croissant
+Bagel
+Lasagna
+Sashimi
+Tempura
+Kimchi
+Mac and Cheese
+Avocado Toast
+Grilled Cheese
+French Fries
+Milkshake
+Cupcake
+Brownie
+Marshmallow
+Pretzel
+Fruit Salad
+Honey
+Cereal
+Omelette
+Garlic Bread
+Meatballs
+Sausage
+Spring Rolls
+Coleslaw

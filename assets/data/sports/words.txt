@@ -1,0 +1,41 @@
+Basketball
+Soccer
+Football
+Tennis
+Baseball
+Golf
+Hockey
+Boxing
+Swimming
+Running
+Cycling
+Volleyball
+Badminton
+Table Tennis
+Rugby
+Cricket
+Skiing
+Snowboarding
+Surfing
+Skateboarding
+Gymnastics
+Wrestling
+Judo
+Karate
+Fencing
+Archery
+Bowling
+Darts
+Billiards
+Marathon
+Triathlon
+Rock Climbing
+Yoga
+Rowing
+Sailing
+Horse Racing
+Formula One
+Sumo
+Cheerleading
+Dodgeball
+Disc Golf
