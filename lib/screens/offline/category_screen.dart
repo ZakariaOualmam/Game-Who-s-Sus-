@@ -7,6 +7,7 @@ import '../../data/categories.dart';
 import '../../game/game_engine.dart';
 import '../../l10n/app_localizations.dart';
 import '../../l10n/category_localizations.dart';
+import '../../services/word_repository.dart';
 import '../../widgets/game_scaffold.dart';
 import 'role_reveal_screen.dart';
 
@@ -26,11 +27,24 @@ class _CategoryScreenState extends State<CategoryScreen> {
     if (_loading) return;
     setState(() => _loading = true);
     try {
+      debugPrint('============ CATEGORY SELECTION DEBUG ============');
+      debugPrint('Selected category: "${category.id}" (${category.name})');
+      debugPrint('Engine wordSource type: ${widget.engine.wordSource.runtimeType}');
+      if (widget.engine.wordSource is WordRepository) {
+        final repo = widget.engine.wordSource as WordRepository;
+        debugPrint('WordRepository language code: ${repo.languageCode}');
+      }
       debugPrint('Starting round for category "${category.id}"');
       await widget.engine.startRound(category);
+      debugPrint('Round started successfully, secretWord: ${widget.engine.secretWord}');
+      debugPrint('==================================================');
     } catch (error, stackTrace) {
-      debugPrint('Failed to start round for category "${category.id}": $error');
+      debugPrint('============ CATEGORY SELECTION ERROR ============');
+      debugPrint('Failed to start round for category "${category.id}"');
+      debugPrint('Error: $error');
+      debugPrint('Stack trace:');
       debugPrint(stackTrace.toString());
+      debugPrint('==================================================');
       if (!mounted) return;
       final l10n = AppLocalizations.of(context);
       setState(() => _loading = false);

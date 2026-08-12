@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/locale_controller.dart';
 import '../../core/router.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
@@ -62,7 +63,10 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
       for (var i = 0; i < _names.length; i++)
         Player(id: 'p$stamp-$i', name: _names[i]),
     ];
-    final locale = Localizations.localeOf(context);
+    // Use LocaleController.instance.locale instead of Localizations.localeOf
+    // to ensure we get the actual selected locale, not a potentially stale one.
+    final locale = LocaleController.instance.locale;
+    debugPrint('Creating GameEngine with locale: ${locale.languageCode}');
     final engine = GameEngine(
       players: players,
       wordSource: WordRepository.instanceFor(locale),

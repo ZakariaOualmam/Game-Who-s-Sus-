@@ -57,6 +57,9 @@ class WordRepository implements WordSource {
   final AssetBundle _bundle;
   final Map<String, List<String>> _cache = {};
 
+  /// Public getter for the language code this repository serves.
+  String get languageCode => _languageCode;
+
   @override
   Future<List<String>> loadWords(WordCategory category) async {
     if (category.isRandom) {
