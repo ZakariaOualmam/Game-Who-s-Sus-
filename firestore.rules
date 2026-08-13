@@ -1,0 +1,96 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isRoomMember(roomId) {
+      return exists(
+        /databases/$(database)/documents/rooms/$(roomId)/players/$(request.auth.uid)
+      );
+    }
+
+    function roomDoc(roomId) {
+      return get(/databases/$(database)/documents/rooms/$(roomId));
+    }
+
+    function isHost(roomId) {
+      return roomDoc(roomId).data.host_player_id == request.auth.uid;
+    }
+
+    // Collection-group rule.
+    //
+    // Firestore requires rules that match the full subcollection path pattern
+    // (e.g. `{path=**}/players/{player}`) in order to authorize
+    // collection-group queries; the explicit matches below (e.g.
+    // `rooms/{roomId}/players/{playerId}`) do not. The app runs collection
+    // group queries on `players` when locating a user's active room
+    // (create-room guard and reconnection), so that collection group needs a
+    // rule. Read is restricted to signed-in users, matching the explicit
+    // `players` read rule, so access is not widened.
+    match /{path=**}/players/{playerId} {
+      allow read: if isSignedIn();
+    }
+
+    // Room code uniqueness index. Any signed-in user may read or write it;
+    // a room code is only "taken" once the room itself exists.
+    match /rooms_by_code/{code} {
+      allow read: if isSignedIn();
+      allow create, update, delete: if isSignedIn();
+    }
+
+    match /rooms/{roomId} {
+      allow read: if isSignedIn();
+      // A user can only create a room as its host, and only in lobby status.
+      allow create: if isSignedIn()
+        && request.resource.data.host_player_id == request.auth.uid
+        && request.resource.data.status == 'lobby';
+      // Host may change anything; other room members may only adjust the
+      // join count (e.g. when joining or leaving a room).
+      allow update: if isSignedIn() && (
+        isHost(roomId)
+        || request.resource.data.diff(resource.data)
+             .affectedKeys()
+             .hasOnly(['player_count', 'updated_at'])
+      );
+      allow delete: if isSignedIn() && isHost(roomId);
+
+      match /players/{playerId} {
+        allow read: if isSignedIn();
+        allow create: if isSignedIn() && request.auth.uid == playerId;
+        allow update: if isSignedIn() && isRoomMember(roomId)
+          && (request.auth.uid == playerId || isHost(roomId));
+        allow delete: if isSignedIn()
+          && (request.auth.uid == playerId || isHost(roomId));
+      }
+
+      match /rounds/{roundId} {
+        allow read: if isSignedIn() && isRoomMember(roomId);
+        allow create: if isSignedIn() && isRoomMember(roomId) && isHost(roomId);
+        allow update: if isSignedIn() && isRoomMember(roomId) && isHost(roomId);
+        allow delete: if isSignedIn() && isRoomMember(roomId) && isHost(roomId);
+
+        match /player_states/{playerId} {
+          allow read: if isSignedIn() && isRoomMember(roomId);
+          allow write: if isSignedIn() && isRoomMember(roomId)
+            && (request.auth.uid == playerId || isHost(roomId));
+        }
+
+        match /votes/{voterId} {
+          allow read: if isSignedIn() && isRoomMember(roomId);
+          allow create, update: if isSignedIn() && isRoomMember(roomId)
+            && request.auth.uid == voterId;
+          allow delete: if false;
+        }
+
+        match /vote_totals/{targetPlayerId} {
+          allow read: if isSignedIn() && isRoomMember(roomId);
+          allow create, update, delete: if isSignedIn()
+            && isRoomMember(roomId) && isHost(roomId);
+        }
+      }
+    }
+  }
+}

@@ -27,6 +27,9 @@ class AppLocalizationsAry extends AppLocalizations {
   String get homeOffline => 'بلا إنترنات';
 
   @override
+  String get homeOnline => 'أونلاين';
+
+  @override
   String get homeOnlineComingSoon => 'أونلاين · قريب';
 
   @override

@@ -138,6 +138,12 @@ abstract class AppLocalizations {
   /// **'OFFLINE'**
   String get homeOffline;
 
+  /// No description provided for @homeOnline.
+  ///
+  /// In en, this message translates to:
+  /// **'ONLINE'**
+  String get homeOnline;
+
   /// No description provided for @homeOnlineComingSoon.
   ///
   /// In en, this message translates to:

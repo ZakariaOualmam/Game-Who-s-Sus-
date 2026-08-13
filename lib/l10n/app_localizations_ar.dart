@@ -27,6 +27,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get homeOffline => 'دون اتصال';
 
   @override
+  String get homeOnline => 'عبر الإنترنت';
+
+  @override
   String get homeOnlineComingSoon => 'عبر الإنترنت · قريبًا';
 
   @override

@@ -71,7 +71,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('OFFLINE'), findsOneWidget);
-    expect(find.textContaining('COMING SOON'), findsOneWidget);
+    expect(find.text('ONLINE'), findsOneWidget);
   });
 
   testWidgets('setup screen accepts players and reaches category selection',

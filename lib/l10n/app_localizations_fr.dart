@@ -27,6 +27,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get homeOffline => 'HORS LIGNE';
 
   @override
+  String get homeOnline => 'EN LIGNE';
+
+  @override
   String get homeOnlineComingSoon => 'EN LIGNE · BIENTÔT';
 
   @override

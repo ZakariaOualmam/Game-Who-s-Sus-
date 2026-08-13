@@ -8,6 +8,7 @@ import '../../widgets/game_button.dart';
 import '../../widgets/game_scaffold.dart';
 import '../../widgets/language_selector.dart';
 import '../offline/offline_setup_screen.dart';
+import '../online/online_menu_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -89,10 +90,12 @@ class HomeScreen extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           GameButton(
-            label: l10n.homeOnlineComingSoon,
+            label: l10n.homeOnline,
             icon: Icons.language,
-            colors: const [AppColors.surfaceHigh, AppColors.surfaceHigh],
-            onPressed: null,
+            colors: const [AppColors.secondary, AppColors.accent],
+            onPressed: () => Navigator.of(context).push(
+              appRoute(const OnlineMenuScreen()),
+            ),
           ),
           const SizedBox(height: 16),
           GameButton(
