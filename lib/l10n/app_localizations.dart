@@ -789,7 +789,7 @@ abstract class AppLocalizations {
   /// No description provided for @onlineNeedPlayers.
   ///
   /// In en, this message translates to:
-  /// **'Need at least 3 players to start'**
+  /// **'Need at least 4 players to start'**
   String get onlineNeedPlayers;
 
   /// No description provided for @roomCodeLabel.
@@ -905,6 +905,174 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Something went wrong. Please try again.'**
   String get onlineError;
+
+  /// No description provided for @settingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'GAME SETTINGS'**
+  String get settingsTitle;
+
+  /// No description provided for @settingsPlayers.
+  ///
+  /// In en, this message translates to:
+  /// **'Players'**
+  String get settingsPlayers;
+
+  /// No description provided for @settingsPlayersHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Number of players in the game'**
+  String get settingsPlayersHint;
+
+  /// No description provided for @settingsImposters.
+  ///
+  /// In en, this message translates to:
+  /// **'Imposters'**
+  String get settingsImposters;
+
+  /// No description provided for @settingsImpostersHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Number of imposters among the players'**
+  String get settingsImpostersHint;
+
+  /// No description provided for @settingsDiscussionTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Discussion time'**
+  String get settingsDiscussionTime;
+
+  /// No description provided for @settingsVotingTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Voting time'**
+  String get settingsVotingTime;
+
+  /// No description provided for @settingsAnonymousVoting.
+  ///
+  /// In en, this message translates to:
+  /// **'Anonymous voting'**
+  String get settingsAnonymousVoting;
+
+  /// No description provided for @settingsAnonymousVotingHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide who voted for whom'**
+  String get settingsAnonymousVotingHelp;
+
+  /// No description provided for @settingsImposterClue.
+  ///
+  /// In en, this message translates to:
+  /// **'Imposter clue'**
+  String get settingsImposterClue;
+
+  /// No description provided for @settingsImposterClueHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Crew members get a hint about the imposter'**
+  String get settingsImposterClueHelp;
+
+  /// No description provided for @settingsOn.
+  ///
+  /// In en, this message translates to:
+  /// **'ON'**
+  String get settingsOn;
+
+  /// No description provided for @settingsOff.
+  ///
+  /// In en, this message translates to:
+  /// **'OFF'**
+  String get settingsOff;
+
+  /// No description provided for @settingsSave.
+  ///
+  /// In en, this message translates to:
+  /// **'SAVE SETTINGS'**
+  String get settingsSave;
+
+  /// No description provided for @settingsClose.
+  ///
+  /// In en, this message translates to:
+  /// **'CLOSE'**
+  String get settingsClose;
+
+  /// No description provided for @settingsSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings saved'**
+  String get settingsSaved;
+
+  /// Shown when saving game settings fails.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save settings: {error}'**
+  String settingsSaveFailed(String error);
+
+  /// No description provided for @settingsHostControls.
+  ///
+  /// In en, this message translates to:
+  /// **'Host controls the settings'**
+  String get settingsHostControls;
+
+  /// No description provided for @settingsHostControlsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Only the host can change these before the game starts'**
+  String get settingsHostControlsHelp;
+
+  /// No description provided for @settingsPlayersAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Players added'**
+  String get settingsPlayersAdded;
+
+  /// A duration in seconds, e.g. 30s.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}s'**
+  String settingsSeconds(int count);
+
+  /// A duration in whole minutes, e.g. 1m.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}m'**
+  String settingsMinutes(int count);
+
+  /// A duration with minutes and seconds, e.g. 1m 30s.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes}m {seconds}s'**
+  String settingsMinSec(int minutes, int seconds);
+
+  /// The supported player count range.
+  ///
+  /// In en, this message translates to:
+  /// **'{min}–{max} players'**
+  String settingsPlayersRange(int min, int max);
+
+  /// No description provided for @settingsImpostersUnsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'2-imposter games are not supported yet'**
+  String get settingsImpostersUnsupported;
+
+  /// Shown when the player count cannot host two imposters.
+  ///
+  /// In en, this message translates to:
+  /// **'Need at least {count} players for 2 imposters'**
+  String settingsImpostersNeedPlayers(int count);
+
+  /// No description provided for @settingsInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid settings. Check the options and try again.'**
+  String get settingsInvalid;
+
+  /// Start button label while the room has not filled to the configured player count.
+  ///
+  /// In en, this message translates to:
+  /// **'WAITING FOR {current}/{expected} PLAYERS'**
+  String onlineWaitingForPlayers(int current, int expected);
 
   /// No description provided for @language.
   ///

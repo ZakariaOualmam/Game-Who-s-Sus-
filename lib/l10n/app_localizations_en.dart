@@ -373,7 +373,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onlineNotLobby => 'Room is no longer in lobby state';
 
   @override
-  String get onlineNeedPlayers => 'Need at least 3 players to start';
+  String get onlineNeedPlayers => 'Need at least 4 players to start';
 
   @override
   String get roomCodeLabel => 'ROOM CODE';
@@ -431,6 +431,108 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onlineError => 'Something went wrong. Please try again.';
+
+  @override
+  String get settingsTitle => 'GAME SETTINGS';
+
+  @override
+  String get settingsPlayers => 'Players';
+
+  @override
+  String get settingsPlayersHint => 'Number of players in the game';
+
+  @override
+  String get settingsImposters => 'Imposters';
+
+  @override
+  String get settingsImpostersHint => 'Number of imposters among the players';
+
+  @override
+  String get settingsDiscussionTime => 'Discussion time';
+
+  @override
+  String get settingsVotingTime => 'Voting time';
+
+  @override
+  String get settingsAnonymousVoting => 'Anonymous voting';
+
+  @override
+  String get settingsAnonymousVotingHelp => 'Hide who voted for whom';
+
+  @override
+  String get settingsImposterClue => 'Imposter clue';
+
+  @override
+  String get settingsImposterClueHelp =>
+      'Crew members get a hint about the imposter';
+
+  @override
+  String get settingsOn => 'ON';
+
+  @override
+  String get settingsOff => 'OFF';
+
+  @override
+  String get settingsSave => 'SAVE SETTINGS';
+
+  @override
+  String get settingsClose => 'CLOSE';
+
+  @override
+  String get settingsSaved => 'Settings saved';
+
+  @override
+  String settingsSaveFailed(String error) {
+    return 'Failed to save settings: $error';
+  }
+
+  @override
+  String get settingsHostControls => 'Host controls the settings';
+
+  @override
+  String get settingsHostControlsHelp =>
+      'Only the host can change these before the game starts';
+
+  @override
+  String get settingsPlayersAdded => 'Players added';
+
+  @override
+  String settingsSeconds(int count) {
+    return '${count}s';
+  }
+
+  @override
+  String settingsMinutes(int count) {
+    return '${count}m';
+  }
+
+  @override
+  String settingsMinSec(int minutes, int seconds) {
+    return '${minutes}m ${seconds}s';
+  }
+
+  @override
+  String settingsPlayersRange(int min, int max) {
+    return '$min–$max players';
+  }
+
+  @override
+  String get settingsImpostersUnsupported =>
+      '2-imposter games are not supported yet';
+
+  @override
+  String settingsImpostersNeedPlayers(int count) {
+    return 'Need at least $count players for 2 imposters';
+  }
+
+  @override
+  String get settingsInvalid =>
+      'Invalid settings. Check the options and try again.';
+
+  @override
+  String onlineWaitingForPlayers(int current, int expected) {
+    return 'WAITING FOR $current/$expected PLAYERS';
+  }
 
   @override
   String get language => 'Language';

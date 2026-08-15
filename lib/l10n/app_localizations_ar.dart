@@ -370,7 +370,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get onlineNotLobby => 'الغرفة لم تعد في وضع الاستقبال';
 
   @override
-  String get onlineNeedPlayers => 'يلزم 3 لاعبين على الأقل للبدء';
+  String get onlineNeedPlayers => 'يلزم 4 لاعبين على الأقل للبدء';
 
   @override
   String get roomCodeLabel => 'رمز الغرفة';
@@ -428,6 +428,106 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get onlineError => 'حدث خطأ ما. حاول مرة أخرى.';
+
+  @override
+  String get settingsTitle => 'إعدادات اللعبة';
+
+  @override
+  String get settingsPlayers => 'اللاعبون';
+
+  @override
+  String get settingsPlayersHint => 'عدد اللاعبين في اللعبة';
+
+  @override
+  String get settingsImposters => 'المحتالون';
+
+  @override
+  String get settingsImpostersHint => 'عدد المحتالين بين اللاعبين';
+
+  @override
+  String get settingsDiscussionTime => 'وقت النقاش';
+
+  @override
+  String get settingsVotingTime => 'وقت التصويت';
+
+  @override
+  String get settingsAnonymousVoting => 'تصويت سري';
+
+  @override
+  String get settingsAnonymousVotingHelp => 'إخفاء من صوّت لمن';
+
+  @override
+  String get settingsImposterClue => 'تلميح عن المحتال';
+
+  @override
+  String get settingsImposterClueHelp => 'يحصل الفريق على تلميح عن المحتال';
+
+  @override
+  String get settingsOn => 'مفعّل';
+
+  @override
+  String get settingsOff => 'معطّل';
+
+  @override
+  String get settingsSave => 'حفظ الإعدادات';
+
+  @override
+  String get settingsClose => 'إغلاق';
+
+  @override
+  String get settingsSaved => 'تم حفظ الإعدادات';
+
+  @override
+  String settingsSaveFailed(String error) {
+    return 'تعذّر حفظ الإعدادات: $error';
+  }
+
+  @override
+  String get settingsHostControls => 'المضيف يتحكم في الإعدادات';
+
+  @override
+  String get settingsHostControlsHelp =>
+      'يمكن للمضيف فقط تغييرها قبل بدء اللعبة';
+
+  @override
+  String get settingsPlayersAdded => 'اللاعبون المضافون';
+
+  @override
+  String settingsSeconds(int count) {
+    return '$count ث';
+  }
+
+  @override
+  String settingsMinutes(int count) {
+    return '$count د';
+  }
+
+  @override
+  String settingsMinSec(int minutes, int seconds) {
+    return '$minutes د $seconds ث';
+  }
+
+  @override
+  String settingsPlayersRange(int min, int max) {
+    return '$min–$max لاعبين';
+  }
+
+  @override
+  String get settingsImpostersUnsupported => 'ألعاب المحتالين 2 غير مدعومة بعد';
+
+  @override
+  String settingsImpostersNeedPlayers(int count) {
+    return 'يلزم $count لاعبين على الأقل لمحتالين';
+  }
+
+  @override
+  String get settingsInvalid =>
+      'إعدادات غير صالحة. تحقق من الخيارات وحاول مجددًا.';
+
+  @override
+  String onlineWaitingForPlayers(int current, int expected) {
+    return 'في انتظار $current/$expected لاعبين';
+  }
 
   @override
   String get language => 'اللغة';

@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show HapticFeedback;
 
+import '../../core/haptics.dart';
 import '../../core/router.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
@@ -32,13 +32,13 @@ class _RoleRevealScreenState extends State<RoleRevealScreen> {
   GameEngine get engine => widget.engine;
 
   void _onReady() {
-    HapticFeedback.lightImpact();
+    Haptics.lightImpact();
     setState(() => engine.nextRevealStep());
   }
 
   void _onDone() {
     final isLast = engine.revealStep == engine.players.length * 2 - 1;
-    HapticFeedback.lightImpact();
+    Haptics.lightImpact();
     setState(() => engine.nextRevealStep());
 
     if (engine.isRevealComplete) {

@@ -378,7 +378,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get onlineNotLobby => 'La partie n\'est plus en état de salon';
 
   @override
-  String get onlineNeedPlayers => 'Il faut au moins 3 joueurs pour commencer';
+  String get onlineNeedPlayers => 'Il faut au moins 4 joueurs pour commencer';
 
   @override
   String get roomCodeLabel => 'CODE DE LA PARTIE';
@@ -438,6 +438,108 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get onlineError => 'Une erreur s\'est produite. Veuillez réessayer.';
+
+  @override
+  String get settingsTitle => 'PARAMÈTRES DU JEU';
+
+  @override
+  String get settingsPlayers => 'Joueurs';
+
+  @override
+  String get settingsPlayersHint => 'Nombre de joueurs dans la partie';
+
+  @override
+  String get settingsImposters => 'Imposteurs';
+
+  @override
+  String get settingsImpostersHint => 'Nombre d\'imposteurs parmi les joueurs';
+
+  @override
+  String get settingsDiscussionTime => 'Temps de discussion';
+
+  @override
+  String get settingsVotingTime => 'Temps de vote';
+
+  @override
+  String get settingsAnonymousVoting => 'Vote anonyme';
+
+  @override
+  String get settingsAnonymousVotingHelp => 'Masquer qui a voté pour qui';
+
+  @override
+  String get settingsImposterClue => 'Indice sur l\'imposteur';
+
+  @override
+  String get settingsImposterClueHelp =>
+      'L\'équipage reçoit un indice sur l\'imposteur';
+
+  @override
+  String get settingsOn => 'ACTIVÉ';
+
+  @override
+  String get settingsOff => 'DÉSACTIVÉ';
+
+  @override
+  String get settingsSave => 'ENREGISTRER';
+
+  @override
+  String get settingsClose => 'FERMER';
+
+  @override
+  String get settingsSaved => 'Paramètres enregistrés';
+
+  @override
+  String settingsSaveFailed(String error) {
+    return 'Échec de l\'enregistrement des paramètres : $error';
+  }
+
+  @override
+  String get settingsHostControls => 'L\'hôte contrôle les paramètres';
+
+  @override
+  String get settingsHostControlsHelp =>
+      'Seul l\'hôte peut les modifier avant le début de la partie';
+
+  @override
+  String get settingsPlayersAdded => 'Joueurs ajoutés';
+
+  @override
+  String settingsSeconds(int count) {
+    return '$count s';
+  }
+
+  @override
+  String settingsMinutes(int count) {
+    return '$count min';
+  }
+
+  @override
+  String settingsMinSec(int minutes, int seconds) {
+    return '$minutes min $seconds s';
+  }
+
+  @override
+  String settingsPlayersRange(int min, int max) {
+    return '$min–$max joueurs';
+  }
+
+  @override
+  String get settingsImpostersUnsupported =>
+      'Les parties à 2 imposteurs ne sont pas encore prises en charge';
+
+  @override
+  String settingsImpostersNeedPlayers(int count) {
+    return 'Il faut au moins $count joueurs pour 2 imposteurs';
+  }
+
+  @override
+  String get settingsInvalid =>
+      'Paramètres invalides. Vérifiez les options et réessayez.';
+
+  @override
+  String onlineWaitingForPlayers(int current, int expected) {
+    return 'EN ATTENTE DE $current/$expected JOUEURS';
+  }
 
   @override
   String get language => 'Langue';

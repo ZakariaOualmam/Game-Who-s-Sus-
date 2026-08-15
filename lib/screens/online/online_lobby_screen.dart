@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../core/game_time_format.dart';
 import '../../core/router.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 import '../../l10n/app_localizations.dart';
+import '../../models/game_settings.dart';
 import '../../models/room.dart';
 import '../../models/room_player.dart';
 import '../../services/online_game_service.dart';
@@ -13,6 +15,7 @@ import '../../widgets/game_button.dart';
 import '../../widgets/game_scaffold.dart';
 import '../../widgets/player_card.dart';
 import '../../models/player.dart' as game_models;
+import '../settings/game_settings_screen.dart';
 import 'online_game_screen.dart';
 
 /// Online multiplayer lobby showing players and room code.
@@ -33,14 +36,23 @@ class OnlineLobbyScreen extends StatefulWidget {
 
 class _OnlineLobbyScreenState extends State<OnlineLobbyScreen> {
   List<RoomPlayer> _players = [];
+  late GameSettings _settings = widget.room.settings;
   bool _loading = true;
   RoomSubscription? _subscription;
   String _roomStatus = 'lobby';
+  bool _initialized = false;
 
   @override
   void initState() {
     super.initState();
     _roomStatus = widget.room.status;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_initialized) return;
+    _initialized = true;
     _loadPlayers();
     _subscribeToRoomUpdates();
   }
@@ -52,9 +64,9 @@ class _OnlineLobbyScreenState extends State<OnlineLobbyScreen> {
   }
 
   Future<void> _loadPlayers() async {
-    final l10n = AppLocalizations.of(context);
     try {
-      final players = await RoomService.instance.getPlayersInRoom(widget.room.id);
+      final players =
+          await RoomService.instance.getPlayersInRoom(widget.room.id);
       if (mounted) {
         setState(() {
           _players = players;
@@ -65,13 +77,12 @@ class _OnlineLobbyScreenState extends State<OnlineLobbyScreen> {
       debugPrint('Failed to load players: $error');
       if (mounted) {
         setState(() => _loading = false);
-        _showError(l10n.onlineFailedLoadPlayers);
+        _showError(AppLocalizations.of(context).onlineFailedLoadPlayers);
       }
     }
   }
 
   void _subscribeToRoomUpdates() {
-    final l10n = AppLocalizations.of(context);
     _subscription = RoomService.instance.subscribeToRoom(
       roomId: widget.room.id,
       onPlayerJoined: (player) {
@@ -82,10 +93,10 @@ class _OnlineLobbyScreenState extends State<OnlineLobbyScreen> {
       onPlayerLeft: (playerId) {
         if (mounted) {
           setState(() => _players.removeWhere((p) => p.playerId == playerId));
-          
+
           // If current player was removed (kicked or connection lost)
           if (playerId == widget.currentPlayer.playerId) {
-            _showError(l10n.onlineDisconnected);
+            _showError(AppLocalizations.of(context).onlineDisconnected);
             Navigator.of(context).pop();
           }
         }
@@ -103,9 +114,13 @@ class _OnlineLobbyScreenState extends State<OnlineLobbyScreen> {
           );
         }
       },
+      onSettingsChanged: (settings) {
+        if (!mounted) return;
+        setState(() => _settings = settings);
+      },
       onRoomClosed: () {
         if (!mounted) return;
-        _showError(l10n.onlineRoomClosed);
+        _showError(AppLocalizations.of(context).onlineRoomClosed);
         Navigator.of(context).pop();
       },
     );
@@ -147,8 +162,23 @@ class _OnlineLobbyScreenState extends State<OnlineLobbyScreen> {
       return;
     }
 
-    if (_players.length < 3) {
+    if (_players.length < GameSettings.minPlayers) {
       _showError(l10n.onlineNeedPlayers);
+      return;
+    }
+
+    final settings = _settings.forPlayerCount(_players.length);
+    final issue = settings.validationIssue(actualPlayerCount: _players.length);
+    if (issue == GameSettingsIssue.unsupportedImposterCount) {
+      _showError(l10n.settingsImpostersUnsupported);
+      return;
+    }
+    if (issue != null) {
+      _showError(l10n.settingsInvalid);
+      return;
+    }
+    if (_players.length != settings.playerCount) {
+      _showError(l10n.onlineWaitingForPlayers(_players.length, settings.playerCount));
       return;
     }
 
@@ -161,6 +191,15 @@ class _OnlineLobbyScreenState extends State<OnlineLobbyScreen> {
       if (!mounted) return;
       _showError(l10n.onlineStartFailed(error.toString()));
     }
+  }
+
+  void _openSettings() {
+    Navigator.of(context).push(
+      appRoute(GameSettingsScreen.online(
+        room: widget.room,
+        isHost: widget.currentPlayer.isHost,
+      )),
+    );
   }
 
   @override
@@ -218,7 +257,8 @@ class _OnlineLobbyScreenState extends State<OnlineLobbyScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Icon(Icons.copy, color: Colors.white70, size: 16),
+                              const Icon(Icons.copy,
+                                  color: Colors.white70, size: 16),
                               const SizedBox(width: 6),
                               Text(
                                 l10n.onlineTapToCopy,
@@ -227,6 +267,66 @@ class _OnlineLobbyScreenState extends State<OnlineLobbyScreen> {
                                 ),
                               ),
                             ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  // Settings summary
+                  GestureDetector(
+                    onTap: _openSettings,
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: AppColors.surface,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 44,
+                            height: 44,
+                            decoration: const BoxDecoration(
+                              color: AppColors.surfaceHigh,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.tune,
+                              color: AppColors.secondary,
+                              size: 22,
+                            ),
+                          ),
+                          const SizedBox(width: 14),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  l10n.settingsTitle,
+                                  style: AppTypography.title(context),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  '${_settings.playerCount} ${l10n.settingsPlayers} · '
+                                  '${_settings.imposterCount} ${l10n.settingsImposters}',
+                                  style: AppTypography.caption(context),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  '${formatGameDuration(l10n, _settings.discussionTime)} '
+                                  '${l10n.settingsDiscussionTime} · '
+                                  '${formatGameDuration(l10n, _settings.votingTime)} '
+                                  '${l10n.settingsVotingTime}',
+                                  style: AppTypography.caption(context),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          const Icon(
+                            Icons.chevron_right,
+                            color: AppColors.textMuted,
                           ),
                         ],
                       ),
@@ -251,7 +351,7 @@ class _OnlineLobbyScreenState extends State<OnlineLobbyScreen> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
-                          '${_players.length}/${widget.room.maxPlayers}',
+                          '${_players.length}/${_settings.playerCount}',
                           style: AppTypography.caption(context).copyWith(
                             color: AppColors.textPrimary,
                           ),
@@ -261,53 +361,62 @@ class _OnlineLobbyScreenState extends State<OnlineLobbyScreen> {
                   ),
                   const SizedBox(height: 14),
                   // Players grid
-                  Expanded(
-                    child: GridView.count(
-                      crossAxisCount: 2,
-                      shrinkWrap: true,
-                      mainAxisSpacing: 10,
-                      crossAxisSpacing: 10,
-                      childAspectRatio: 2.2,
-                      children: [
-                        for (final roomPlayer in _players)
-                          PlayerCard(
-                            player: game_models.Player(
-                              id: roomPlayer.playerId,
-                              name: roomPlayer.playerName,
-                            ),
-                            trailing: roomPlayer.isHost
-                                ? Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                      vertical: 4,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.primary,
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Text(
-                                      l10n.hostLabel,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w800,
-                                      ),
-                                    ),
-                                  )
-                                : null,
+                  GridView.count(
+                    crossAxisCount: 2,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 10,
+                    childAspectRatio: 2.2,
+                    children: [
+                      for (final roomPlayer in _players)
+                        PlayerCard(
+                          player: game_models.Player(
+                            id: roomPlayer.playerId,
+                            name: roomPlayer.playerName,
                           ),
-                      ],
-                    ),
+                          trailing: roomPlayer.isHost
+                              ? Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.primary,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Text(
+                                    l10n.hostLabel,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                )
+                              : null,
+                        ),
+                    ],
                   ),
                 ],
               ),
         bottomBar: isHost
             ? GameButton(
-                label: l10n.onlineStartGame,
-                onPressed: _players.length >= 3 ? _startGame : null,
+                label: _players.length == _settings.playerCount
+                    ? l10n.onlineStartGame
+                    : l10n.onlineWaitingForPlayers(
+                        _players.length,
+                        _settings.playerCount,
+                      ),
+                onPressed: _players.length == _settings.playerCount &&
+                        _settings.imposterCount <=
+                            GameSettings.supportedImposters
+                    ? _startGame
+                    : null,
               )
             : Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                 child: Text(
                   l10n.onlineWaitingHost,
                   textAlign: TextAlign.center,

@@ -12,6 +12,7 @@ import '../../services/word_repository.dart';
 import '../../widgets/game_button.dart';
 import '../../widgets/game_scaffold.dart';
 import '../../widgets/player_card.dart';
+import '../settings/game_settings_screen.dart';
 import 'category_screen.dart';
 
 class OfflineSetupScreen extends StatefulWidget {
@@ -24,6 +25,7 @@ class OfflineSetupScreen extends StatefulWidget {
 class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
   final TextEditingController _nameController = TextEditingController();
   final List<String> _names = [];
+  GameSettings _settings = const GameSettings();
 
   void _addName() {
     final l10n = AppLocalizations.of(context);
@@ -49,6 +51,18 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
       ..showSnackBar(SnackBar(content: Text(message)));
   }
 
+  Future<void> _openSettings() async {
+    final result = await Navigator.of(context).push<GameSettings>(
+      appRoute(GameSettingsScreen.offline(
+        initialSettings: _settings,
+        playerCount: _names.length,
+      )),
+    );
+    if (result != null && mounted) {
+      setState(() => _settings = result);
+    }
+  }
+
   void _continue() {
     final l10n = AppLocalizations.of(context);
     if (_names.length < GameSettings.minPlayers) {
@@ -56,6 +70,16 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
         GameSettings.minPlayers,
         GameSettings.maxPlayers,
       ));
+      return;
+    }
+    final settings = _settings.forPlayerCount(_names.length);
+    final issue = settings.validationIssue(actualPlayerCount: _names.length);
+    if (issue != null) {
+      _showMessage(
+        issue == GameSettingsIssue.unsupportedImposterCount
+            ? l10n.settingsImpostersUnsupported
+            : l10n.settingsInvalid,
+      );
       return;
     }
     final stamp = DateTime.now().microsecondsSinceEpoch;
@@ -69,6 +93,7 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
     final engine = GameEngine(
       players: players,
       wordSource: WordRepository.instanceFor(locale),
+      settings: settings,
     );
     Navigator.of(context).push(appRoute(CategoryScreen(engine: engine)));
   }
@@ -128,6 +153,15 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
             height: 52,
             fontSize: 16,
             onPressed: _addName,
+          ),
+          const SizedBox(height: 10),
+          GameButton(
+            label: l10n.settingsTitle,
+            icon: Icons.tune,
+            colors: const [AppColors.surfaceHigh, AppColors.surfaceHigh],
+            height: 52,
+            fontSize: 16,
+            onPressed: _openSettings,
           ),
           const SizedBox(height: 18),
           if (_names.isEmpty)

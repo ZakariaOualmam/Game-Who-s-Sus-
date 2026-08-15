@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show HapticFeedback;
 
+import '../../core/haptics.dart';
 import '../../core/router.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
@@ -26,7 +26,7 @@ class _WinnerScreenState extends State<WinnerScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) HapticFeedback.mediumImpact();
+      if (mounted) Haptics.mediumImpact();
     });
   }
 

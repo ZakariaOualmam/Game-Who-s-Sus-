@@ -122,8 +122,22 @@ class OnlineGameService {
     required String languageCode,
   }) async {
     final players = await _roomService.getPlayersInRoom(room.id);
-    if (players.length < 3) {
-      throw Exception('Need at least 3 players to start');
+    if (players.length < GameSettings.minPlayers) {
+      throw Exception(
+        'Need at least ${GameSettings.minPlayers} players to start',
+      );
+    }
+
+    final settings = room.settings;
+    final issue = settings.validationIssue(actualPlayerCount: players.length);
+    if (issue != null) {
+      throw Exception('Invalid game settings: $issue');
+    }
+    if (players.length != settings.playerCount) {
+      throw Exception(
+        'Need ${settings.playerCount} players to start '
+        '(${players.length} joined)',
+      );
     }
 
     final category = categories.firstWhere(
@@ -139,7 +153,7 @@ class OnlineGameService {
     final engine = GameEngine(
       players: enginePlayers,
       wordSource: wordSource,
-      settings: const GameSettings(imposterCount: 1),
+      settings: settings,
     );
 
     await engine.startRound(category);
@@ -414,7 +428,7 @@ class OnlineGameService {
     final engine = GameEngine(
       players: enginePlayers,
       wordSource: _wordSourceProvider(Locale(round.languageCode)),
-      settings: const GameSettings(imposterCount: 1),
+      settings: room.settings,
     );
 
     final category = categories.firstWhere((c) => c.id == round.categoryId);

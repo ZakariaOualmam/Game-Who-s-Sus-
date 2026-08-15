@@ -2,6 +2,7 @@ import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:who_sus/data/categories.dart';
+import 'package:who_sus/models/game_settings.dart';
 import 'package:who_sus/services/firebase_auth_service.dart';
 import 'package:who_sus/services/online_game_service.dart';
 import 'package:who_sus/services/room_service.dart';
@@ -145,7 +146,7 @@ void main() {
       expect(myState, isNotNull);
     });
 
-    test('requires at least 3 players', () async {
+    test('requires at least 4 players', () async {
       final created = await alice.roomService.createRoom(playerName: 'Alice');
       await bob.roomService.joinRoom(roomCode: created.room.code, playerName: 'Bob');
 
@@ -155,7 +156,55 @@ void main() {
           categoryId: 'animals',
           languageCode: 'en',
         ),
-        throwsA(predicate((Object e) => e.toString().contains('at least 3'))),
+        throwsA(predicate((Object e) => e.toString().contains('at least 4'))),
+      );
+    });
+
+    test('waits until the room fills to the configured player count', () async {
+      final created = await alice.roomService.createRoom(playerName: 'Alice');
+      await bob.roomService.joinRoom(roomCode: created.room.code, playerName: 'Bob');
+      await cara.roomService.joinRoom(roomCode: created.room.code, playerName: 'Cara');
+      await dave.roomService.joinRoom(roomCode: created.room.code, playerName: 'Dave');
+
+      await alice.roomService.updateGameSettings(
+        roomId: created.room.id,
+        settings: const GameSettings(playerCount: 6),
+      );
+
+      // The passed room reflects the current Firestore settings, so the
+      // service refuses to start a 4-player game for a room that expects 6.
+      final fresh = await alice.gameService.getRoomById(created.room.id);
+      await expectLater(
+        alice.gameService.startRoundFromCategory(
+          room: fresh,
+          categoryId: 'animals',
+          languageCode: 'en',
+        ),
+        throwsA(predicate((Object e) => e.toString().contains('Need 6'))),
+      );
+    });
+
+    test('blocks unsupported imposter counts', () async {
+      final created = await alice.roomService.createRoom(playerName: 'Alice');
+      await bob.roomService.joinRoom(roomCode: created.room.code, playerName: 'Bob');
+      await cara.roomService.joinRoom(roomCode: created.room.code, playerName: 'Cara');
+      await dave.roomService.joinRoom(roomCode: created.room.code, playerName: 'Dave');
+
+      await alice.roomService.updateGameSettings(
+        roomId: created.room.id,
+        settings: const GameSettings(playerCount: 4, imposterCount: 2),
+      );
+
+      final fresh = await alice.gameService.getRoomById(created.room.id);
+      await expectLater(
+        alice.gameService.startRoundFromCategory(
+          room: fresh,
+          categoryId: 'animals',
+          languageCode: 'en',
+        ),
+        throwsA(predicate(
+          (Object e) => e.toString().contains('Invalid game settings'),
+        )),
       );
     });
   });
@@ -193,13 +242,17 @@ void main() {
         'voting',
       );
 
-      // Voting: crew members accuse the imposter, the imposter deflects.
+      // Voting: crew members accuse the imposter, the imposter deflects to
+      // a crew member (never themselves, whoever got the role).
       for (final player in [alice, bob, cara, dave]) {
         if (player.uid == imposterId) {
+          final target = [alice, bob, cara, dave]
+              .firstWhere((p) => p.uid != imposterId)
+              .uid;
           await player.gameService.castVote(
             roomId: roomId,
             roundId: roundId,
-            targetPlayerId: 'alice',
+            targetPlayerId: target,
           );
         } else {
           await player.gameService.castVote(

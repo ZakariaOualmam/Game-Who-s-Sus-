@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show HapticFeedback;
 
+import '../../core/haptics.dart';
 import '../../core/router.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
@@ -31,7 +31,7 @@ class _VotingScreenState extends State<VotingScreen> {
   Player get _voter => engine.players[_voterIndex];
 
   void _select(String id) {
-    HapticFeedback.selectionClick();
+    Haptics.selectionClick();
     setState(() => _selectedId = id);
   }
 
@@ -40,7 +40,7 @@ class _VotingScreenState extends State<VotingScreen> {
   void _confirm() {
     final targetId = _selectedId!;
     engine.castVote(voterId: _voter.id, targetId: targetId);
-    HapticFeedback.lightImpact();
+    Haptics.lightImpact();
 
     if (engine.allPlayersVoted) {
       Navigator.of(context).pushReplacement(

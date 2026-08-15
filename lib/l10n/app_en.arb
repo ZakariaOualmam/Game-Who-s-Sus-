@@ -175,7 +175,7 @@
   "onlineRoomClosed": "Room was closed by host",
   "onlineCodeCopied": "Room code copied to clipboard!",
   "onlineNotLobby": "Room is no longer in lobby state",
-  "onlineNeedPlayers": "Need at least 3 players to start",
+  "onlineNeedPlayers": "Need at least 4 players to start",
   "roomCodeLabel": "ROOM CODE",
   "onlineTapToCopy": "Tap to copy",
   "playersLabel": "Players",
@@ -195,6 +195,80 @@
   "onlineFinalizeRound": "FINALIZE ROUND",
   "onlineNextRound": "NEXT ROUND",
   "onlineError": "Something went wrong. Please try again.",
+
+  "settingsTitle": "GAME SETTINGS",
+  "settingsPlayers": "Players",
+  "settingsPlayersHint": "Number of players in the game",
+  "settingsImposters": "Imposters",
+  "settingsImpostersHint": "Number of imposters among the players",
+  "settingsDiscussionTime": "Discussion time",
+  "settingsVotingTime": "Voting time",
+  "settingsAnonymousVoting": "Anonymous voting",
+  "settingsAnonymousVotingHelp": "Hide who voted for whom",
+  "settingsImposterClue": "Imposter clue",
+  "settingsImposterClueHelp": "Crew members get a hint about the imposter",
+  "settingsOn": "ON",
+  "settingsOff": "OFF",
+  "settingsSave": "SAVE SETTINGS",
+  "settingsClose": "CLOSE",
+  "settingsSaved": "Settings saved",
+  "settingsSaveFailed": "Failed to save settings: {error}",
+  "@settingsSaveFailed": {
+    "description": "Shown when saving game settings fails.",
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "settingsHostControls": "Host controls the settings",
+  "settingsHostControlsHelp": "Only the host can change these before the game starts",
+  "settingsPlayersAdded": "Players added",
+  "settingsSeconds": "{count}s",
+  "@settingsSeconds": {
+    "description": "A duration in seconds, e.g. 30s.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "settingsMinutes": "{count}m",
+  "@settingsMinutes": {
+    "description": "A duration in whole minutes, e.g. 1m.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "settingsMinSec": "{minutes}m {seconds}s",
+  "@settingsMinSec": {
+    "description": "A duration with minutes and seconds, e.g. 1m 30s.",
+    "placeholders": {
+      "minutes": { "type": "int" },
+      "seconds": { "type": "int" }
+    }
+  },
+  "settingsPlayersRange": "{min}–{max} players",
+  "@settingsPlayersRange": {
+    "description": "The supported player count range.",
+    "placeholders": {
+      "min": { "type": "int" },
+      "max": { "type": "int" }
+    }
+  },
+  "settingsImpostersUnsupported": "2-imposter games are not supported yet",
+  "settingsImpostersNeedPlayers": "Need at least {count} players for 2 imposters",
+  "@settingsImpostersNeedPlayers": {
+    "description": "Shown when the player count cannot host two imposters.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "settingsInvalid": "Invalid settings. Check the options and try again.",
+  "onlineWaitingForPlayers": "WAITING FOR {current}/{expected} PLAYERS",
+  "@onlineWaitingForPlayers": {
+    "description": "Start button label while the room has not filled to the configured player count.",
+    "placeholders": {
+      "current": { "type": "int" },
+      "expected": { "type": "int" }
+    }
+  },
 
   "language": "Language"
 }

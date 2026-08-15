@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show HapticFeedback;
 
+import '../../core/haptics.dart';
 import '../../core/router.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
@@ -31,7 +31,7 @@ class _ImposterGuessScreenState extends State<ImposterGuessScreen> {
   List<String>? _options;
 
   void _onReady() {
-    HapticFeedback.lightImpact();
+    Haptics.lightImpact();
     setState(() => _ready = true);
     _loadOptions();
   }
@@ -53,7 +53,7 @@ class _ImposterGuessScreenState extends State<ImposterGuessScreen> {
     final engine = widget.engine;
     engine.submitImposterGuess(guess);
     engine.finishRound();
-    HapticFeedback.mediumImpact();
+    Haptics.mediumImpact();
     Navigator.of(context).pushReplacement(
       appRoute(WinnerScreen(engine: engine)),
     );

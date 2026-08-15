@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:who_sus/models/game_settings.dart';
 import 'package:who_sus/services/firebase_auth_service.dart';
 import 'package:who_sus/services/room_service.dart';
 
@@ -96,6 +99,11 @@ void main() {
 
       final roomDoc = await f.collection('rooms').doc(result.room.id).get();
       expect(roomDoc.data()!['player_count'], 1);
+
+      final settings =
+          roomDoc.data()!['settings'] as Map<String, dynamic>;
+      expect(settings['player_count'], GameSettings.minPlayers);
+      expect(settings['imposter_count'], 1);
 
       final players =
           await f.collection('rooms').doc(result.room.id).collection('players').get();
@@ -377,6 +385,119 @@ void main() {
       await alice.updateRoomStatus(roomId: created.room.id, newStatus: 'playing');
       final roomDoc = await f.collection('rooms').doc(created.room.id).get();
       expect(roomDoc.data()!['status'], 'playing');
+    });
+  });
+
+  group('RoomService.updateGameSettings', () {
+    test('persists settings and keeps max_players in sync', () async {
+      final f = SettlingFirestore();
+      final alice =
+          RoomService(firestore: f, authService: _authService(_authFor('alice')));
+      final created = await alice.createRoom(playerName: 'Alice');
+
+      await alice.updateGameSettings(
+        roomId: created.room.id,
+        settings: const GameSettings(
+          playerCount: 6,
+          imposterCount: 2,
+          imposterClue: true,
+        ),
+      );
+
+      final roomDoc = await f.collection('rooms').doc(created.room.id).get();
+      final settings = roomDoc.data()!['settings'] as Map<String, dynamic>;
+      expect(settings['player_count'], 6);
+      expect(settings['imposter_count'], 2);
+      expect(settings['imposter_clue'], isTrue);
+      expect(roomDoc.data()!['max_players'], 6);
+    });
+
+    test('only the host can update game settings', () async {
+      final f = SettlingFirestore();
+      final alice =
+          RoomService(firestore: f, authService: _authService(_authFor('alice')));
+      final bob =
+          RoomService(firestore: f, authService: _authService(_authFor('bob')));
+      final created = await alice.createRoom(playerName: 'Alice');
+      await bob.joinRoom(roomCode: created.room.code, playerName: 'Bob');
+
+      await expectLater(
+        bob.updateGameSettings(
+          roomId: created.room.id,
+          settings: const GameSettings(playerCount: 6),
+        ),
+        _throwsWithMessage('Only the host can change game settings'),
+      );
+    });
+
+    test('rejects updates for an unknown room', () async {
+      final f = SettlingFirestore();
+      final alice =
+          RoomService(firestore: f, authService: _authService(_authFor('alice')));
+
+      await expectLater(
+        alice.updateGameSettings(
+          roomId: 'missing',
+          settings: const GameSettings(),
+        ),
+        _throwsWithMessage('Room not found'),
+      );
+    });
+  });
+
+  group('RoomService.joinRoom capacity', () {
+    test('fills to the configured player count', () async {
+      final f = SettlingFirestore();
+      final alice =
+          RoomService(firestore: f, authService: _authService(_authFor('alice')));
+      final bob =
+          RoomService(firestore: f, authService: _authService(_authFor('bob')));
+      final cara =
+          RoomService(firestore: f, authService: _authService(_authFor('cara')));
+      final dave =
+          RoomService(firestore: f, authService: _authService(_authFor('dave')));
+      final eve =
+          RoomService(firestore: f, authService: _authService(_authFor('eve')));
+      final created = await alice.createRoom(playerName: 'Alice');
+
+      await bob.joinRoom(roomCode: created.room.code, playerName: 'Bob');
+      await cara.joinRoom(roomCode: created.room.code, playerName: 'Cara');
+      await dave.joinRoom(roomCode: created.room.code, playerName: 'Dave');
+
+      await expectLater(
+        eve.joinRoom(roomCode: created.room.code, playerName: 'Eve'),
+        _throwsWithMessage('Room is full'),
+      );
+    });
+  });
+
+  group('RoomService.subscribeToRoom settings', () {
+    test('reports settings changes in realtime', () async {
+      final f = SettlingFirestore();
+      final alice =
+          RoomService(firestore: f, authService: _authService(_authFor('alice')));
+      final created = await alice.createRoom(playerName: 'Alice');
+
+      final changed = Completer<GameSettings>();
+      final sub = alice.subscribeToRoom(
+        roomId: created.room.id,
+        onPlayerJoined: (_) {},
+        onPlayerLeft: (_) {},
+        onSettingsChanged: (settings) {
+          if (settings.playerCount == 6) changed.complete(settings);
+        },
+      );
+
+      await alice.updateGameSettings(
+        roomId: created.room.id,
+        settings: const GameSettings(playerCount: 6, imposterClue: true),
+      );
+
+      final settings = await changed.future.timeout(const Duration(seconds: 2));
+      expect(settings.playerCount, 6);
+      expect(settings.imposterClue, isTrue);
+
+      await sub.unsubscribe();
     });
   });
 }

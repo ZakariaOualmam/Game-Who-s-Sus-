@@ -126,7 +126,7 @@
   "onlineRoomClosed": "أغلق المضيف الغرفة",
   "onlineCodeCopied": "تم نسخ رمز الغرفة!",
   "onlineNotLobby": "الغرفة لم تعد في وضع الاستقبال",
-  "onlineNeedPlayers": "يلزم 3 لاعبين على الأقل للبدء",
+  "onlineNeedPlayers": "يلزم 4 لاعبين على الأقل للبدء",
   "roomCodeLabel": "رمز الغرفة",
   "onlineTapToCopy": "المس للنسخ",
   "playersLabel": "اللاعبون",
@@ -146,6 +146,80 @@
   "onlineFinalizeRound": "إنهاء الجولة",
   "onlineNextRound": "الجولة التالية",
   "onlineError": "حدث خطأ ما. حاول مرة أخرى.",
+
+  "settingsTitle": "إعدادات اللعبة",
+  "settingsPlayers": "اللاعبون",
+  "settingsPlayersHint": "عدد اللاعبين في اللعبة",
+  "settingsImposters": "المحتالون",
+  "settingsImpostersHint": "عدد المحتالين بين اللاعبين",
+  "settingsDiscussionTime": "وقت النقاش",
+  "settingsVotingTime": "وقت التصويت",
+  "settingsAnonymousVoting": "تصويت سري",
+  "settingsAnonymousVotingHelp": "إخفاء من صوّت لمن",
+  "settingsImposterClue": "تلميح عن المحتال",
+  "settingsImposterClueHelp": "يحصل الفريق على تلميح عن المحتال",
+  "settingsOn": "مفعّل",
+  "settingsOff": "معطّل",
+  "settingsSave": "حفظ الإعدادات",
+  "settingsClose": "إغلاق",
+  "settingsSaved": "تم حفظ الإعدادات",
+  "settingsSaveFailed": "تعذّر حفظ الإعدادات: {error}",
+  "@settingsSaveFailed": {
+    "description": "يظهر عند فشل حفظ إعدادات اللعبة.",
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "settingsHostControls": "المضيف يتحكم في الإعدادات",
+  "settingsHostControlsHelp": "يمكن للمضيف فقط تغييرها قبل بدء اللعبة",
+  "settingsPlayersAdded": "اللاعبون المضافون",
+  "settingsSeconds": "{count} ث",
+  "@settingsSeconds": {
+    "description": "مدة بالثواني، مثل 30 ث.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "settingsMinutes": "{count} د",
+  "@settingsMinutes": {
+    "description": "مدة بالدقائق الكاملة، مثل 1 د.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "settingsMinSec": "{minutes} د {seconds} ث",
+  "@settingsMinSec": {
+    "description": "مدة بالدقائق والثواني، مثل 1 د 30 ث.",
+    "placeholders": {
+      "minutes": { "type": "int" },
+      "seconds": { "type": "int" }
+    }
+  },
+  "settingsPlayersRange": "{min}–{max} لاعبين",
+  "@settingsPlayersRange": {
+    "description": "نطاق اللاعبين المدعوم.",
+    "placeholders": {
+      "min": { "type": "int" },
+      "max": { "type": "int" }
+    }
+  },
+  "settingsImpostersUnsupported": "ألعاب المحتالين 2 غير مدعومة بعد",
+  "settingsImpostersNeedPlayers": "يلزم {count} لاعبين على الأقل لمحتالين",
+  "@settingsImpostersNeedPlayers": {
+    "description": "يظهر عندما لا يتسع عدد اللاعبين لمحتالين.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "settingsInvalid": "إعدادات غير صالحة. تحقق من الخيارات وحاول مجددًا.",
+  "onlineWaitingForPlayers": "في انتظار {current}/{expected} لاعبين",
+  "@onlineWaitingForPlayers": {
+    "description": "تسمية زر البدء ما دام عدد اللاعبين دون العدد المحدد.",
+    "placeholders": {
+      "current": { "type": "int" },
+      "expected": { "type": "int" }
+    }
+  },
 
   "language": "اللغة"
 }

@@ -126,7 +126,7 @@
   "onlineRoomClosed": "La partie a été fermée par l'hôte",
   "onlineCodeCopied": "Code copié dans le presse-papiers !",
   "onlineNotLobby": "La partie n'est plus en état de salon",
-  "onlineNeedPlayers": "Il faut au moins 3 joueurs pour commencer",
+  "onlineNeedPlayers": "Il faut au moins 4 joueurs pour commencer",
   "roomCodeLabel": "CODE DE LA PARTIE",
   "onlineTapToCopy": "Touchez pour copier",
   "playersLabel": "Joueurs",
@@ -146,6 +146,80 @@
   "onlineFinalizeRound": "TERMINER LE MANCHE",
   "onlineNextRound": "MANCHE SUIVANTE",
   "onlineError": "Une erreur s'est produite. Veuillez réessayer.",
+
+  "settingsTitle": "PARAMÈTRES DU JEU",
+  "settingsPlayers": "Joueurs",
+  "settingsPlayersHint": "Nombre de joueurs dans la partie",
+  "settingsImposters": "Imposteurs",
+  "settingsImpostersHint": "Nombre d'imposteurs parmi les joueurs",
+  "settingsDiscussionTime": "Temps de discussion",
+  "settingsVotingTime": "Temps de vote",
+  "settingsAnonymousVoting": "Vote anonyme",
+  "settingsAnonymousVotingHelp": "Masquer qui a voté pour qui",
+  "settingsImposterClue": "Indice sur l'imposteur",
+  "settingsImposterClueHelp": "L'équipage reçoit un indice sur l'imposteur",
+  "settingsOn": "ACTIVÉ",
+  "settingsOff": "DÉSACTIVÉ",
+  "settingsSave": "ENREGISTRER",
+  "settingsClose": "FERMER",
+  "settingsSaved": "Paramètres enregistrés",
+  "settingsSaveFailed": "Échec de l'enregistrement des paramètres : {error}",
+  "@settingsSaveFailed": {
+    "description": "Affiché lorsque l'enregistrement des paramètres échoue.",
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "settingsHostControls": "L'hôte contrôle les paramètres",
+  "settingsHostControlsHelp": "Seul l'hôte peut les modifier avant le début de la partie",
+  "settingsPlayersAdded": "Joueurs ajoutés",
+  "settingsSeconds": "{count} s",
+  "@settingsSeconds": {
+    "description": "Une durée en secondes, ex. 30 s.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "settingsMinutes": "{count} min",
+  "@settingsMinutes": {
+    "description": "Une durée en minutes entières, ex. 1 min.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "settingsMinSec": "{minutes} min {seconds} s",
+  "@settingsMinSec": {
+    "description": "Une durée avec minutes et secondes, ex. 1 min 30 s.",
+    "placeholders": {
+      "minutes": { "type": "int" },
+      "seconds": { "type": "int" }
+    }
+  },
+  "settingsPlayersRange": "{min}–{max} joueurs",
+  "@settingsPlayersRange": {
+    "description": "La plage de joueurs prise en charge.",
+    "placeholders": {
+      "min": { "type": "int" },
+      "max": { "type": "int" }
+    }
+  },
+  "settingsImpostersUnsupported": "Les parties à 2 imposteurs ne sont pas encore prises en charge",
+  "settingsImpostersNeedPlayers": "Il faut au moins {count} joueurs pour 2 imposteurs",
+  "@settingsImpostersNeedPlayers": {
+    "description": "Affiché lorsque le nombre de joueurs ne peut pas accueillir deux imposteurs.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "settingsInvalid": "Paramètres invalides. Vérifiez les options et réessayez.",
+  "onlineWaitingForPlayers": "EN ATTENTE DE {current}/{expected} JOUEURS",
+  "@onlineWaitingForPlayers": {
+    "description": "Libellé du bouton de lancement tant que la partie n'a pas atteint le nombre de joueurs configuré.",
+    "placeholders": {
+      "current": { "type": "int" },
+      "expected": { "type": "int" }
+    }
+  },
 
   "language": "Langue"
 }

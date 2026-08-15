@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show HapticFeedback;
 
+import '../core/haptics.dart';
 import '../core/theme/app_colors.dart';
 import '../core/theme/app_typography.dart';
 
@@ -39,7 +39,7 @@ class _GameButtonState extends State<GameButton> {
   bool get _enabled => widget.onPressed != null && !widget.loading;
 
   void _onTapDown(_) {
-    HapticFeedback.lightImpact();
+    Haptics.lightImpact();
     setState(() => _pressed = true);
   }
 

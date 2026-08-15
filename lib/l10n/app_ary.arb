@@ -126,7 +126,7 @@
   "onlineRoomClosed": "المضيف سد الرووم",
   "onlineCodeCopied": "تّنسخ كود الرووم!",
   "onlineNotLobby": "الرووم ما بقاش ف حالة الاستقبال",
-  "onlineNeedPlayers": "خاص 3 لاعبين على الأقل باش تبداو",
+  "onlineNeedPlayers": "خاص 4 لاعبين على الأقل باش تبداو",
   "roomCodeLabel": "كود الرووم",
   "onlineTapToCopy": "مسّ باش تنسخ",
   "playersLabel": "اللاعبين",
@@ -146,6 +146,80 @@
   "onlineFinalizeRound": "سالي الدور",
   "onlineNextRound": "الدور الجاي",
   "onlineError": "وقع شي مشكل. عاود جرب.",
+
+  "settingsTitle": "الإعدادات ديال اللعبة",
+  "settingsPlayers": "اللاعبين",
+  "settingsPlayersHint": "شحال من لاعب ف اللعبة",
+  "settingsImposters": "المحتالين",
+  "settingsImpostersHint": "شحال من محتال بين اللاعبين",
+  "settingsDiscussionTime": "الوقت ديال المناقشة",
+  "settingsVotingTime": "الوقت ديال التصويت",
+  "settingsAnonymousVoting": "تصويت سري",
+  "settingsAnonymousVotingHelp": "خبّي شكون صوّت لشكون",
+  "settingsImposterClue": "تلميح على المحتال",
+  "settingsImposterClueHelp": "الطاقم كياخد تلميح على المحتال",
+  "settingsOn": "مفعّل",
+  "settingsOff": "معطّل",
+  "settingsSave": "حفض الإعدادات",
+  "settingsClose": "سد",
+  "settingsSaved": "تّحفضات الإعدادات",
+  "settingsSaveFailed": "ما تّحفضاتش الإعدادات: {error}",
+  "@settingsSaveFailed": {
+    "description": "كيبان ملي يفشل الحفض ديال إعدادات اللعبة.",
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "settingsHostControls": "المضيف هو لي كيتحكم ف الإعدادات",
+  "settingsHostControlsHelp": "المضيف بوحدو لي يقدر يبدلهم قبل ما تبدا اللعبة",
+  "settingsPlayersAdded": "اللاعبين المضافين",
+  "settingsSeconds": "{count} ث",
+  "@settingsSeconds": {
+    "description": "مدة بالثواني، بحال 30 ث.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "settingsMinutes": "{count} د",
+  "@settingsMinutes": {
+    "description": "مدة بالدقائق الكاملة، بحال 1 د.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "settingsMinSec": "{minutes} د {seconds} ث",
+  "@settingsMinSec": {
+    "description": "مدة بالدقائق والثواني، بحال 1 د 30 ث.",
+    "placeholders": {
+      "minutes": { "type": "int" },
+      "seconds": { "type": "int" }
+    }
+  },
+  "settingsPlayersRange": "{min}–{max} لاعبين",
+  "@settingsPlayersRange": {
+    "description": "النطاق المدعوم ديال اللاعبين.",
+    "placeholders": {
+      "min": { "type": "int" },
+      "max": { "type": "int" }
+    }
+  },
+  "settingsImpostersUnsupported": "الألعاب ب 2 محتالين مزيانين ماشي مدعومين حتى هادي",
+  "settingsImpostersNeedPlayers": "خاص {count} لاعبين على الأقل ل 2 محتالين",
+  "@settingsImpostersNeedPlayers": {
+    "description": "كيبان ملي عدد اللاعبين ما كيسمحش ب 2 محتالين.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "settingsInvalid": "إعدادات غالطة. تآكد من الخيارات وعاود جرب.",
+  "onlineWaitingForPlayers": "كنسناو {current}/{expected} لاعبين",
+  "@onlineWaitingForPlayers": {
+    "description": "الاسم ديال زرار البدء حتى يكمّل عدد اللاعبين المحدد.",
+    "placeholders": {
+      "current": { "type": "int" },
+      "expected": { "type": "int" }
+    }
+  },
 
   "language": "اللغة"
 }

@@ -12,6 +12,7 @@ class Room {
     required this.currentRoundNumber,
     required this.activeRoundId,
     required this.selectedCategoryId,
+    required this.settings,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -22,6 +23,7 @@ class Room {
   final String status; // 'lobby', 'playing', 'finished'
   final String gamePhase;
   final int maxPlayers;
+  final GameSettings settings;
   final int currentRoundNumber;
   final String? activeRoundId;
   final String? selectedCategoryId;
@@ -42,6 +44,7 @@ class Room {
       currentRoundNumber: (data['current_round_number'] as int?) ?? 0,
       activeRoundId: data['active_round_id'] as String?,
       selectedCategoryId: data['selected_category_id'] as String?,
+      settings: GameSettings.fromMap(data['settings'] as Map<String, dynamic>?),
       createdAt: DateTime.parse(data['created_at'] as String),
       updatedAt: DateTime.parse(data['updated_at'] as String),
     );
@@ -58,6 +61,7 @@ class Room {
       'current_round_number': currentRoundNumber,
       'active_round_id': activeRoundId,
       'selected_category_id': selectedCategoryId,
+      'settings': settings.toMap(),
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
     };
@@ -73,6 +77,7 @@ class Room {
     int? currentRoundNumber,
     String? activeRoundId,
     String? selectedCategoryId,
+    GameSettings? settings,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -86,6 +91,7 @@ class Room {
       currentRoundNumber: currentRoundNumber ?? this.currentRoundNumber,
       activeRoundId: activeRoundId ?? this.activeRoundId,
       selectedCategoryId: selectedCategoryId ?? this.selectedCategoryId,
+      settings: settings ?? this.settings,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );

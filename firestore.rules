@@ -20,6 +20,13 @@ service cloud.firestore {
       return roomDoc(roomId).data.host_player_id == request.auth.uid;
     }
 
+    // True when the room has anonymous voting enabled. Only the host may then
+    // read the individual vote documents, so who voted for whom stays private.
+    function anonymousVoting(roomId) {
+      let s = roomDoc(roomId).data.settings;
+      return s != null && 'anonymous_voting' in s && s.anonymous_voting == true;
+    }
+
     // Collection-group rule.
     //
     // Firestore requires rules that match the full subcollection path pattern
@@ -79,7 +86,8 @@ service cloud.firestore {
         }
 
         match /votes/{voterId} {
-          allow read: if isSignedIn() && isRoomMember(roomId);
+          allow read: if isSignedIn() && isRoomMember(roomId)
+            && (isHost(roomId) || !anonymousVoting(roomId));
           allow create, update: if isSignedIn() && isRoomMember(roomId)
             && request.auth.uid == voterId;
           allow delete: if false;

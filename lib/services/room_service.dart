@@ -131,6 +131,7 @@ class RoomService {
   }) async {
     final nowIso = DateTime.now().toUtc().toIso8601String();
     final roomRef = _roomsRef.doc();
+    const defaultSettings = GameSettings();
 
     await _firestore.runTransaction((txn) async {
       final codeSnap = await txn.get(_codeRef(code));
@@ -147,10 +148,11 @@ class RoomService {
         'host_player_id': uid,
         'status': 'lobby',
         'game_phase': OnlineGamePhase.lobby.dbValue,
-        'max_players': GameSettings.maxPlayers,
+        'max_players': defaultSettings.playerCount,
         'current_round_number': 0,
         'active_round_id': null,
         'selected_category_id': null,
+        'settings': defaultSettings.toMap(),
         'player_count': 1,
         'created_at': nowIso,
         'updated_at': nowIso,
@@ -173,10 +175,11 @@ class RoomService {
         'host_player_id': uid,
         'status': 'lobby',
         'game_phase': OnlineGamePhase.lobby.dbValue,
-        'max_players': GameSettings.maxPlayers,
+        'max_players': defaultSettings.playerCount,
         'current_round_number': 0,
         'active_round_id': null,
         'selected_category_id': null,
+        'settings': defaultSettings.toMap(),
         'created_at': nowIso,
         'updated_at': nowIso,
       },
@@ -251,9 +254,10 @@ class RoomService {
         throw Exception('Room is not accepting players');
       }
       final playerCount = (roomData['player_count'] as int?) ?? 1;
-      final maxPlayers =
-          (roomData['max_players'] as int?) ?? GameSettings.maxPlayers;
-      if (playerCount >= maxPlayers) {
+      final capacity = GameSettings.fromMap(
+        roomData['settings'] as Map<String, dynamic>?,
+      ).playerCount;
+      if (playerCount >= capacity) {
         throw Exception('Room is full');
       }
 
@@ -417,6 +421,7 @@ class RoomService {
     required void Function(RoomPlayer player) onPlayerJoined,
     required void Function(String playerId) onPlayerLeft,
     void Function(String status)? onRoomStatusChanged,
+    void Function(GameSettings settings)? onSettingsChanged,
     VoidCallback? onRoomClosed,
   }) {
     final roomRef = _roomRef(roomId);
@@ -424,6 +429,7 @@ class RoomService {
 
     var knownPlayers = <String, RoomPlayer>{};
     var lastStatus = '';
+    GameSettings? lastSettings;
     final subscriptions = <StreamSubscription<dynamic>>[];
 
     subscriptions.add(playersRef.snapshots().listen(
@@ -466,6 +472,12 @@ class RoomService {
           debugPrint('Realtime: Room $roomId status changed to $status');
           onRoomStatusChanged?.call(status);
         }
+        final settings =
+            GameSettings.fromMap(data['settings'] as Map<String, dynamic>?);
+        if (settings != lastSettings) {
+          lastSettings = settings;
+          onSettingsChanged?.call(settings);
+        }
       },
       onError: (Object error) {
         debugPrint('Failed to stream room $roomId: $error');
@@ -498,5 +510,37 @@ class RoomService {
       'updated_at': DateTime.now().toUtc().toIso8601String(),
     });
     debugPrint('Room $roomId status updated to $newStatus');
+  }
+
+  /// Updates the room's game settings.
+  ///
+  /// Only the host can change settings. The room's join capacity
+  /// (`max_players`) is kept in sync with the configured player count so the
+  /// room fills to exactly the number of players the game is set up for.
+  Future<void> updateGameSettings({
+    required String roomId,
+    required GameSettings settings,
+  }) async {
+    final uid = await _authService.requireUid();
+    final roomRef = _roomRef(roomId);
+
+    final roomDoc = await roomRef.get();
+    final roomData = roomDoc.data();
+    if (roomData == null) {
+      throw Exception('Room not found');
+    }
+    if (roomData['host_player_id'] != uid) {
+      throw Exception('Only the host can change game settings');
+    }
+
+    await roomRef.update({
+      'settings': settings.toMap(),
+      'max_players': settings.playerCount,
+      'updated_at': DateTime.now().toUtc().toIso8601String(),
+    });
+    debugPrint(
+      'Room $roomId settings updated: '
+      '${settings.playerCount} players, ${settings.imposterCount} imposters',
+    );
   }
 }
