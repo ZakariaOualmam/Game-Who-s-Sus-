@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- WHO'S SUS midnight navy launch background -->
+    <color name="launch_background">#0B0B18</color>
+	<color name="ic_launcher_background">#0B0B18</color>
+</resources>

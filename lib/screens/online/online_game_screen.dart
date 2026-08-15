@@ -91,9 +91,10 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
 
       await _runHostAutoTransitions();
     } catch (error) {
+      debugPrint('Failed to refresh online game: $error');
       if (!mounted) return;
       setState(() => _loading = false);
-      _show(error.toString());
+      _show(AppLocalizations.of(context).onlineError);
     }
   }
 
@@ -119,11 +120,14 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
 
   Future<void> _guarded(Future<void> Function() action) async {
     if (_busy) return;
+    final l10n = AppLocalizations.of(context);
     setState(() => _busy = true);
     try {
       await action();
     } catch (error) {
-      _show(error.toString());
+      debugPrint('Online game action failed: $error');
+      if (!mounted) return;
+      _show(l10n.onlineError);
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -157,9 +161,9 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
       OnlineGamePhase.voteResults => l10n.votesTitle.toUpperCase(),
       OnlineGamePhase.imposterReveal => l10n.imposterTitle.toUpperCase(),
       OnlineGamePhase.imposterGuess => l10n.finalChance.toUpperCase(),
-      OnlineGamePhase.winner => 'WINNER',
+      OnlineGamePhase.winner => l10n.winnerTitle.toUpperCase(),
       OnlineGamePhase.scoreboard => l10n.scoresTitle.toUpperCase(),
-      _ => 'GAME',
+      _ => l10n.onlineGameTitle.toUpperCase(),
     };
   }
 
@@ -174,14 +178,14 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
       OnlineGamePhase.imposterGuess => _buildImposterGuessPhase(l10n),
       OnlineGamePhase.winner => _buildWinnerPhase(l10n),
       OnlineGamePhase.scoreboard => _buildScoreboardPhase(l10n),
-      _ => Center(child: Text('Waiting for host...', style: AppTypography.body(context))),
+      _ => Center(child: Text(l10n.onlineWaitingForHost, style: AppTypography.body(context))),
     };
   }
 
   Widget _buildCategoryPhase(AppLocalizations l10n) {
     if (!_isHost) {
       return Center(
-        child: Text('Host is selecting category...', style: AppTypography.body(context)),
+        child: Text(l10n.onlineHostSelecting, style: AppTypography.body(context)),
       );
     }
 
@@ -257,7 +261,7 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
         card,
         const SizedBox(height: 32),
         GameButton(
-          label: me.revealReady ? 'READY' : l10n.imReady.toUpperCase(),
+          label: me.revealReady ? l10n.ready : l10n.imReady.toUpperCase(),
           onPressed: me.revealReady
               ? null
               : () => _guarded(() async {
@@ -288,7 +292,7 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
         Text(l10n.figureOutWhosImp, textAlign: TextAlign.center, style: AppTypography.caption(context)),
         const SizedBox(height: 34),
         GameButton(
-          label: me.discussionReady ? 'READY' : l10n.imReady.toUpperCase(),
+          label: me.discussionReady ? l10n.ready : l10n.imReady.toUpperCase(),
           onPressed: me.discussionReady
               ? null
               : () => _guarded(() async {
@@ -337,7 +341,7 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
     final accusedName = _players
         .where((p) => p.playerId == accusedId)
         .map((p) => p.playerName)
-        .firstWhere((_) => true, orElse: () => 'No one (tie)');
+        .firstWhere((_) => true, orElse: () => l10n.onlineNoOneTie);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -373,7 +377,7 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
     final imposterName = _players
         .where((p) => p.playerId == imposterId)
         .map((p) => p.playerName)
-        .firstWhere((_) => true, orElse: () => 'Unknown');
+        .firstWhere((_) => true, orElse: () => l10n.onlineUnknown);
     final caught = accusedId != null && accusedId == imposterId;
 
     return Column(
@@ -392,7 +396,7 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
         const SizedBox(height: 28),
         if (_isHost)
           GameButton(
-            label: caught ? l10n.finalChance.toUpperCase() : 'SHOW WINNER',
+            label: caught ? l10n.finalChance.toUpperCase() : l10n.onlineShowWinner,
             onPressed: () => _guarded(() async {
               if (caught) {
                 await OnlineGameService.instance.advanceToImposterGuess(_room!.id);
@@ -419,7 +423,7 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
 
     if (!isImposter) {
       return Center(
-        child: Text('Waiting for imposter guess...', style: AppTypography.body(context)),
+        child: Text(l10n.onlineWaitingImposterGuess, style: AppTypography.body(context)),
       );
     }
 
@@ -444,12 +448,12 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
         ],
         if (hasSubmitted) ...[
           const SizedBox(height: 14),
-          Text('Guess submitted.', textAlign: TextAlign.center, style: AppTypography.caption(context)),
+          Text(l10n.onlineGuessSubmitted, textAlign: TextAlign.center, style: AppTypography.caption(context)),
         ],
         const SizedBox(height: 20),
         if (_isHost)
           GameButton(
-            label: 'FINALIZE ROUND',
+            label: l10n.onlineFinalizeRound,
             onPressed: () => _guarded(() => OnlineGameService.instance.finalizeRoundWithGameEngine(
                   roomId: _room!.id,
                   roundId: _round!.id,
@@ -509,7 +513,7 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
         const SizedBox(height: 20),
         if (_isHost)
           GameButton(
-            label: 'NEXT ROUND',
+            label: l10n.onlineNextRound,
             icon: Icons.replay,
             colors: AppColors.crewGradient,
             onPressed: () => _guarded(() => OnlineGameService.instance.startNextRound(_room!.id)),

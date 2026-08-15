@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../../core/router.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
+import '../../l10n/app_localizations.dart';
 import '../../models/room.dart';
 import '../../models/room_player.dart';
 import '../../services/online_game_service.dart';
@@ -51,6 +52,7 @@ class _OnlineLobbyScreenState extends State<OnlineLobbyScreen> {
   }
 
   Future<void> _loadPlayers() async {
+    final l10n = AppLocalizations.of(context);
     try {
       final players = await RoomService.instance.getPlayersInRoom(widget.room.id);
       if (mounted) {
@@ -63,12 +65,13 @@ class _OnlineLobbyScreenState extends State<OnlineLobbyScreen> {
       debugPrint('Failed to load players: $error');
       if (mounted) {
         setState(() => _loading = false);
-        _showError('Failed to load players');
+        _showError(l10n.onlineFailedLoadPlayers);
       }
     }
   }
 
   void _subscribeToRoomUpdates() {
+    final l10n = AppLocalizations.of(context);
     _subscription = RoomService.instance.subscribeToRoom(
       roomId: widget.room.id,
       onPlayerJoined: (player) {
@@ -82,7 +85,7 @@ class _OnlineLobbyScreenState extends State<OnlineLobbyScreen> {
           
           // If current player was removed (kicked or connection lost)
           if (playerId == widget.currentPlayer.playerId) {
-            _showError('You have been disconnected from the room');
+            _showError(l10n.onlineDisconnected);
             Navigator.of(context).pop();
           }
         }
@@ -102,7 +105,7 @@ class _OnlineLobbyScreenState extends State<OnlineLobbyScreen> {
       },
       onRoomClosed: () {
         if (!mounted) return;
-        _showError('Room was closed by host');
+        _showError(l10n.onlineRoomClosed);
         Navigator.of(context).pop();
       },
     );
@@ -116,10 +119,11 @@ class _OnlineLobbyScreenState extends State<OnlineLobbyScreen> {
 
   void _copyRoomCode() {
     Clipboard.setData(ClipboardData(text: widget.room.code));
-    _showError('Room code copied to clipboard!');
+    _showError(AppLocalizations.of(context).onlineCodeCopied);
   }
 
   Future<void> _leaveRoom() async {
+    final l10n = AppLocalizations.of(context);
     try {
       await RoomService.instance.leaveRoom(
         roomId: widget.room.id,
@@ -130,20 +134,21 @@ class _OnlineLobbyScreenState extends State<OnlineLobbyScreen> {
     } catch (error) {
       debugPrint('Failed to leave room: $error');
       if (!mounted) return;
-      _showError('Failed to leave room: $error');
+      _showError(l10n.onlineLeaveFailed(error.toString()));
     }
   }
 
   Future<void> _startGame() async {
     if (!widget.currentPlayer.isHost) return;
+    final l10n = AppLocalizations.of(context);
 
     if (_roomStatus != 'lobby') {
-      _showError('Room is no longer in lobby state');
+      _showError(l10n.onlineNotLobby);
       return;
     }
 
     if (_players.length < 3) {
-      _showError('Need at least 3 players to start');
+      _showError(l10n.onlineNeedPlayers);
       return;
     }
 
@@ -154,13 +159,14 @@ class _OnlineLobbyScreenState extends State<OnlineLobbyScreen> {
     } catch (error) {
       debugPrint('Failed to start game: $error');
       if (!mounted) return;
-      _showError('Failed to start game: $error');
+      _showError(l10n.onlineStartFailed(error.toString()));
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final isHost = widget.currentPlayer.isHost;
+    final l10n = AppLocalizations.of(context);
 
     return PopScope(
       canPop: false,
@@ -170,7 +176,7 @@ class _OnlineLobbyScreenState extends State<OnlineLobbyScreen> {
         }
       },
       child: GameScaffold(
-        title: 'LOBBY',
+        title: l10n.lobbyTitle,
         onBack: _leaveRoom,
         body: _loading
             ? const Center(child: CircularProgressIndicator())
@@ -194,7 +200,7 @@ class _OnlineLobbyScreenState extends State<OnlineLobbyScreen> {
                       child: Column(
                         children: [
                           Text(
-                            'ROOM CODE',
+                            l10n.roomCodeLabel,
                             style: AppTypography.caption(context).copyWith(
                               color: Colors.white.withValues(alpha: 0.8),
                             ),
@@ -215,7 +221,7 @@ class _OnlineLobbyScreenState extends State<OnlineLobbyScreen> {
                               const Icon(Icons.copy, color: Colors.white70, size: 16),
                               const SizedBox(width: 6),
                               Text(
-                                'Tap to copy',
+                                l10n.onlineTapToCopy,
                                 style: AppTypography.caption(context).copyWith(
                                   color: Colors.white70,
                                 ),
@@ -231,7 +237,7 @@ class _OnlineLobbyScreenState extends State<OnlineLobbyScreen> {
                   Row(
                     children: [
                       Text(
-                        'Players',
+                        l10n.playersLabel,
                         style: AppTypography.title(context),
                       ),
                       const Spacer(),
@@ -279,9 +285,9 @@ class _OnlineLobbyScreenState extends State<OnlineLobbyScreen> {
                                       color: AppColors.primary,
                                       borderRadius: BorderRadius.circular(8),
                                     ),
-                                    child: const Text(
-                                      'HOST',
-                                      style: TextStyle(
+                                    child: Text(
+                                      l10n.hostLabel,
+                                      style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 10,
                                         fontWeight: FontWeight.w800,
@@ -297,13 +303,13 @@ class _OnlineLobbyScreenState extends State<OnlineLobbyScreen> {
               ),
         bottomBar: isHost
             ? GameButton(
-                label: 'START GAME',
+                label: l10n.onlineStartGame,
                 onPressed: _players.length >= 3 ? _startGame : null,
               )
             : Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                 child: Text(
-                  'Waiting for host to start the game...',
+                  l10n.onlineWaitingHost,
                   textAlign: TextAlign.center,
                   style: AppTypography.caption(context),
                 ),

@@ -9,13 +9,7 @@ class AppLocalizationsAr extends AppLocalizations {
   AppLocalizationsAr([String locale = 'ar']) : super(locale);
 
   @override
-  String get appName => 'Word Imposter';
-
-  @override
-  String get appNameWord => 'WORD';
-
-  @override
-  String get appNameImposter => 'IMPOSTER';
+  String get appName => 'WHO\'S SUS';
 
   @override
   String get splashTagline => 'لعبة كلمات للحفلات';
@@ -28,9 +22,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get homeOnline => 'عبر الإنترنت';
-
-  @override
-  String get homeOnlineComingSoon => 'عبر الإنترنت · قريبًا';
 
   @override
   String get homeHowToPlay => 'كيف تلعب';
@@ -285,6 +276,158 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get homeButton => 'الرئيسية';
+
+  @override
+  String get onlineConnecting => 'جارٍ الاتصال...';
+
+  @override
+  String get onlineFailedConnect => 'تعذّر الاتصال. حاول مرة أخرى.';
+
+  @override
+  String get onlineWaitConnecting => 'انتظر، جارٍ الاتصال...';
+
+  @override
+  String get onlineTagline => 'العب مع أصدقائك في أي مكان!';
+
+  @override
+  String get onlineCreateGame => 'إنشاء لعبة';
+
+  @override
+  String get onlineJoinGame => 'الانضمام إلى لعبة';
+
+  @override
+  String get onlineMenuHelp =>
+      'أنشئ غرفة وشارك الرمز، أو انضم إلى غرفة موجودة برمز من 6 خانات.';
+
+  @override
+  String get onlineEnterName => 'يرجى إدخال اسمك';
+
+  @override
+  String get onlineRoomCodeLength => 'يجب أن يتكوّن رمز الغرفة من 6 خانات';
+
+  @override
+  String onlineCreateFailed(String error) {
+    return 'تعذّر إنشاء الغرفة: $error';
+  }
+
+  @override
+  String onlineJoinFailed(String error) {
+    return 'تعذّر الانضمام إلى الغرفة: $error';
+  }
+
+  @override
+  String onlineLeaveFailed(String error) {
+    return 'تعذّر مغادرة الغرفة: $error';
+  }
+
+  @override
+  String onlineStartFailed(String error) {
+    return 'تعذّر بدء اللعبة: $error';
+  }
+
+  @override
+  String get onlineStartNewGame => 'ابدأ لعبة جديدة';
+
+  @override
+  String get onlineJoinExistingGame => 'انضم إلى لعبة موجودة';
+
+  @override
+  String get onlineYourNameHint => 'اسمك';
+
+  @override
+  String get onlineRoomCodeHint => 'رمز الغرفة (مثال: A3X9K2)';
+
+  @override
+  String get onlineCreateRoom => 'إنشاء الغرفة';
+
+  @override
+  String get onlineJoinRoom => 'الانضمام';
+
+  @override
+  String get onlineCreateRoomHelp =>
+      'ستكون المضيف وستحصل على رمز غرفة لمشاركته مع الآخرين.';
+
+  @override
+  String get onlineJoinRoomHelp =>
+      'أدخل رمز الغرفة من 6 خانات الذي يقدمه المضيف.';
+
+  @override
+  String get lobbyTitle => 'الغرفة';
+
+  @override
+  String get onlineFailedLoadPlayers => 'تعذّر تحميل اللاعبين';
+
+  @override
+  String get onlineDisconnected => 'انقطع اتصالك بالغرفة';
+
+  @override
+  String get onlineRoomClosed => 'أغلق المضيف الغرفة';
+
+  @override
+  String get onlineCodeCopied => 'تم نسخ رمز الغرفة!';
+
+  @override
+  String get onlineNotLobby => 'الغرفة لم تعد في وضع الاستقبال';
+
+  @override
+  String get onlineNeedPlayers => 'يلزم 3 لاعبين على الأقل للبدء';
+
+  @override
+  String get roomCodeLabel => 'رمز الغرفة';
+
+  @override
+  String get onlineTapToCopy => 'المس للنسخ';
+
+  @override
+  String get playersLabel => 'اللاعبون';
+
+  @override
+  String get hostLabel => 'المضيف';
+
+  @override
+  String get onlineStartGame => 'ابدأ اللعبة';
+
+  @override
+  String get onlineWaitingHost => 'في انتظار المضيف لبدء اللعبة...';
+
+  @override
+  String get winnerTitle => 'الفائز';
+
+  @override
+  String get onlineGameTitle => 'اللعبة';
+
+  @override
+  String get onlineWaitingForHost => 'في انتظار المضيف...';
+
+  @override
+  String get onlineHostSelecting => 'المضيف يختار الفئة...';
+
+  @override
+  String get ready => 'جاهز';
+
+  @override
+  String get onlineNoOneTie => 'لا أحد (تعادل)';
+
+  @override
+  String get onlineUnknown => 'غير معروف';
+
+  @override
+  String get onlineShowWinner => 'إظهار الفائز';
+
+  @override
+  String get onlineWaitingImposterGuess => 'في انتظار تخمين المحتال...';
+
+  @override
+  String get onlineGuessSubmitted => 'تم إرسال التخمين.';
+
+  @override
+  String get onlineFinalizeRound => 'إنهاء الجولة';
+
+  @override
+  String get onlineNextRound => 'الجولة التالية';
+
+  @override
+  String get onlineError => 'حدث خطأ ما. حاول مرة أخرى.';
 
   @override
   String get language => 'اللغة';

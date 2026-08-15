@@ -4,8 +4,8 @@ import 'dart:ui' show Locale;
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:wordimposter/data/categories.dart';
-import 'package:wordimposter/services/word_repository.dart';
+import 'package:who_sus/data/categories.dart';
+import 'package:who_sus/services/word_repository.dart';
 
 /// Serves the bundled word files straight from disk so repository tests don't
 /// depend on the test runner's asset bundle (which only bundles fonts).

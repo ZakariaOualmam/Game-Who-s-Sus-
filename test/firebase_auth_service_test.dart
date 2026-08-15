@@ -3,7 +3,7 @@ import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_exceptions/mock_exceptions.dart';
 import 'package:mock_exceptions/src/mock_exceptions.dart' as mock_exceptions;
-import 'package:wordimposter/services/firebase_auth_service.dart';
+import 'package:who_sus/services/firebase_auth_service.dart';
 
 MockFirebaseAuth _authFor(String uid) {
   return MockFirebaseAuth(

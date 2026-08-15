@@ -4,12 +4,13 @@ import '../../core/router.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 import '../../l10n/app_localizations.dart';
+import '../../widgets/brand_logo.dart';
 import '../../widgets/game_button.dart';
-import '../../widgets/game_scaffold.dart';
 import '../../widgets/language_selector.dart';
 import '../offline/offline_setup_screen.dart';
 import '../online/online_menu_screen.dart';
 
+/// Landing screen: brand logo, tagline, and the main entry actions.
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -52,60 +53,67 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return GameScaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const SizedBox(height: 8),
-          const Align(
-            alignment: AlignmentDirectional.centerEnd,
-            child: LanguageSelector(),
+    final width = MediaQuery.sizeOf(context).width;
+    final logoSize = width < 420 ? width * 0.5 : width < 800 ? 210.0 : 260.0;
+
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Center(child: LanguageSelector()),
+              const SizedBox(height: 16),
+              Center(child: BrandLogo(size: logoSize)),
+              const SizedBox(height: 20),
+              Text(
+                l10n.homeTagline,
+                style: AppTypography.title(context).copyWith(
+                  color: AppColors.textSecondary,
+                  fontWeight: FontWeight.w600,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 36),
+              GameButton(
+                label: l10n.homeOffline,
+                icon: Icons.person_pin_circle_outlined,
+                onPressed: () {
+                  Navigator.of(context)
+                      .push(appRoute(const OfflineSetupScreen()));
+                },
+              ),
+              const SizedBox(height: 14),
+              GameButton(
+                label: l10n.homeOnline,
+                icon: Icons.public,
+                colors: const [AppColors.secondary, AppColors.accent],
+                onPressed: () {
+                  Navigator.of(context)
+                      .push(appRoute(const OnlineMenuScreen()));
+                },
+              ),
+              const SizedBox(height: 14),
+              OutlinedButton.icon(
+                icon: const Icon(Icons.menu_book_outlined,
+                    size: 20, color: AppColors.textSecondary),
+                label: Text(
+                  l10n.homeHowToPlay,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: AppColors.textSecondary,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                onPressed: () => _showHowToPlay(context),
+              ),
+              const SizedBox(height: 24),
+            ],
           ),
-          const SizedBox(height: 24),
-          Text(
-            l10n.appNameWord,
-            textAlign: TextAlign.center,
-            style: AppTypography.display(context)
-                .copyWith(color: AppColors.primary, fontSize: 60),
-          ),
-          Text(
-            l10n.appNameImposter,
-            textAlign: TextAlign.center,
-            style: AppTypography.display(context).copyWith(fontSize: 60),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            l10n.homeTagline,
-            textAlign: TextAlign.center,
-            style: AppTypography.caption(context),
-          ),
-          const SizedBox(height: 48),
-          GameButton(
-            label: l10n.homeOffline,
-            icon: Icons.sports_esports,
-            colors: AppColors.primaryGradient,
-            onPressed: () => Navigator.of(context).push(
-              appRoute(const OfflineSetupScreen()),
-            ),
-          ),
-          const SizedBox(height: 16),
-          GameButton(
-            label: l10n.homeOnline,
-            icon: Icons.language,
-            colors: const [AppColors.secondary, AppColors.accent],
-            onPressed: () => Navigator.of(context).push(
-              appRoute(const OnlineMenuScreen()),
-            ),
-          ),
-          const SizedBox(height: 16),
-          GameButton(
-            label: l10n.homeHowToPlay,
-            icon: Icons.help_outline,
-            colors: const [AppColors.surfaceHigh, AppColors.surfaceHigh],
-            onPressed: () => _showHowToPlay(context),
-          ),
-          const SizedBox(height: 32),
-        ],
+        ),
       ),
     );
   }
@@ -120,29 +128,33 @@ class _Rule extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
+      padding: const EdgeInsets.only(bottom: 14),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             width: 30,
             height: 30,
+            alignment: Alignment.center,
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
-              color: AppColors.primary,
+              gradient: LinearGradient(colors: AppColors.primaryGradient),
             ),
-            alignment: Alignment.center,
             child: Text(
               number,
               style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w800,
+                fontSize: 15,
               ),
             ),
           ),
           const SizedBox(width: 14),
           Expanded(
-            child: Text(text, style: AppTypography.body(context)),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Text(text, style: AppTypography.body(context)),
+            ),
           ),
         ],
       ),

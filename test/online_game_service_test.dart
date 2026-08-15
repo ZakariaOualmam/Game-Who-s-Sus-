@@ -1,11 +1,11 @@
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:wordimposter/data/categories.dart';
-import 'package:wordimposter/services/firebase_auth_service.dart';
-import 'package:wordimposter/services/online_game_service.dart';
-import 'package:wordimposter/services/room_service.dart';
-import 'package:wordimposter/services/word_repository.dart';
+import 'package:who_sus/data/categories.dart';
+import 'package:who_sus/services/firebase_auth_service.dart';
+import 'package:who_sus/services/online_game_service.dart';
+import 'package:who_sus/services/room_service.dart';
+import 'package:who_sus/services/word_repository.dart';
 
 import 'helpers/settling_firestore.dart';
 

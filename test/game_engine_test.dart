@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:wordimposter/data/categories.dart';
-import 'package:wordimposter/game/game_engine.dart';
-import 'package:wordimposter/models/game_phase.dart';
-import 'package:wordimposter/models/player.dart';
-import 'package:wordimposter/services/word_repository.dart';
+import 'package:who_sus/data/categories.dart';
+import 'package:who_sus/game/game_engine.dart';
+import 'package:who_sus/models/game_phase.dart';
+import 'package:who_sus/models/player.dart';
+import 'package:who_sus/services/word_repository.dart';
 
 class _FakeWordSource implements WordSource {
   @override

@@ -1,13 +1,13 @@
 import 'dart:ui';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:wordimposter/data/categories.dart';
-import 'package:wordimposter/game/game_engine.dart';
-import 'package:wordimposter/models/player.dart';
-import 'package:wordimposter/models/role.dart';
-import 'package:wordimposter/models/vote.dart';
-import 'package:wordimposter/services/online_sync_rules.dart';
-import 'package:wordimposter/services/word_repository.dart';
+import 'package:who_sus/data/categories.dart';
+import 'package:who_sus/game/game_engine.dart';
+import 'package:who_sus/models/player.dart';
+import 'package:who_sus/models/role.dart';
+import 'package:who_sus/models/vote.dart';
+import 'package:who_sus/services/online_sync_rules.dart';
+import 'package:who_sus/services/word_repository.dart';
 
 class _StubWordSource implements WordSource {
   @override

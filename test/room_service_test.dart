@@ -1,7 +1,7 @@
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:wordimposter/services/firebase_auth_service.dart';
-import 'package:wordimposter/services/room_service.dart';
+import 'package:who_sus/services/firebase_auth_service.dart';
+import 'package:who_sus/services/room_service.dart';
 
 import 'helpers/settling_firestore.dart';
 

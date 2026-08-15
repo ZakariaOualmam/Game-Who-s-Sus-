@@ -5,11 +5,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:wordimposter/core/locale_controller.dart';
-import 'package:wordimposter/data/categories.dart';
-import 'package:wordimposter/main.dart';
-import 'package:wordimposter/services/word_repository.dart';
-import 'package:wordimposter/widgets/language_selector.dart';
+import 'package:who_sus/core/locale_controller.dart';
+import 'package:who_sus/data/categories.dart';
+import 'package:who_sus/main.dart';
+import 'package:who_sus/services/word_repository.dart';
+import 'package:who_sus/widgets/language_selector.dart';
 
 /// Disk-backed bundle so word lookups don't depend on the test asset bundle.
 class _DiskAssetBundle extends CachingAssetBundle {
@@ -65,7 +65,7 @@ void main() {
     Future<void> pumpHome(WidgetTester tester) async {
       SharedPreferences.setMockInitialValues({});
       LocaleController.instance.resetForTesting();
-      await tester.pumpWidget(const WordImposterApp());
+      await tester.pumpWidget(const WhoSusApp());
       await tester.pump(const Duration(milliseconds: 1800));
       await tester.pumpAndSettle();
     }

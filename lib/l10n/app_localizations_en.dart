@@ -9,13 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appName => 'Word Imposter';
-
-  @override
-  String get appNameWord => 'WORD';
-
-  @override
-  String get appNameImposter => 'IMPOSTER';
+  String get appName => 'WHO\'S SUS';
 
   @override
   String get splashTagline => 'party word game';
@@ -28,9 +22,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get homeOnline => 'ONLINE';
-
-  @override
-  String get homeOnlineComingSoon => 'ONLINE  ·  COMING SOON';
 
   @override
   String get homeHowToPlay => 'HOW TO PLAY';
@@ -288,6 +279,158 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get homeButton => 'HOME';
+
+  @override
+  String get onlineConnecting => 'Connecting...';
+
+  @override
+  String get onlineFailedConnect => 'Failed to connect. Please try again.';
+
+  @override
+  String get onlineWaitConnecting => 'Please wait, connecting...';
+
+  @override
+  String get onlineTagline => 'Play with friends anywhere!';
+
+  @override
+  String get onlineCreateGame => 'CREATE GAME';
+
+  @override
+  String get onlineJoinGame => 'JOIN GAME';
+
+  @override
+  String get onlineMenuHelp =>
+      'Create a room and share the code, or join an existing room with a 6-character code.';
+
+  @override
+  String get onlineEnterName => 'Please enter your name';
+
+  @override
+  String get onlineRoomCodeLength => 'Room code must be 6 characters';
+
+  @override
+  String onlineCreateFailed(String error) {
+    return 'Failed to create room: $error';
+  }
+
+  @override
+  String onlineJoinFailed(String error) {
+    return 'Failed to join room: $error';
+  }
+
+  @override
+  String onlineLeaveFailed(String error) {
+    return 'Failed to leave room: $error';
+  }
+
+  @override
+  String onlineStartFailed(String error) {
+    return 'Failed to start game: $error';
+  }
+
+  @override
+  String get onlineStartNewGame => 'Start a new game';
+
+  @override
+  String get onlineJoinExistingGame => 'Join an existing game';
+
+  @override
+  String get onlineYourNameHint => 'Your name';
+
+  @override
+  String get onlineRoomCodeHint => 'Room code (e.g., A3X9K2)';
+
+  @override
+  String get onlineCreateRoom => 'CREATE ROOM';
+
+  @override
+  String get onlineJoinRoom => 'JOIN ROOM';
+
+  @override
+  String get onlineCreateRoomHelp =>
+      'You will be the host and get a room code to share with others.';
+
+  @override
+  String get onlineJoinRoomHelp =>
+      'Enter the 6-character room code from the host.';
+
+  @override
+  String get lobbyTitle => 'LOBBY';
+
+  @override
+  String get onlineFailedLoadPlayers => 'Failed to load players';
+
+  @override
+  String get onlineDisconnected => 'You have been disconnected from the room';
+
+  @override
+  String get onlineRoomClosed => 'Room was closed by host';
+
+  @override
+  String get onlineCodeCopied => 'Room code copied to clipboard!';
+
+  @override
+  String get onlineNotLobby => 'Room is no longer in lobby state';
+
+  @override
+  String get onlineNeedPlayers => 'Need at least 3 players to start';
+
+  @override
+  String get roomCodeLabel => 'ROOM CODE';
+
+  @override
+  String get onlineTapToCopy => 'Tap to copy';
+
+  @override
+  String get playersLabel => 'Players';
+
+  @override
+  String get hostLabel => 'HOST';
+
+  @override
+  String get onlineStartGame => 'START GAME';
+
+  @override
+  String get onlineWaitingHost => 'Waiting for host to start the game...';
+
+  @override
+  String get winnerTitle => 'WINNER';
+
+  @override
+  String get onlineGameTitle => 'GAME';
+
+  @override
+  String get onlineWaitingForHost => 'Waiting for host...';
+
+  @override
+  String get onlineHostSelecting => 'Host is selecting category...';
+
+  @override
+  String get ready => 'READY';
+
+  @override
+  String get onlineNoOneTie => 'No one (tie)';
+
+  @override
+  String get onlineUnknown => 'Unknown';
+
+  @override
+  String get onlineShowWinner => 'SHOW WINNER';
+
+  @override
+  String get onlineWaitingImposterGuess => 'Waiting for imposter guess...';
+
+  @override
+  String get onlineGuessSubmitted => 'Guess submitted.';
+
+  @override
+  String get onlineFinalizeRound => 'FINALIZE ROUND';
+
+  @override
+  String get onlineNextRound => 'NEXT ROUND';
+
+  @override
+  String get onlineError => 'Something went wrong. Please try again.';
 
   @override
   String get language => 'Language';

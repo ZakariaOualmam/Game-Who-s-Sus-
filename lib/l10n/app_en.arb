@@ -1,14 +1,11 @@
 {
   "@@locale": "en",
-  "appName": "Word Imposter",
-  "appNameWord": "WORD",
-  "appNameImposter": "IMPOSTER",
+  "appName": "WHO'S SUS",
   "splashTagline": "party word game",
 
   "homeTagline": "Find the imposter among your friends",
   "homeOffline": "OFFLINE",
   "homeOnline": "ONLINE",
-  "homeOnlineComingSoon": "ONLINE  ·  COMING SOON",
   "homeHowToPlay": "HOW TO PLAY",
   "howToPlayTitle": "HOW TO PLAY",
   "rule1": "Everyone gets the same secret word — except the imposter.",
@@ -126,6 +123,78 @@
   "scoresTitle": "SCORES",
   "playAgain": "PLAY AGAIN",
   "homeButton": "HOME",
+
+  "onlineConnecting": "Connecting...",
+  "onlineFailedConnect": "Failed to connect. Please try again.",
+  "onlineWaitConnecting": "Please wait, connecting...",
+  "onlineTagline": "Play with friends anywhere!",
+  "onlineCreateGame": "CREATE GAME",
+  "onlineJoinGame": "JOIN GAME",
+  "onlineMenuHelp": "Create a room and share the code, or join an existing room with a 6-character code.",
+  "onlineEnterName": "Please enter your name",
+  "onlineRoomCodeLength": "Room code must be 6 characters",
+  "onlineCreateFailed": "Failed to create room: {error}",
+  "@onlineCreateFailed": {
+    "description": "Shown when creating a room fails.",
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "onlineJoinFailed": "Failed to join room: {error}",
+  "@onlineJoinFailed": {
+    "description": "Shown when joining a room fails.",
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "onlineLeaveFailed": "Failed to leave room: {error}",
+  "@onlineLeaveFailed": {
+    "description": "Shown when leaving a room fails.",
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "onlineStartFailed": "Failed to start game: {error}",
+  "@onlineStartFailed": {
+    "description": "Shown when starting an online game fails.",
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "onlineStartNewGame": "Start a new game",
+  "onlineJoinExistingGame": "Join an existing game",
+  "onlineYourNameHint": "Your name",
+  "onlineRoomCodeHint": "Room code (e.g., A3X9K2)",
+  "onlineCreateRoom": "CREATE ROOM",
+  "onlineJoinRoom": "JOIN ROOM",
+  "onlineCreateRoomHelp": "You will be the host and get a room code to share with others.",
+  "onlineJoinRoomHelp": "Enter the 6-character room code from the host.",
+  "lobbyTitle": "LOBBY",
+  "onlineFailedLoadPlayers": "Failed to load players",
+  "onlineDisconnected": "You have been disconnected from the room",
+  "onlineRoomClosed": "Room was closed by host",
+  "onlineCodeCopied": "Room code copied to clipboard!",
+  "onlineNotLobby": "Room is no longer in lobby state",
+  "onlineNeedPlayers": "Need at least 3 players to start",
+  "roomCodeLabel": "ROOM CODE",
+  "onlineTapToCopy": "Tap to copy",
+  "playersLabel": "Players",
+  "hostLabel": "HOST",
+  "onlineStartGame": "START GAME",
+  "onlineWaitingHost": "Waiting for host to start the game...",
+  "winnerTitle": "WINNER",
+  "onlineGameTitle": "GAME",
+  "onlineWaitingForHost": "Waiting for host...",
+  "onlineHostSelecting": "Host is selecting category...",
+  "ready": "READY",
+  "onlineNoOneTie": "No one (tie)",
+  "onlineUnknown": "Unknown",
+  "onlineShowWinner": "SHOW WINNER",
+  "onlineWaitingImposterGuess": "Waiting for imposter guess...",
+  "onlineGuessSubmitted": "Guess submitted.",
+  "onlineFinalizeRound": "FINALIZE ROUND",
+  "onlineNextRound": "NEXT ROUND",
+  "onlineError": "Something went wrong. Please try again.",
 
   "language": "Language"
 }

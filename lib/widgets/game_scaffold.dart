@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../core/theme/app_colors.dart';
 import '../core/theme/app_typography.dart';
+import 'brand_logo.dart';
 
 /// Reusable screen shell: dark gradient background, optional header, scrollable
 /// body, and pop protection for in-game screens.
@@ -56,9 +57,18 @@ class GameScaffold extends StatelessWidget {
                 if (title != null || onBack != null)
                   _Header(title: title, onBack: onBack),
                 Expanded(
-                  child: SingleChildScrollView(
-                    padding: padding,
-                    child: body,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      const Positioned(
+                        top: 60,
+                        child: BrandLogo(size: 220, showWatermark: true),
+                      ),
+                      SingleChildScrollView(
+                        padding: padding,
+                        child: body,
+                      ),
+                    ],
                   ),
                 ),
                 if (bottomBar != null)
@@ -114,7 +124,20 @@ class _Header extends StatelessWidget {
               style: AppTypography.headline(context).copyWith(fontSize: 28),
             ),
           ),
-          const SizedBox(width: 44),
+          SizedBox(
+            width: 44,
+            child: Opacity(
+              opacity: 0.85,
+              child: Image.asset(
+                'assets/branding/logo/logo_icon.png',
+                width: 34,
+                height: 34,
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) =>
+                    const SizedBox.shrink(),
+              ),
+            ),
+          ),
         ],
       ),
     );

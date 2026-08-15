@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core/router.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
+import '../../l10n/app_localizations.dart';
 import '../../services/room_service.dart';
 import '../../widgets/game_button.dart';
 import '../../widgets/game_scaffold.dart';
@@ -37,9 +38,10 @@ class _CreateJoinScreenState extends State<CreateJoinScreen> {
   }
 
   Future<void> _createRoom() async {
+    final l10n = AppLocalizations.of(context);
     final name = _nameController.text.trim();
     if (name.isEmpty) {
-      _showError('Please enter your name');
+      _showError(l10n.onlineEnterName);
       return;
     }
 
@@ -59,21 +61,22 @@ class _CreateJoinScreenState extends State<CreateJoinScreen> {
       debugPrint('Failed to create room: $error');
       if (!mounted) return;
       setState(() => _loading = false);
-      _showError('Failed to create room: $error');
+      _showError(l10n.onlineCreateFailed(error.toString()));
     }
   }
 
   Future<void> _joinRoom() async {
+    final l10n = AppLocalizations.of(context);
     final name = _nameController.text.trim();
     final code = _codeController.text.trim().toUpperCase();
 
     if (name.isEmpty) {
-      _showError('Please enter your name');
+      _showError(l10n.onlineEnterName);
       return;
     }
 
     if (code.length != 6) {
-      _showError('Room code must be 6 characters');
+      _showError(l10n.onlineRoomCodeLength);
       return;
     }
 
@@ -96,23 +99,24 @@ class _CreateJoinScreenState extends State<CreateJoinScreen> {
       debugPrint('Failed to join room: $error');
       if (!mounted) return;
       setState(() => _loading = false);
-      _showError('Failed to join room: $error');
+      _showError(l10n.onlineJoinFailed(error.toString()));
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final isCreate = widget.isCreateMode;
+    final l10n = AppLocalizations.of(context);
 
     return GameScaffold(
-      title: isCreate ? 'CREATE GAME' : 'JOIN GAME',
+      title: isCreate ? l10n.onlineCreateGame : l10n.onlineJoinGame,
       onBack: _loading ? null : () => Navigator.of(context).pop(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const SizedBox(height: 24),
           Text(
-            isCreate ? 'Start a new game' : 'Join an existing game',
+            isCreate ? l10n.onlineStartNewGame : l10n.onlineJoinExistingGame,
             style: AppTypography.title(context),
           ),
           const SizedBox(height: 24),
@@ -121,10 +125,10 @@ class _CreateJoinScreenState extends State<CreateJoinScreen> {
             enabled: !_loading,
             textCapitalization: TextCapitalization.words,
             maxLength: 18,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               counterText: '',
-              hintText: 'Your name',
-              prefixIcon: Icon(Icons.person, color: AppColors.textMuted),
+              hintText: l10n.onlineYourNameHint,
+              prefixIcon: const Icon(Icons.person, color: AppColors.textMuted),
             ),
           ),
           if (!isCreate) ...[
@@ -134,10 +138,10 @@ class _CreateJoinScreenState extends State<CreateJoinScreen> {
               enabled: !_loading,
               textCapitalization: TextCapitalization.characters,
               maxLength: 6,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 counterText: '',
-                hintText: 'Room code (e.g., A3X9K2)',
-                prefixIcon: Icon(Icons.tag, color: AppColors.textMuted),
+                hintText: l10n.onlineRoomCodeHint,
+                prefixIcon: const Icon(Icons.tag, color: AppColors.textMuted),
               ),
             ),
           ],
@@ -146,7 +150,7 @@ class _CreateJoinScreenState extends State<CreateJoinScreen> {
             const Center(child: CircularProgressIndicator())
           else
             GameButton(
-              label: isCreate ? 'CREATE ROOM' : 'JOIN ROOM',
+              label: isCreate ? l10n.onlineCreateRoom : l10n.onlineJoinRoom,
               icon: isCreate ? Icons.add_circle : Icons.login,
               colors: AppColors.primaryGradient,
               onPressed: isCreate ? _createRoom : _joinRoom,
@@ -156,7 +160,7 @@ class _CreateJoinScreenState extends State<CreateJoinScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
-                'You will be the host and get a room code to share with others.',
+                l10n.onlineCreateRoomHelp,
                 textAlign: TextAlign.center,
                 style: AppTypography.caption(context),
               ),
@@ -165,7 +169,7 @@ class _CreateJoinScreenState extends State<CreateJoinScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
-                'Enter the 6-character room code from the host.',
+                l10n.onlineJoinRoomHelp,
                 textAlign: TextAlign.center,
                 style: AppTypography.caption(context),
               ),

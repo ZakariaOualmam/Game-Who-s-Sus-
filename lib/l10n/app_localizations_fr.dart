@@ -9,13 +9,7 @@ class AppLocalizationsFr extends AppLocalizations {
   AppLocalizationsFr([String locale = 'fr']) : super(locale);
 
   @override
-  String get appName => 'Word Imposter';
-
-  @override
-  String get appNameWord => 'WORD';
-
-  @override
-  String get appNameImposter => 'IMPOSTER';
+  String get appName => 'WHO\'S SUS';
 
   @override
   String get splashTagline => 'jeu de mots pour soirées';
@@ -28,9 +22,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get homeOnline => 'EN LIGNE';
-
-  @override
-  String get homeOnlineComingSoon => 'EN LIGNE · BIENTÔT';
 
   @override
   String get homeHowToPlay => 'COMMENT JOUER';
@@ -291,6 +282,162 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get homeButton => 'ACCUEIL';
+
+  @override
+  String get onlineConnecting => 'Connexion...';
+
+  @override
+  String get onlineFailedConnect =>
+      'Échec de la connexion. Veuillez réessayer.';
+
+  @override
+  String get onlineWaitConnecting => 'Veuillez patienter, connexion...';
+
+  @override
+  String get onlineTagline => 'Jouez avec vos amis où que vous soyez !';
+
+  @override
+  String get onlineCreateGame => 'CRÉER UNE PARTIE';
+
+  @override
+  String get onlineJoinGame => 'REJOINDRE UNE PARTIE';
+
+  @override
+  String get onlineMenuHelp =>
+      'Créez une partie et partagez le code, ou rejoignez une partie existante avec un code à 6 caractères.';
+
+  @override
+  String get onlineEnterName => 'Veuillez saisir votre nom';
+
+  @override
+  String get onlineRoomCodeLength =>
+      'Le code de la partie doit comporter 6 caractères';
+
+  @override
+  String onlineCreateFailed(String error) {
+    return 'Échec de la création de la partie : $error';
+  }
+
+  @override
+  String onlineJoinFailed(String error) {
+    return 'Échec de la jonction à la partie : $error';
+  }
+
+  @override
+  String onlineLeaveFailed(String error) {
+    return 'Échec de la sortie de la partie : $error';
+  }
+
+  @override
+  String onlineStartFailed(String error) {
+    return 'Échec du lancement de la partie : $error';
+  }
+
+  @override
+  String get onlineStartNewGame => 'Lancer une nouvelle partie';
+
+  @override
+  String get onlineJoinExistingGame => 'Rejoindre une partie existante';
+
+  @override
+  String get onlineYourNameHint => 'Votre nom';
+
+  @override
+  String get onlineRoomCodeHint => 'Code de la partie (ex. : A3X9K2)';
+
+  @override
+  String get onlineCreateRoom => 'CRÉER LA PARTIE';
+
+  @override
+  String get onlineJoinRoom => 'REJOINDRE';
+
+  @override
+  String get onlineCreateRoomHelp =>
+      'Vous serez l\'hôte et recevrez un code à partager avec les autres.';
+
+  @override
+  String get onlineJoinRoomHelp =>
+      'Saisissez le code à 6 caractères de l\'hôte.';
+
+  @override
+  String get lobbyTitle => 'SALON';
+
+  @override
+  String get onlineFailedLoadPlayers => 'Échec du chargement des joueurs';
+
+  @override
+  String get onlineDisconnected => 'Vous avez été déconnecté de la partie';
+
+  @override
+  String get onlineRoomClosed => 'La partie a été fermée par l\'hôte';
+
+  @override
+  String get onlineCodeCopied => 'Code copié dans le presse-papiers !';
+
+  @override
+  String get onlineNotLobby => 'La partie n\'est plus en état de salon';
+
+  @override
+  String get onlineNeedPlayers => 'Il faut au moins 3 joueurs pour commencer';
+
+  @override
+  String get roomCodeLabel => 'CODE DE LA PARTIE';
+
+  @override
+  String get onlineTapToCopy => 'Touchez pour copier';
+
+  @override
+  String get playersLabel => 'Joueurs';
+
+  @override
+  String get hostLabel => 'HÔTE';
+
+  @override
+  String get onlineStartGame => 'LANCER LA PARTIE';
+
+  @override
+  String get onlineWaitingHost =>
+      'En attente de l\'hôte pour lancer la partie...';
+
+  @override
+  String get winnerTitle => 'GAGNANT';
+
+  @override
+  String get onlineGameTitle => 'PARTIE';
+
+  @override
+  String get onlineWaitingForHost => 'En attente de l\'hôte...';
+
+  @override
+  String get onlineHostSelecting => 'L\'hôte choisit une catégorie...';
+
+  @override
+  String get ready => 'PRÊT';
+
+  @override
+  String get onlineNoOneTie => 'Personne (égalité)';
+
+  @override
+  String get onlineUnknown => 'Inconnu';
+
+  @override
+  String get onlineShowWinner => 'MONTRER LE GAGNANT';
+
+  @override
+  String get onlineWaitingImposterGuess =>
+      'En attente de la supposition de l\'imposteur...';
+
+  @override
+  String get onlineGuessSubmitted => 'Supposition envoyée.';
+
+  @override
+  String get onlineFinalizeRound => 'TERMINER LE MANCHE';
+
+  @override
+  String get onlineNextRound => 'MANCHE SUIVANTE';
+
+  @override
+  String get onlineError => 'Une erreur s\'est produite. Veuillez réessayer.';
 
   @override
   String get language => 'Langue';

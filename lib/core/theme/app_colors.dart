@@ -1,16 +1,25 @@
 import 'package:flutter/material.dart';
 
-/// Central color palette for the Word Imposter design system.
+/// Central color palette for the WHO'S SUS design system.
 abstract final class AppColors {
+  // Brand identity (official WHO'S SUS palette)
+  static const Color midnight = Color(0xFF0B0B18);
+  static const Color navy = Color(0xFF0A0A16);
+  static const Color purpleDeep = Color(0xFF241B4D);
+  static const Color violet = Color(0xFF7C4DFF);
+  static const Color cyan = Color(0xFF00C2FF);
+  static const Color blueSoft = Color(0xFF3D7CFF);
+  static const Color lavender = Color(0xFFF1EFFF);
+
   // Surfaces
-  static const Color background = Color(0xFF0B0B18);
+  static const Color background = midnight;
   static const Color surface = Color(0xFF16162B);
   static const Color surfaceHigh = Color(0xFF20203D);
 
   // Brand accents
-  static const Color primary = Color(0xFF7C4DFF);
-  static const Color secondary = Color(0xFF00C2FF);
-  static const Color accent = Color(0xFFFF3D9A);
+  static const Color primary = violet;
+  static const Color secondary = cyan;
+  static const Color accent = blueSoft;
 
   // Feedback
   static const Color success = Color(0xFF37E39E);
@@ -18,7 +27,7 @@ abstract final class AppColors {
   static const Color warning = Color(0xFFFFC94D);
 
   // Text
-  static const Color textPrimary = Color(0xFFF4F4FF);
+  static const Color textPrimary = lavender;
   static const Color textSecondary = Color(0xFFA6A6C2);
   static const Color textMuted = Color(0xFF6E6E8C);
 

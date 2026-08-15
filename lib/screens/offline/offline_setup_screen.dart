@@ -66,7 +66,6 @@ class _OfflineSetupScreenState extends State<OfflineSetupScreen> {
     // Use LocaleController.instance.locale instead of Localizations.localeOf
     // to ensure we get the actual selected locale, not a potentially stale one.
     final locale = LocaleController.instance.locale;
-    debugPrint('Creating GameEngine with locale: ${locale.languageCode}');
     final engine = GameEngine(
       players: players,
       wordSource: WordRepository.instanceFor(locale),

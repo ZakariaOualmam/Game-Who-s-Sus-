@@ -9,13 +9,7 @@ class AppLocalizationsAry extends AppLocalizations {
   AppLocalizationsAry([String locale = 'ary']) : super(locale);
 
   @override
-  String get appName => 'Word Imposter';
-
-  @override
-  String get appNameWord => 'WORD';
-
-  @override
-  String get appNameImposter => 'IMPOSTER';
+  String get appName => 'WHO\'S SUS';
 
   @override
   String get splashTagline => 'لعبة الكلمات دي السهرات';
@@ -28,9 +22,6 @@ class AppLocalizationsAry extends AppLocalizations {
 
   @override
   String get homeOnline => 'أونلاين';
-
-  @override
-  String get homeOnlineComingSoon => 'أونلاين · قريب';
 
   @override
   String get homeHowToPlay => 'كيفاش تلعب';
@@ -285,6 +276,157 @@ class AppLocalizationsAry extends AppLocalizations {
 
   @override
   String get homeButton => 'الرئيسية';
+
+  @override
+  String get onlineConnecting => 'كيتّصل...';
+
+  @override
+  String get onlineFailedConnect => 'ما تّصلش. عاود جرب.';
+
+  @override
+  String get onlineWaitConnecting => 'صبر شوية، كيتّصل...';
+
+  @override
+  String get onlineTagline => 'العب مع صحابك فين ما كانو!';
+
+  @override
+  String get onlineCreateGame => 'صاوب لعبة';
+
+  @override
+  String get onlineJoinGame => 'دخل للعبة';
+
+  @override
+  String get onlineMenuHelp =>
+      'صاوب رووم وشارك الكود، ولا دخل لرووم موجود بكود ديال 6 حروف.';
+
+  @override
+  String get onlineEnterName => 'عافاك دخل سمية ديالك';
+
+  @override
+  String get onlineRoomCodeLength => 'كود الرووم خاصو يكون 6 حروف';
+
+  @override
+  String onlineCreateFailed(String error) {
+    return 'ما تّصاوبش الرووم: $error';
+  }
+
+  @override
+  String onlineJoinFailed(String error) {
+    return 'ما دخلتيش للرووم: $error';
+  }
+
+  @override
+  String onlineLeaveFailed(String error) {
+    return 'ما خرجتيش من الرووم: $error';
+  }
+
+  @override
+  String onlineStartFailed(String error) {
+    return 'ما بداتش اللعبة: $error';
+  }
+
+  @override
+  String get onlineStartNewGame => 'بدا لعبة جديدة';
+
+  @override
+  String get onlineJoinExistingGame => 'دخل للعبة موجودة';
+
+  @override
+  String get onlineYourNameHint => 'سمية ديالك';
+
+  @override
+  String get onlineRoomCodeHint => 'كود الرووم (مثال: A3X9K2)';
+
+  @override
+  String get onlineCreateRoom => 'صاوب الرووم';
+
+  @override
+  String get onlineJoinRoom => 'دخل';
+
+  @override
+  String get onlineCreateRoomHelp =>
+      'غادي تكون المضيف وغادي تاخد كود الرووم باش تشاركو مع الآخرين.';
+
+  @override
+  String get onlineJoinRoomHelp => 'دخل كود الرووم ديال 6 حروف من المضيف.';
+
+  @override
+  String get lobbyTitle => 'الرووم';
+
+  @override
+  String get onlineFailedLoadPlayers => 'ما تّحمّلوش اللاعبين';
+
+  @override
+  String get onlineDisconnected => 'تقطّعت عليك العلاقة مع الرووم';
+
+  @override
+  String get onlineRoomClosed => 'المضيف سد الرووم';
+
+  @override
+  String get onlineCodeCopied => 'تّنسخ كود الرووم!';
+
+  @override
+  String get onlineNotLobby => 'الرووم ما بقاش ف حالة الاستقبال';
+
+  @override
+  String get onlineNeedPlayers => 'خاص 3 لاعبين على الأقل باش تبداو';
+
+  @override
+  String get roomCodeLabel => 'كود الرووم';
+
+  @override
+  String get onlineTapToCopy => 'مسّ باش تنسخ';
+
+  @override
+  String get playersLabel => 'اللاعبين';
+
+  @override
+  String get hostLabel => 'المضيف';
+
+  @override
+  String get onlineStartGame => 'بدا اللعبة';
+
+  @override
+  String get onlineWaitingHost => 'كنسناو المضيف يبدا اللعبة...';
+
+  @override
+  String get winnerTitle => 'الرابح';
+
+  @override
+  String get onlineGameTitle => 'اللعبة';
+
+  @override
+  String get onlineWaitingForHost => 'كنسناو المضيف...';
+
+  @override
+  String get onlineHostSelecting => 'المضيف كيختار الفئة...';
+
+  @override
+  String get ready => 'جاهز';
+
+  @override
+  String get onlineNoOneTie => 'حتى واحد (تساوي)';
+
+  @override
+  String get onlineUnknown => 'مجهول';
+
+  @override
+  String get onlineShowWinner => 'ورّي الرابح';
+
+  @override
+  String get onlineWaitingImposterGuess => 'كنسناو المحتال يخمّن...';
+
+  @override
+  String get onlineGuessSubmitted => 'تّصيفط التخمين.';
+
+  @override
+  String get onlineFinalizeRound => 'سالي الدور';
+
+  @override
+  String get onlineNextRound => 'الدور الجاي';
+
+  @override
+  String get onlineError => 'وقع شي مشكل. عاود جرب.';
 
   @override
   String get language => 'اللغة';

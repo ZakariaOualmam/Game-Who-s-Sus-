@@ -105,20 +105,8 @@ abstract class AppLocalizations {
   /// No description provided for @appName.
   ///
   /// In en, this message translates to:
-  /// **'Word Imposter'**
+  /// **'WHO\'S SUS'**
   String get appName;
-
-  /// No description provided for @appNameWord.
-  ///
-  /// In en, this message translates to:
-  /// **'WORD'**
-  String get appNameWord;
-
-  /// No description provided for @appNameImposter.
-  ///
-  /// In en, this message translates to:
-  /// **'IMPOSTER'**
-  String get appNameImposter;
 
   /// No description provided for @splashTagline.
   ///
@@ -143,12 +131,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'ONLINE'**
   String get homeOnline;
-
-  /// No description provided for @homeOnlineComingSoon.
-  ///
-  /// In en, this message translates to:
-  /// **'ONLINE  ·  COMING SOON'**
-  String get homeOnlineComingSoon;
 
   /// No description provided for @homeHowToPlay.
   ///
@@ -641,6 +623,288 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'HOME'**
   String get homeButton;
+
+  /// No description provided for @onlineConnecting.
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting...'**
+  String get onlineConnecting;
+
+  /// No description provided for @onlineFailedConnect.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to connect. Please try again.'**
+  String get onlineFailedConnect;
+
+  /// No description provided for @onlineWaitConnecting.
+  ///
+  /// In en, this message translates to:
+  /// **'Please wait, connecting...'**
+  String get onlineWaitConnecting;
+
+  /// No description provided for @onlineTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Play with friends anywhere!'**
+  String get onlineTagline;
+
+  /// No description provided for @onlineCreateGame.
+  ///
+  /// In en, this message translates to:
+  /// **'CREATE GAME'**
+  String get onlineCreateGame;
+
+  /// No description provided for @onlineJoinGame.
+  ///
+  /// In en, this message translates to:
+  /// **'JOIN GAME'**
+  String get onlineJoinGame;
+
+  /// No description provided for @onlineMenuHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a room and share the code, or join an existing room with a 6-character code.'**
+  String get onlineMenuHelp;
+
+  /// No description provided for @onlineEnterName.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your name'**
+  String get onlineEnterName;
+
+  /// No description provided for @onlineRoomCodeLength.
+  ///
+  /// In en, this message translates to:
+  /// **'Room code must be 6 characters'**
+  String get onlineRoomCodeLength;
+
+  /// Shown when creating a room fails.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to create room: {error}'**
+  String onlineCreateFailed(String error);
+
+  /// Shown when joining a room fails.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to join room: {error}'**
+  String onlineJoinFailed(String error);
+
+  /// Shown when leaving a room fails.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to leave room: {error}'**
+  String onlineLeaveFailed(String error);
+
+  /// Shown when starting an online game fails.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to start game: {error}'**
+  String onlineStartFailed(String error);
+
+  /// No description provided for @onlineStartNewGame.
+  ///
+  /// In en, this message translates to:
+  /// **'Start a new game'**
+  String get onlineStartNewGame;
+
+  /// No description provided for @onlineJoinExistingGame.
+  ///
+  /// In en, this message translates to:
+  /// **'Join an existing game'**
+  String get onlineJoinExistingGame;
+
+  /// No description provided for @onlineYourNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Your name'**
+  String get onlineYourNameHint;
+
+  /// No description provided for @onlineRoomCodeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Room code (e.g., A3X9K2)'**
+  String get onlineRoomCodeHint;
+
+  /// No description provided for @onlineCreateRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'CREATE ROOM'**
+  String get onlineCreateRoom;
+
+  /// No description provided for @onlineJoinRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'JOIN ROOM'**
+  String get onlineJoinRoom;
+
+  /// No description provided for @onlineCreateRoomHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'You will be the host and get a room code to share with others.'**
+  String get onlineCreateRoomHelp;
+
+  /// No description provided for @onlineJoinRoomHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the 6-character room code from the host.'**
+  String get onlineJoinRoomHelp;
+
+  /// No description provided for @lobbyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'LOBBY'**
+  String get lobbyTitle;
+
+  /// No description provided for @onlineFailedLoadPlayers.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load players'**
+  String get onlineFailedLoadPlayers;
+
+  /// No description provided for @onlineDisconnected.
+  ///
+  /// In en, this message translates to:
+  /// **'You have been disconnected from the room'**
+  String get onlineDisconnected;
+
+  /// No description provided for @onlineRoomClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'Room was closed by host'**
+  String get onlineRoomClosed;
+
+  /// No description provided for @onlineCodeCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Room code copied to clipboard!'**
+  String get onlineCodeCopied;
+
+  /// No description provided for @onlineNotLobby.
+  ///
+  /// In en, this message translates to:
+  /// **'Room is no longer in lobby state'**
+  String get onlineNotLobby;
+
+  /// No description provided for @onlineNeedPlayers.
+  ///
+  /// In en, this message translates to:
+  /// **'Need at least 3 players to start'**
+  String get onlineNeedPlayers;
+
+  /// No description provided for @roomCodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'ROOM CODE'**
+  String get roomCodeLabel;
+
+  /// No description provided for @onlineTapToCopy.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to copy'**
+  String get onlineTapToCopy;
+
+  /// No description provided for @playersLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Players'**
+  String get playersLabel;
+
+  /// No description provided for @hostLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'HOST'**
+  String get hostLabel;
+
+  /// No description provided for @onlineStartGame.
+  ///
+  /// In en, this message translates to:
+  /// **'START GAME'**
+  String get onlineStartGame;
+
+  /// No description provided for @onlineWaitingHost.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for host to start the game...'**
+  String get onlineWaitingHost;
+
+  /// No description provided for @winnerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'WINNER'**
+  String get winnerTitle;
+
+  /// No description provided for @onlineGameTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'GAME'**
+  String get onlineGameTitle;
+
+  /// No description provided for @onlineWaitingForHost.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for host...'**
+  String get onlineWaitingForHost;
+
+  /// No description provided for @onlineHostSelecting.
+  ///
+  /// In en, this message translates to:
+  /// **'Host is selecting category...'**
+  String get onlineHostSelecting;
+
+  /// No description provided for @ready.
+  ///
+  /// In en, this message translates to:
+  /// **'READY'**
+  String get ready;
+
+  /// No description provided for @onlineNoOneTie.
+  ///
+  /// In en, this message translates to:
+  /// **'No one (tie)'**
+  String get onlineNoOneTie;
+
+  /// No description provided for @onlineUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get onlineUnknown;
+
+  /// No description provided for @onlineShowWinner.
+  ///
+  /// In en, this message translates to:
+  /// **'SHOW WINNER'**
+  String get onlineShowWinner;
+
+  /// No description provided for @onlineWaitingImposterGuess.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for imposter guess...'**
+  String get onlineWaitingImposterGuess;
+
+  /// No description provided for @onlineGuessSubmitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Guess submitted.'**
+  String get onlineGuessSubmitted;
+
+  /// No description provided for @onlineFinalizeRound.
+  ///
+  /// In en, this message translates to:
+  /// **'FINALIZE ROUND'**
+  String get onlineFinalizeRound;
+
+  /// No description provided for @onlineNextRound.
+  ///
+  /// In en, this message translates to:
+  /// **'NEXT ROUND'**
+  String get onlineNextRound;
+
+  /// No description provided for @onlineError.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get onlineError;
 
   /// No description provided for @language.
   ///

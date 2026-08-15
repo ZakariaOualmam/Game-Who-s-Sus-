@@ -20,17 +20,17 @@ Future<void> main() async {
   // Initialize services
   await LocaleController.instance.load();
 
-  runApp(const WordImposterApp());
+  runApp(const WhoSusApp());
 }
 
-class WordImposterApp extends StatefulWidget {
-  const WordImposterApp({super.key});
+class WhoSusApp extends StatefulWidget {
+  const WhoSusApp({super.key});
 
   @override
-  State<WordImposterApp> createState() => _WordImposterAppState();
+  State<WhoSusApp> createState() => _WhoSusAppState();
 }
 
-class _WordImposterAppState extends State<WordImposterApp> {
+class _WhoSusAppState extends State<WhoSusApp> {
   @override
   void initState() {
     super.initState();

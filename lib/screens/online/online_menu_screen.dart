@@ -46,7 +46,7 @@ class _OnlineMenuScreenState extends State<OnlineMenuScreen> {
       debugPrint('Authentication failed: $error');
       if (mounted) {
         setState(() => _authenticating = false);
-        _showError('Failed to connect. Please try again.');
+        _showError(AppLocalizations.of(context).onlineFailedConnect);
       }
     }
 
@@ -87,7 +87,7 @@ class _OnlineMenuScreenState extends State<OnlineMenuScreen> {
 
   void _navigateToCreateJoin(bool isCreate) {
     if (!FirebaseAuthService.instance.isAuthenticated) {
-      _showError('Please wait, connecting...');
+      _showError(AppLocalizations.of(context).onlineWaitConnecting);
       return;
     }
     Navigator.of(context).push(
@@ -102,13 +102,13 @@ class _OnlineMenuScreenState extends State<OnlineMenuScreen> {
       title: l10n.homeOnline.toUpperCase(),
       onBack: () => Navigator.of(context).pop(),
       body: _authenticating
-          ? const Center(
+          ? Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  CircularProgressIndicator(),
-                  SizedBox(height: 16),
-                  Text('Connecting...'),
+                  const CircularProgressIndicator(),
+                  const SizedBox(height: 16),
+                  Text(l10n.onlineConnecting),
                 ],
               ),
             )
@@ -117,20 +117,20 @@ class _OnlineMenuScreenState extends State<OnlineMenuScreen> {
               children: [
                 const SizedBox(height: 24),
                 Text(
-                  'Play with friends anywhere!',
+                  l10n.onlineTagline,
                   textAlign: TextAlign.center,
                   style: AppTypography.title(context),
                 ),
                 const SizedBox(height: 48),
                 GameButton(
-                  label: 'CREATE GAME',
+                  label: l10n.onlineCreateGame,
                   icon: Icons.add_circle_outline,
                   colors: AppColors.primaryGradient,
                   onPressed: () => _navigateToCreateJoin(true),
                 ),
                 const SizedBox(height: 16),
                 GameButton(
-                  label: 'JOIN GAME',
+                  label: l10n.onlineJoinGame,
                   icon: Icons.login,
                   colors: const [AppColors.surfaceHigh, AppColors.surfaceHigh],
                   onPressed: () => _navigateToCreateJoin(false),
@@ -139,7 +139,7 @@ class _OnlineMenuScreenState extends State<OnlineMenuScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Text(
-                    'Create a room and share the code, or join an existing room with a 6-character code.',
+                    l10n.onlineMenuHelp,
                     textAlign: TextAlign.center,
                     style: AppTypography.caption(context),
                   ),

@@ -1,11 +1,11 @@
 {
-    "name": "wordimposter",
-    "short_name": "wordimposter",
+    "name": "WHO'S SUS",
+    "short_name": "WHO'S SUS",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#0B0B18",
+    "theme_color": "#0B0B18",
+    "description": "A social deduction party game. Find the imposter among your friends before they get away.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

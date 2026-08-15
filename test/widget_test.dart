@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:wordimposter/core/theme/app_theme.dart';
-import 'package:wordimposter/data/categories.dart';
-import 'package:wordimposter/game/game_engine.dart';
-import 'package:wordimposter/l10n/app_localizations.dart';
-import 'package:wordimposter/main.dart';
-import 'package:wordimposter/models/player.dart';
-import 'package:wordimposter/screens/offline/imposter_guess_screen.dart';
-import 'package:wordimposter/screens/offline/role_reveal_screen.dart';
-import 'package:wordimposter/services/word_repository.dart';
-import 'package:wordimposter/widgets/game_button.dart';
-import 'package:wordimposter/widgets/player_card.dart';
+import 'package:who_sus/core/theme/app_theme.dart';
+import 'package:who_sus/data/categories.dart';
+import 'package:who_sus/game/game_engine.dart';
+import 'package:who_sus/l10n/app_localizations.dart';
+import 'package:who_sus/main.dart';
+import 'package:who_sus/models/player.dart';
+import 'package:who_sus/screens/offline/imposter_guess_screen.dart';
+import 'package:who_sus/screens/offline/role_reveal_screen.dart';
+import 'package:who_sus/services/word_repository.dart';
+import 'package:who_sus/widgets/brand_logo.dart';
+import 'package:who_sus/widgets/game_button.dart';
+import 'package:who_sus/widgets/player_card.dart';
 
 class _StubWordSource implements WordSource {
   @override
@@ -61,10 +62,10 @@ Widget _wrap(GameEngine engine) {
 
 void main() {
   testWidgets('app launches splash then shows home screen', (tester) async {
-    await tester.pumpWidget(const WordImposterApp());
+    await tester.pumpWidget(const WhoSusApp());
 
     // Splash is shown first.
-    expect(find.text('IMPOSTER'), findsOneWidget);
+    expect(find.byType(BrandLogo), findsOneWidget);
 
     // Advance past the splash timer, then settle navigation animations.
     await tester.pump(const Duration(milliseconds: 1800));
@@ -76,7 +77,7 @@ void main() {
 
   testWidgets('setup screen accepts players and reaches category selection',
       (tester) async {
-    await tester.pumpWidget(const WordImposterApp());
+    await tester.pumpWidget(const WhoSusApp());
     await tester.pump(const Duration(milliseconds: 1800));
     await tester.pumpAndSettle();
 
