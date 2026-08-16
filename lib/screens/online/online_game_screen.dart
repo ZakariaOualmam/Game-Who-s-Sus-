@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../core/theme/app_colors.dart';
@@ -5,13 +7,16 @@ import '../../core/theme/app_typography.dart';
 import '../../data/categories.dart';
 import '../../l10n/app_localizations.dart';
 import '../../l10n/category_localizations.dart';
+import '../../models/chat_message.dart';
 import '../../models/online_game_phase.dart';
 import '../../models/online_player_round_state.dart';
 import '../../models/online_round.dart';
 import '../../models/room.dart';
 import '../../models/room_player.dart';
+import '../../services/chat_service.dart';
 import '../../services/online_game_service.dart';
 import '../../services/room_service.dart';
+import '../../widgets/chat_panel.dart';
 import '../../widgets/game_button.dart';
 import '../../widgets/game_countdown.dart';
 import '../../widgets/game_scaffold.dart';
@@ -38,6 +43,8 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
   OnlinePlayerRoundState? _myState;
   List<RoomPlayer> _players = [];
   Map<String, int> _voteTotals = {};
+  final List<ChatMessage> _chatMessages = [];
+  StreamSubscription<List<ChatMessage>>? _chatSub;
   RoomSubscription? _sub;
   bool _subscribedAsHost = false;
   bool _loading = true;
@@ -48,8 +55,25 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
   @override
   void initState() {
     super.initState();
+    _subscribeChat();
     _syncSubscription();
     _refreshAll();
+  }
+
+  /// Follows the room's discussion chat for the whole session. Rendering is
+  /// scoped to the discussion phase; here we just keep the snapshot fresh.
+  void _subscribeChat() {
+    _chatSub?.cancel();
+    _chatSub = ChatService.instance
+        .subscribeToMessages(widget.roomId)
+        .listen((messages) {
+      if (!mounted) return;
+      setState(() {
+        _chatMessages
+          ..clear()
+          ..addAll(messages);
+      });
+    });
   }
 
   /// Keeps the Firestore subscriptions scoped to the current player's role:
@@ -70,6 +94,7 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
 
   @override
   void dispose() {
+    _chatSub?.cancel();
     _sub?.unsubscribe();
     super.dispose();
   }
@@ -166,6 +191,24 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
       await OnlineGameService.instance.hostEndVoting(_room!.id, _round!.id);
     } catch (error) {
       debugPrint('Failed to auto-end voting: $error');
+    }
+  }
+
+  /// Sends a chat message during the discussion phase. Returns true when the
+  /// message was delivered so the panel can clear its input.
+  Future<bool> _sendChatMessage(String message) async {
+    try {
+      await ChatService.instance.sendMessage(
+        roomId: widget.roomId,
+        playerName: widget.currentPlayer.playerName,
+        message: message,
+      );
+      return true;
+    } catch (error) {
+      debugPrint('Failed to send chat message: $error');
+      if (!mounted) return false;
+      _show(AppLocalizations.of(context).chatSendFailed);
+      return false;
     }
   }
 
@@ -331,25 +374,37 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
             onFinished: _endDiscussionFromTimer,
           ),
         ),
-        const SizedBox(height: 22),
+        const SizedBox(height: 18),
         Text(l10n.discuss.toUpperCase(), textAlign: TextAlign.center, style: AppTypography.display(context)),
-        const SizedBox(height: 10),
+        const SizedBox(height: 6),
         Text(l10n.figureOutWhosImp, textAlign: TextAlign.center, style: AppTypography.caption(context)),
-        const SizedBox(height: 34),
-        GameButton(
-          label: me.discussionReady ? l10n.ready : l10n.imReady.toUpperCase(),
-          onPressed: me.discussionReady
-              ? null
-              : () => _guarded(() async {
-                    await OnlineGameService.instance.setDiscussionReady(
-                      roomId: _room!.id,
-                      roundId: _round!.id,
-                      ready: true,
-                    );
-                    await OnlineGameService.instance.hostAdvanceDiscussion(_room!.id, _round!.id, requireAllReady: true);
-                  }),
+        const SizedBox(height: 12),
+        Center(child: _buildDiscussionPlayersBadge(l10n)),
+        const SizedBox(height: 12),
+        ChatPanel(
+          messages: _chatMessages,
+          myPlayerId: widget.currentPlayer.playerId,
+          onSend: _sendChatMessage,
         ),
       ],
+    );
+  }
+
+  Widget _buildDiscussionPlayersBadge(AppLocalizations l10n) {
+    return Container(
+      key: const ValueKey('discussion-players'),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceHigh,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.secondary.withValues(alpha: 0.4)),
+      ),
+      child: Text(
+        l10n.discussionPlayers(_players.length),
+        style: AppTypography.caption(context).copyWith(
+          color: AppColors.secondary,
+        ),
+      ),
     );
   }
 

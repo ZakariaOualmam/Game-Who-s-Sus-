@@ -223,5 +223,27 @@
 
   "timeLeft": "Temps restant",
 
+  "chatSend": "ENVOYER",
+  "chatInputHint": "Écrivez un message...",
+  "chatEmpty": "Aucun message pour l'instant",
+  "chatEmptyHint": "Lancez la discussion ci-dessous",
+  "chatSendFailed": "Échec de l'envoi du message",
+  "chatMessageTooLong": "Message trop long (200 caractères maximum)",
+  "chatMessageLength": "{current}/{max}",
+  "@chatMessageLength": {
+    "description": "Compteur de caractères dans la saisie du tchat.",
+    "placeholders": {
+      "current": { "type": "int" },
+      "max": { "type": "int" }
+    }
+  },
+  "discussionPlayers": "{count} joueurs discutent",
+  "@discussionPlayers": {
+    "description": "Joueurs connectés pendant la phase de discussion.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
   "language": "Langue"
 }

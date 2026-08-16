@@ -6,15 +6,18 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:who_sus/core/theme/app_theme.dart';
 import 'package:who_sus/data/categories.dart';
 import 'package:who_sus/l10n/app_localizations.dart';
+import 'package:who_sus/l10n/app_localizations_en.dart';
 import 'package:who_sus/models/game_settings.dart';
 import 'package:who_sus/models/online_game_phase.dart';
 import 'package:who_sus/models/room.dart';
 import 'package:who_sus/models/room_player.dart';
 import 'package:who_sus/screens/online/online_game_screen.dart';
+import 'package:who_sus/services/chat_service.dart';
 import 'package:who_sus/services/firebase_auth_service.dart';
 import 'package:who_sus/services/online_game_service.dart';
 import 'package:who_sus/services/room_service.dart';
 import 'package:who_sus/services/word_repository.dart';
+import 'package:who_sus/widgets/chat_panel.dart';
 import 'package:who_sus/widgets/game_countdown.dart';
 import 'package:who_sus/widgets/player_card.dart';
 
@@ -55,10 +58,18 @@ class _PlayerContext {
           firestore: firestore,
           authService: _authService(_authFor(uid)),
         ),
+        chatService = ChatService(
+          firestore: firestore,
+          authService: _authService(_authFor(uid)),
+        ),
         gameService = OnlineGameService(
           firestore: firestore,
           authService: _authService(_authFor(uid)),
           roomService: RoomService(
+            firestore: firestore,
+            authService: _authService(_authFor(uid)),
+          ),
+          chatService: ChatService(
             firestore: firestore,
             authService: _authService(_authFor(uid)),
           ),
@@ -68,6 +79,7 @@ class _PlayerContext {
   final String uid;
   final RoomService roomService;
   final OnlineGameService gameService;
+  final ChatService chatService;
 }
 
 Widget _localizedApp(Widget home) {
@@ -122,7 +134,7 @@ void main() {
     await dave.roomService.joinRoom(roomCode: created.room.code, playerName: 'Dave');
   });
 
-  Future<void> startRoundInDiscussion() async {
+  Future<void> startRoundInRoleReveal() async {
     await alice.roomService.updateGameSettings(
       roomId: created.room.id,
       settings: const GameSettings(
@@ -139,6 +151,10 @@ void main() {
     );
     final fresh = await alice.gameService.getRoomById(created.room.id);
     roundId = fresh.activeRoundId!;
+  }
+
+  Future<void> startRoundInDiscussion() async {
+    await startRoundInRoleReveal();
     for (final player in [alice, bob, cara, dave]) {
       await player.gameService.setRevealReady(
         roomId: created.room.id,
@@ -170,6 +186,7 @@ void main() {
     final currentPlayer = players.firstWhere((p) => p.playerId == client.uid);
     RoomService.instance = client.roomService;
     OnlineGameService.instance = client.gameService;
+    ChatService.instance = client.chatService;
     await tester.pumpWidget(
       _localizedApp(OnlineGameScreen(
         roomId: created.room.id,
@@ -310,10 +327,10 @@ void main() {
   testWidgets(
       'non-host client takes over host duties after the host leaves',
       (tester) async {
-    await tester.runAsync(startRoundInDiscussion);
+    await tester.runAsync(startRoundInRoleReveal);
 
     await pumpScreenAs(tester, bob);
-    await _pumpUntilFound(tester, find.byKey(const ValueKey('discussion-timer')));
+    await _pumpUntilFound(tester, find.text("I'M READY"));
 
     // The original host leaves mid-game; bob becomes host.
     await tester.runAsync(() async {
@@ -330,30 +347,110 @@ void main() {
 
     // The new host presses ready, then the other players do too. Bob's
     // subscription re-scopes to the whole round, so their ready events reach
-    // him and he advances the game to voting.
+    // him and he advances the game to the discussion phase.
     await tester.tap(find.text("I'M READY"));
     await tester.pumpAndSettle();
 
     await tester.runAsync(() async {
-      await cara.gameService.setDiscussionReady(
+      await cara.gameService.setRevealReady(
         roomId: created.room.id,
         roundId: roundId,
         ready: true,
       );
-      await dave.gameService.setDiscussionReady(
+      await dave.gameService.setRevealReady(
         roomId: created.room.id,
         roundId: roundId,
         ready: true,
       );
       await Future<void>.delayed(const Duration(milliseconds: 250));
     });
-    await _pumpUntilFound(tester, find.byKey(const ValueKey('voting-timer')));
+    await _pumpUntilFound(tester, find.byKey(const ValueKey('discussion-timer')));
 
     final roomAdvanced = await bob.gameService.getRoomById(created.room.id);
     expect(
       OnlineGamePhase.fromDb(roomAdvanced.gamePhase),
-      OnlineGamePhase.voting,
+      OnlineGamePhase.discussion,
     );
+
+    await tester.pumpWidget(const SizedBox());
+    await tester.pump();
+  });
+
+  testWidgets('discussion phase shows the chat panel with an empty state',
+      (tester) async {
+    await tester.runAsync(startRoundInDiscussion);
+
+    await pumpScreenAs(tester, bob);
+    await _pumpUntilFound(tester, find.byType(ChatPanel));
+
+    expect(find.byType(ChatPanel), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('discussion-players')),
+      findsOneWidget,
+    );
+    expect(find.text(AppLocalizationsEn().discussionPlayers(4)), findsOneWidget);
+    expect(find.text(AppLocalizationsEn().chatEmpty), findsOneWidget);
+
+    // The send button is disabled while the input is empty.
+    final send = tester.widget<GestureDetector>(
+      find.byKey(const ValueKey('chat-send')),
+    );
+    expect(send.onTap, isNull);
+
+    await tester.pumpWidget(const SizedBox());
+    await tester.pump();
+  });
+
+  testWidgets('players can send chat messages that appear in real time',
+      (tester) async {
+    await tester.runAsync(startRoundInDiscussion);
+
+    await pumpScreenAs(tester, bob);
+    await _pumpUntilFound(tester, find.byType(ChatPanel));
+
+    // The chat sits below the fold of the 600px test viewport.
+    await tester.ensureVisible(find.byKey(const ValueKey('chat-input')));
+    await tester.pump();
+    await tester.enterText(
+      find.byKey(const ValueKey('chat-input')),
+      'I think Cara is sus',
+    );
+    await tester.pump();
+
+    final send = tester.widget<GestureDetector>(
+      find.byKey(const ValueKey('chat-send')),
+    );
+    expect(send.onTap, isNotNull);
+
+    await tester.tap(find.byKey(const ValueKey('chat-send')));
+    await tester.pump();
+
+    // The message lands in Firestore and the subscription delivers it back.
+    await tester.runAsync(() async {
+      await Future<void>.delayed(const Duration(milliseconds: 250));
+    });
+    await _pumpUntilFound(tester, find.text('I think Cara is sus'));
+
+    // The input clears after a successful send.
+    final input = tester.widget<TextField>(
+      find.byKey(const ValueKey('chat-input')),
+    );
+    expect(input.controller!.text, isEmpty);
+
+    await tester.pumpWidget(const SizedBox());
+    await tester.pump();
+  });
+
+  testWidgets('chat is not shown outside the discussion phase',
+      (tester) async {
+    await tester.runAsync(startRoundInVoting);
+
+    await pumpScreenAs(tester, bob);
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ChatPanel), findsNothing);
+    expect(find.byKey(const ValueKey('chat-input')), findsNothing);
+    expect(find.byKey(const ValueKey('chat-send')), findsNothing);
 
     await tester.pumpWidget(const SizedBox());
     await tester.pump();

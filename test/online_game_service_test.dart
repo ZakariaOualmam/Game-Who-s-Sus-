@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:who_sus/data/categories.dart';
 import 'package:who_sus/models/game_settings.dart';
+import 'package:who_sus/services/chat_service.dart';
 import 'package:who_sus/services/firebase_auth_service.dart';
 import 'package:who_sus/services/online_game_service.dart';
 import 'package:who_sus/services/room_service.dart';
@@ -45,10 +46,18 @@ class _PlayerContext {
           firestore: firestore,
           authService: _authService(auth),
         ),
+        chatService = ChatService(
+          firestore: firestore,
+          authService: _authService(auth),
+        ),
         gameService = OnlineGameService(
           firestore: firestore,
           authService: _authService(auth),
           roomService: RoomService(
+            firestore: firestore,
+            authService: _authService(auth),
+          ),
+          chatService: ChatService(
             firestore: firestore,
             authService: _authService(auth),
           ),
@@ -59,6 +68,7 @@ class _PlayerContext {
   final MockFirebaseAuth auth;
   final RoomService roomService;
   final OnlineGameService gameService;
+  final ChatService chatService;
 }
 
 void main() {
@@ -499,6 +509,46 @@ void main() {
         ),
         throwsA(predicate((Object e) => e.toString().contains('Only host'))),
       );
+    });
+  });
+
+  group('OnlineGameService chat integration', () {
+    test('starting a new round clears the previous round chat', () async {
+      final (roomId, _, _, _) = await setupRound();
+
+      final chat = ChatService(
+        firestore: f,
+        authService: _authService(_authFor('alice')),
+      );
+      await chat.sendMessage(
+        roomId: roomId,
+        playerName: 'Alice',
+        message: 'old discussion message',
+      );
+
+      // Move the room back to category selection, as startNextRound does.
+      await f
+          .collection('rooms')
+          .doc(roomId)
+          .update({
+            'game_phase': 'category',
+            'active_round_id': null,
+            'selected_category_id': null,
+          });
+
+      final freshRoom = await alice.gameService.getRoomById(roomId);
+      await alice.gameService.startRoundFromCategory(
+        room: freshRoom,
+        categoryId: 'animals',
+        languageCode: 'en',
+      );
+
+      final messages = await f
+          .collection('rooms')
+          .doc(roomId)
+          .collection('messages')
+          .get();
+      expect(messages.docs, isEmpty);
     });
   });
 }

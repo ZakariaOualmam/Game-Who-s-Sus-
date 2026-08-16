@@ -1080,6 +1080,54 @@ abstract class AppLocalizations {
   /// **'Time left'**
   String get timeLeft;
 
+  /// No description provided for @chatSend.
+  ///
+  /// In en, this message translates to:
+  /// **'SEND'**
+  String get chatSend;
+
+  /// No description provided for @chatInputHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Type a message...'**
+  String get chatInputHint;
+
+  /// No description provided for @chatEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No messages yet'**
+  String get chatEmpty;
+
+  /// No description provided for @chatEmptyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Start the discussion below'**
+  String get chatEmptyHint;
+
+  /// No description provided for @chatSendFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to send message'**
+  String get chatSendFailed;
+
+  /// No description provided for @chatMessageTooLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Message too long (max 200 characters)'**
+  String get chatMessageTooLong;
+
+  /// Character counter in the chat input.
+  ///
+  /// In en, this message translates to:
+  /// **'{current}/{max}'**
+  String chatMessageLength(int current, int max);
+
+  /// Players connected during the discussion phase.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} players discussing'**
+  String discussionPlayers(int count);
+
   /// No description provided for @language.
   ///
   /// In en, this message translates to:

@@ -223,5 +223,27 @@
 
   "timeLeft": "الوقت المتبقي",
 
+  "chatSend": "إرسال",
+  "chatInputHint": "اكتب رسالة...",
+  "chatEmpty": "لا توجد رسائل بعد",
+  "chatEmptyHint": "ابدأ النقاش بالأسفل",
+  "chatSendFailed": "تعذّر إرسال الرسالة",
+  "chatMessageTooLong": "الرسالة طويلة جدًا (200 حرف كحد أقصى)",
+  "chatMessageLength": "{current}/{max}",
+  "@chatMessageLength": {
+    "description": "عداد الأحرف في خانة الدردشة.",
+    "placeholders": {
+      "current": { "type": "int" },
+      "max": { "type": "int" }
+    }
+  },
+  "discussionPlayers": "{count} لاعبين يناقشون",
+  "@discussionPlayers": {
+    "description": "اللاعبون المتصلون أثناء مرحلة النقاش.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
   "language": "اللغة"
 }

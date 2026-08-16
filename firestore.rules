@@ -94,6 +94,21 @@ service cloud.firestore {
           && (request.auth.uid == playerId || isHost(roomId));
       }
 
+      match /messages/{messageId} {
+        // Room members may read the discussion chat.
+        allow read: if isSignedIn() && isRoomMember(roomId);
+        // Messages are immutable, sender-verifiable text under the length cap.
+        allow create: if isSignedIn() && isRoomMember(roomId)
+          && request.resource.data.player_id == request.auth.uid
+          && request.resource.data.type == 'text'
+          && request.resource.data.message is string
+          && request.resource.data.message.size() >= 1
+          && request.resource.data.message.size() <= 200;
+        allow update: if false;
+        // Only the host may wipe the chat when a new round starts.
+        allow delete: if isSignedIn() && isRoomMember(roomId) && isHost(roomId);
+      }
+
       match /rounds/{roundId} {
         allow read: if isSignedIn() && isRoomMember(roomId);
         allow create: if isSignedIn() && isRoomMember(roomId) && isHost(roomId);

@@ -538,5 +538,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get timeLeft => 'Time left';
 
   @override
+  String get chatSend => 'SEND';
+
+  @override
+  String get chatInputHint => 'Type a message...';
+
+  @override
+  String get chatEmpty => 'No messages yet';
+
+  @override
+  String get chatEmptyHint => 'Start the discussion below';
+
+  @override
+  String get chatSendFailed => 'Failed to send message';
+
+  @override
+  String get chatMessageTooLong => 'Message too long (max 200 characters)';
+
+  @override
+  String chatMessageLength(int current, int max) {
+    return '$current/$max';
+  }
+
+  @override
+  String discussionPlayers(int count) {
+    return '$count players discussing';
+  }
+
+  @override
   String get language => 'Language';
 }

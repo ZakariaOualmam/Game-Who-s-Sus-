@@ -533,5 +533,33 @@ class AppLocalizationsAr extends AppLocalizations {
   String get timeLeft => 'الوقت المتبقي';
 
   @override
+  String get chatSend => 'إرسال';
+
+  @override
+  String get chatInputHint => 'اكتب رسالة...';
+
+  @override
+  String get chatEmpty => 'لا توجد رسائل بعد';
+
+  @override
+  String get chatEmptyHint => 'ابدأ النقاش بالأسفل';
+
+  @override
+  String get chatSendFailed => 'تعذّر إرسال الرسالة';
+
+  @override
+  String get chatMessageTooLong => 'الرسالة طويلة جدًا (200 حرف كحد أقصى)';
+
+  @override
+  String chatMessageLength(int current, int max) {
+    return '$current/$max';
+  }
+
+  @override
+  String discussionPlayers(int count) {
+    return '$count لاعبين يناقشون';
+  }
+
+  @override
   String get language => 'اللغة';
 }

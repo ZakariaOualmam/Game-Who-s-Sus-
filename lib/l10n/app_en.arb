@@ -272,5 +272,27 @@
 
   "timeLeft": "Time left",
 
+  "chatSend": "SEND",
+  "chatInputHint": "Type a message...",
+  "chatEmpty": "No messages yet",
+  "chatEmptyHint": "Start the discussion below",
+  "chatSendFailed": "Failed to send message",
+  "chatMessageTooLong": "Message too long (max 200 characters)",
+  "chatMessageLength": "{current}/{max}",
+  "@chatMessageLength": {
+    "description": "Character counter in the chat input.",
+    "placeholders": {
+      "current": { "type": "int" },
+      "max": { "type": "int" }
+    }
+  },
+  "discussionPlayers": "{count} players discussing",
+  "@discussionPlayers": {
+    "description": "Players connected during the discussion phase.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
   "language": "Language"
 }

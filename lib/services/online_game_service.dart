@@ -15,6 +15,7 @@ import '../models/player.dart';
 import '../models/role.dart';
 import '../models/room.dart';
 import '../models/vote.dart';
+import 'chat_service.dart';
 import 'firebase_auth_service.dart';
 import 'room_service.dart';
 import 'word_repository.dart';
@@ -34,10 +35,12 @@ class OnlineGameService {
     FirebaseFirestore? firestore,
     FirebaseAuthService? authService,
     RoomService? roomService,
+    ChatService? chatService,
     WordSource Function(Locale locale)? wordSourceProvider,
   })  : _firestore = firestore ?? FirebaseFirestore.instance,
         _authService = authService ?? FirebaseAuthService.instance,
         _roomService = roomService ?? RoomService.instance,
+        _chatService = chatService ?? ChatService.instance,
         _wordSourceProvider = wordSourceProvider ?? WordRepository.instanceFor;
 
   /// Swappable singleton so tests can inject fakes.
@@ -46,6 +49,7 @@ class OnlineGameService {
   final FirebaseFirestore _firestore;
   final FirebaseAuthService _authService;
   final RoomService _roomService;
+  final ChatService _chatService;
   final WordSource Function(Locale locale) _wordSourceProvider;
 
   DocumentReference<Map<String, dynamic>> _roomRef(String roomId) =>
@@ -215,6 +219,10 @@ class OnlineGameService {
     });
 
     await batch.commit();
+
+    // A new round starts with a fresh discussion: wipe the previous round's
+    // chat so players don't carry conversation into the next reveal.
+    await _chatService.clearMessages(room.id);
 
     // Keep imposter private until reveal phase.
     debugPrint(

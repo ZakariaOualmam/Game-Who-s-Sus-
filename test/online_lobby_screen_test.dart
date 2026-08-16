@@ -9,6 +9,7 @@ import 'package:who_sus/l10n/app_localizations.dart';
 import 'package:who_sus/models/room.dart';
 import 'package:who_sus/models/room_player.dart';
 import 'package:who_sus/screens/online/online_lobby_screen.dart';
+import 'package:who_sus/services/chat_service.dart';
 import 'package:who_sus/services/firebase_auth_service.dart';
 import 'package:who_sus/services/online_game_service.dart';
 import 'package:who_sus/services/room_service.dart';
@@ -54,10 +55,18 @@ class _PlayerContext {
           firestore: firestore,
           authService: _authService(_authFor(uid)),
         ),
+        chatService = ChatService(
+          firestore: firestore,
+          authService: _authService(_authFor(uid)),
+        ),
         gameService = OnlineGameService(
           firestore: firestore,
           authService: _authService(_authFor(uid)),
           roomService: RoomService(
+            firestore: firestore,
+            authService: _authService(_authFor(uid)),
+          ),
+          chatService: ChatService(
             firestore: firestore,
             authService: _authService(_authFor(uid)),
           ),
@@ -67,6 +76,7 @@ class _PlayerContext {
   final String uid;
   final RoomService roomService;
   final OnlineGameService gameService;
+  final ChatService chatService;
 }
 
 Widget _localizedApp(Widget home) {
