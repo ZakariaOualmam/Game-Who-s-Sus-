@@ -401,18 +401,37 @@ class _OnlineLobbyScreenState extends State<OnlineLobbyScreen> {
                 ],
               ),
         bottomBar: isHost
-            ? GameButton(
-                label: _players.length == _settings.playerCount
-                    ? l10n.onlineStartGame
-                    : l10n.onlineWaitingForPlayers(
-                        _players.length,
-                        _settings.playerCount,
+            ? Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (_settings.imposterCount >
+                      GameSettings.supportedImposters) ...[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Text(
+                        l10n.settingsImpostersUnsupported,
+                        textAlign: TextAlign.center,
+                        style: AppTypography.caption(context)
+                            .copyWith(color: AppColors.warning),
                       ),
-                onPressed: _players.length == _settings.playerCount &&
-                        _settings.imposterCount <=
-                            GameSettings.supportedImposters
-                    ? _startGame
-                    : null,
+                    ),
+                    const SizedBox(height: 8),
+                  ],
+                  GameButton(
+                    label: _players.length == _settings.playerCount
+                        ? l10n.onlineStartGame
+                        : l10n.onlineWaitingForPlayers(
+                            _players.length,
+                            _settings.playerCount,
+                          ),
+                    onPressed: _players.length == _settings.playerCount &&
+                            _settings.imposterCount <=
+                                GameSettings.supportedImposters
+                        ? _startGame
+                        : null,
+                  ),
+                ],
               )
             : Padding(
                 padding:

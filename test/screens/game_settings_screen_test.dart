@@ -40,28 +40,6 @@ Widget _localizedApp(Widget home) {
   );
 }
 
-Future<void> _pushOffline(WidgetTester tester) async {
-  await tester.pumpWidget(_localizedApp(Builder(
-    builder: (context) => Scaffold(
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).push<GameSettings>(
-              appRoute(const GameSettingsScreen.offline(
-                initialSettings: GameSettings(),
-                playerCount: 5,
-              )),
-            );
-          },
-          child: const Text('OPEN'),
-        ),
-      ),
-    ),
-  )));
-  await tester.tap(find.text('OPEN'));
-  await tester.pumpAndSettle();
-}
-
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -96,13 +74,16 @@ void main() {
     expect(find.text('GAME SETTINGS'), findsOneWidget);
     expect(find.text('Players'), findsOneWidget);
 
-    // Toggle anonymous voting and pick a 2-minute discussion.
-    final firstSwitch = find.byType(Switch).first;
-    await tester.ensureVisible(firstSwitch);
-    await tester.pumpAndSettle();
-    await tester.tap(firstSwitch);
-    await tester.pumpAndSettle();
+    final l10n = AppLocalizations.of(
+      tester.element(find.byType(GameSettingsScreen)),
+    );
 
+    // Settings without a gameplay effect are hidden for V1.
+    expect(find.text(l10n.settingsAnonymousVoting), findsNothing);
+    expect(find.text(l10n.settingsImposterClue), findsNothing);
+    expect(find.byType(Switch), findsNothing);
+
+    // Pick a 2-minute discussion.
     final twoMinutes = find.text('2m');
     await tester.ensureVisible(twoMinutes);
     await tester.pumpAndSettle();
@@ -116,24 +97,106 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(returned, isNotNull);
-    expect(returned!.anonymousVoting, isTrue);
+    expect(returned!.anonymousVoting, isFalse);
+    expect(returned!.imposterCount, 1);
     expect(returned!.discussionTime, const Duration(minutes: 2));
   });
 
-  testWidgets('offline mode flags unsupported imposter counts', (tester) async {
-    await _pushOffline(tester);
+  testWidgets('two-imposter option is locked for V1', (tester) async {
+    GameSettings? returned;
+    await tester.pumpWidget(_localizedApp(Builder(
+      builder: (context) => Scaffold(
+        body: Center(
+          child: ElevatedButton(
+            onPressed: () async {
+              returned = await Navigator.of(context).push<GameSettings>(
+                appRoute(const GameSettingsScreen.offline(
+                  initialSettings: GameSettings(),
+                  playerCount: 5,
+                )),
+              );
+            },
+            child: const Text('OPEN'),
+          ),
+        ),
+      ),
+    )));
+    await tester.tap(find.text('OPEN'));
+    await tester.pumpAndSettle();
 
-    // 5 players allow 2 imposters, but gameplay does not support it yet.
+    final l10n = AppLocalizations.of(
+      tester.element(find.byType(GameSettingsScreen)),
+    );
+
+    // 5 players would allow 2 imposters, but gameplay does not support it,
+    // so the "2" option is disabled and cannot be selected.
     final twoImposters = find.text('2');
     await tester.ensureVisible(twoImposters);
     await tester.pumpAndSettle();
-    await tester.tap(twoImposters);
+    await tester.tap(twoImposters, warnIfMissed: false);
+    await tester.pumpAndSettle();
+
+    expect(find.text(l10n.settingsImpostersUnsupported), findsNothing);
+
+    final close = find.text('CLOSE');
+    await tester.ensureVisible(close);
+    await tester.pumpAndSettle();
+    await tester.tap(close);
+    await tester.pumpAndSettle();
+
+    expect(returned, isNotNull);
+    expect(returned!.imposterCount, 1);
+  });
+
+  testWidgets('legacy online room with 2 imposters warns the host', (tester) async {
+    final firestore = SettlingFirestore();
+    final host = RoomService(
+      firestore: firestore,
+      authService: _authService(_authFor('alice')),
+    );
+    RoomService.instance = host;
+
+    late Room createdRoom;
+    await tester.runAsync(() async {
+      final created = await host.createRoom(playerName: 'Alice');
+      createdRoom = created.room;
+
+      // Simulate a room saved before V1 locked imposter count to 1.
+      await firestore.collection('rooms').doc(createdRoom.id).update({
+        'settings': GameSettings(
+          playerCount: createdRoom.settings.playerCount,
+          imposterCount: 2,
+        ).toMap(),
+      });
+      final legacyDoc = await firestore
+          .collection('rooms')
+          .doc(createdRoom.id)
+          .get();
+      createdRoom = Room.fromMap(legacyDoc.data()!, id: legacyDoc.id);
+    });
+    expect(createdRoom.settings.imposterCount, 2);
+
+    await tester.pumpWidget(_localizedApp(
+      GameSettingsScreen.online(room: createdRoom, isHost: true),
+    ));
     await tester.pumpAndSettle();
 
     final l10n = AppLocalizations.of(
       tester.element(find.byType(GameSettingsScreen)),
     );
     expect(find.text(l10n.settingsImpostersUnsupported), findsOneWidget);
+
+    // The host can switch back to 1 imposter and save.
+    await tester.tap(find.text('1'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(l10n.settingsSave));
+    await tester.pumpAndSettle();
+
+    final savedDoc = await tester.runAsync(
+      () => firestore.collection('rooms').doc(createdRoom.id).get(),
+    );
+    final savedSettings = savedDoc!.data()!['settings'] as Map<String, dynamic>;
+    expect(savedSettings['imposter_count'], 1);
   });
 
   testWidgets('online host saves settings to the room', (tester) async {

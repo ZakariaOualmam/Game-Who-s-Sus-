@@ -197,28 +197,6 @@ class _GameSettingsScreenState extends State<GameSettingsScreen> {
                   setState(() => _settings = _settings.copyWith(votingTime: value)),
             ),
           ),
-          const SizedBox(height: 16),
-          _Section(
-            title: l10n.settingsAnonymousVoting,
-            hint: l10n.settingsAnonymousVotingHelp,
-            child: _SwitchRow(
-              value: _settings.anonymousVoting,
-              enabled: _editable,
-              onChanged: (value) =>
-                  setState(() => _settings = _settings.copyWith(anonymousVoting: value)),
-            ),
-          ),
-          const SizedBox(height: 16),
-          _Section(
-            title: l10n.settingsImposterClue,
-            hint: l10n.settingsImposterClueHelp,
-            child: _SwitchRow(
-              value: _settings.imposterClue,
-              enabled: _editable,
-              onChanged: (value) =>
-                  setState(() => _settings = _settings.copyWith(imposterClue: value)),
-            ),
-          ),
         ],
       ),
       bottomBar: _isOnline && _editable
@@ -340,38 +318,20 @@ class _ImposterSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    final maxForPlayers = GameSettings.maxImpostersFor(playerCount);
     final choices = [
       for (var count = 1; count <= GameSettings.maxImposters; count++) count,
     ];
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    return Wrap(
+      spacing: 10,
+      runSpacing: 10,
       children: [
-        Wrap(
-          spacing: 10,
-          runSpacing: 10,
-          children: [
-            for (final count in choices)
-              _OptionChip(
-                label: '$count',
-                selected: count == current,
-                enabled: enabled && count <= maxForPlayers,
-                onTap: () => onChanged(count),
-              ),
-          ],
-        ),
-        if (maxForPlayers < GameSettings.maxImposters)
-          Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: Text(
-              l10n.settingsImpostersNeedPlayers(
-                GameSettings.minCrewMembers + GameSettings.maxImposters,
-              ),
-              textAlign: TextAlign.center,
-              style: AppTypography.caption(context),
-            ),
+        for (final count in choices)
+          _OptionChip(
+            label: '$count',
+            selected: count == current,
+            enabled: enabled && count <= GameSettings.supportedImposters,
+            onTap: () => onChanged(count),
           ),
       ],
     );
@@ -405,38 +365,6 @@ class _DurationSelector extends StatelessWidget {
             enabled: enabled,
             onTap: () => onChanged(option),
           ),
-      ],
-    );
-  }
-}
-
-class _SwitchRow extends StatelessWidget {
-  const _SwitchRow({
-    required this.value,
-    required this.enabled,
-    required this.onChanged,
-  });
-
-  final bool value;
-  final bool enabled;
-  final ValueChanged<bool> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          value
-              ? AppLocalizations.of(context).settingsOn
-              : AppLocalizations.of(context).settingsOff,
-          style: AppTypography.bodyBold(context),
-        ),
-        Switch(
-          value: value,
-          onChanged: enabled ? (v) => onChanged(v) : null,
-          activeTrackColor: AppColors.primary,
-        ),
       ],
     );
   }
