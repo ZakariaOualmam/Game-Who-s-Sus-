@@ -221,5 +221,7 @@
     }
   },
 
+  "timeLeft": "Temps restant",
+
   "language": "Langue"
 }

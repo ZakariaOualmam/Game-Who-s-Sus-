@@ -535,5 +535,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get timeLeft => 'Time left';
+
+  @override
   String get language => 'Language';
 }

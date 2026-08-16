@@ -8,12 +8,14 @@ import '../../game/game_engine.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/player.dart';
 import '../../widgets/game_button.dart';
+import '../../widgets/game_countdown.dart';
 import '../../widgets/game_scaffold.dart';
 import '../../widgets/player_card.dart';
 import 'vote_results_screen.dart';
 
 /// Pass-the-phone voting. Each player picks a suspect, then confirms their
-/// vote with one tap.
+/// vote with one tap. A countdown from the configured voting time finalizes
+/// the vote with the ballots cast so far when it reaches zero.
 class VotingScreen extends StatefulWidget {
   const VotingScreen({super.key, required this.engine});
 
@@ -26,9 +28,18 @@ class VotingScreen extends StatefulWidget {
 class _VotingScreenState extends State<VotingScreen> {
   int _voterIndex = 0;
   String? _selectedId;
+  bool _transitioning = false;
 
   GameEngine get engine => widget.engine;
   Player get _voter => engine.players[_voterIndex];
+
+  void _goToResults() {
+    if (_transitioning) return;
+    _transitioning = true;
+    Navigator.of(context).pushReplacement(
+      appRoute(VoteResultsScreen(engine: engine)),
+    );
+  }
 
   void _select(String id) {
     Haptics.selectionClick();
@@ -43,9 +54,7 @@ class _VotingScreenState extends State<VotingScreen> {
     Haptics.lightImpact();
 
     if (engine.allPlayersVoted) {
-      Navigator.of(context).pushReplacement(
-        appRoute(VoteResultsScreen(engine: engine)),
-      );
+      _goToResults();
       return;
     }
     setState(() {
@@ -100,7 +109,15 @@ class _VotingScreenState extends State<VotingScreen> {
                 ),
             ],
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
+          Center(
+            child: GameCountdown(
+              duration: engine.settings.votingTime,
+              compact: true,
+              onFinished: _goToResults,
+            ),
+          ),
+          const SizedBox(height: 16),
           Text(
             l10n.whoIsTheImposter,
             textAlign: TextAlign.center,

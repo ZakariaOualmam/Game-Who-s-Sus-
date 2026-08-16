@@ -530,5 +530,8 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
+  String get timeLeft => 'الوقت المتبقي';
+
+  @override
   String get language => 'اللغة';
 }

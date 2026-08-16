@@ -267,47 +267,49 @@ class OnlineGameService {
     }
   }
 
-  Future<void> hostTryAdvanceDiscussion(String roomId, String roundId) async {
-    final room = await getRoomById(roomId);
-    if (!await _isHost(room.id)) return;
-
-    final players = await _roomService.getPlayersInRoom(roomId);
-    final readyRows = await _roundRef(roomId, roundId)
-        .collection('player_states')
-        .where('discussion_ready', isEqualTo: true)
-        .get();
-
-    if (readyRows.docs.length >= players.length) {
-      await _updateRoomPhase(roomId: roomId, phase: OnlineGamePhase.voting);
-    }
-  }
-
-  Future<void> castVote({
-    required String roomId,
-    required String roundId,
-    required String targetPlayerId,
+  Future<void> hostAdvanceDiscussion(
+    String roomId,
+    String roundId, {
+    required bool requireAllReady,
   }) async {
-    final uid = await _authService.requireUid();
-    if (uid == targetPlayerId) {
-      throw Exception('Cannot vote for yourself');
-    }
-
-    await _roundRef(roomId, roundId).collection('votes').doc(uid).set({
-      'room_id': roomId,
-      'round_id': roundId,
-      'voter_player_id': uid,
-      'target_player_id': targetPlayerId,
-      'created_at': DateTime.now().toUtc().toIso8601String(),
-    });
-  }
-
-  Future<void> hostTryCompleteVoting(String roomId, String roundId) async {
     final room = await getRoomById(roomId);
     if (!await _isHost(room.id)) return;
+    if (room.gamePhase != OnlineGamePhase.discussion.dbValue) return;
+
+    if (requireAllReady) {
+      final players = await _roomService.getPlayersInRoom(roomId);
+      final readyRows = await _roundRef(roomId, roundId)
+          .collection('player_states')
+          .where('discussion_ready', isEqualTo: true)
+          .get();
+      if (readyRows.docs.length < players.length) return;
+    }
+
+    await _updateRoomPhase(roomId: roomId, phase: OnlineGamePhase.voting);
+  }
+
+  Future<void> hostTryAdvanceDiscussion(String roomId, String roundId) {
+    return hostAdvanceDiscussion(roomId, roundId, requireAllReady: true);
+  }
+
+  /// Host-only, timer-driven end of the discussion phase. Advances to voting
+  /// regardless of how many players pressed "ready". Idempotent.
+  Future<void> hostEndDiscussion(String roomId, String roundId) {
+    return hostAdvanceDiscussion(roomId, roundId, requireAllReady: false);
+  }
+
+  Future<void> hostCompleteVoting(
+    String roomId,
+    String roundId, {
+    required bool requireAllVotes,
+  }) async {
+    final room = await getRoomById(roomId);
+    if (!await _isHost(room.id)) return;
+    if (room.gamePhase != OnlineGamePhase.voting.dbValue) return;
 
     final players = await _roomService.getPlayersInRoom(roomId);
     final votes = await _roundRef(roomId, roundId).collection('votes').get();
-    if (votes.docs.length < players.length) return;
+    if (requireAllVotes && votes.docs.length < players.length) return;
 
     final counts = <String, int>{};
     for (final doc in votes.docs) {
@@ -351,6 +353,35 @@ class OnlineGameService {
     });
 
     await batch.commit();
+  }
+
+  Future<void> hostTryCompleteVoting(String roomId, String roundId) {
+    return hostCompleteVoting(roomId, roundId, requireAllVotes: true);
+  }
+
+  /// Host-only, timer-driven end of the voting phase. Tallies whatever votes
+  /// were cast and moves to results even if not everyone voted. Idempotent.
+  Future<void> hostEndVoting(String roomId, String roundId) {
+    return hostCompleteVoting(roomId, roundId, requireAllVotes: false);
+  }
+
+  Future<void> castVote({
+    required String roomId,
+    required String roundId,
+    required String targetPlayerId,
+  }) async {
+    final uid = await _authService.requireUid();
+    if (uid == targetPlayerId) {
+      throw Exception('Cannot vote for yourself');
+    }
+
+    await _roundRef(roomId, roundId).collection('votes').doc(uid).set({
+      'room_id': roomId,
+      'round_id': roundId,
+      'voter_player_id': uid,
+      'target_player_id': targetPlayerId,
+      'created_at': DateTime.now().toUtc().toIso8601String(),
+    });
   }
 
   Future<void> hostRevealImposter(String roomId, String roundId) async {

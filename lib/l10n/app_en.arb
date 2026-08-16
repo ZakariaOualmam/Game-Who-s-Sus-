@@ -270,5 +270,7 @@
     }
   },
 
+  "timeLeft": "Time left",
+
   "language": "Language"
 }

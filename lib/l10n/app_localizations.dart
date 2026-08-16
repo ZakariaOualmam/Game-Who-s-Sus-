@@ -1074,6 +1074,12 @@ abstract class AppLocalizations {
   /// **'WAITING FOR {current}/{expected} PLAYERS'**
   String onlineWaitingForPlayers(int current, int expected);
 
+  /// No description provided for @timeLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Time left'**
+  String get timeLeft;
+
   /// No description provided for @language.
   ///
   /// In en, this message translates to:

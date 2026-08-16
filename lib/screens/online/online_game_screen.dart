@@ -10,10 +10,10 @@ import '../../models/online_player_round_state.dart';
 import '../../models/online_round.dart';
 import '../../models/room.dart';
 import '../../models/room_player.dart';
-import '../../services/firebase_auth_service.dart';
 import '../../services/online_game_service.dart';
 import '../../services/room_service.dart';
 import '../../widgets/game_button.dart';
+import '../../widgets/game_countdown.dart';
 import '../../widgets/game_scaffold.dart';
 import '../../widgets/player_card.dart';
 import '../../models/player.dart' as game_models;
@@ -42,7 +42,7 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
   bool _loading = true;
   bool _busy = false;
 
-  bool get _isHost => _room?.hostPlayerId == FirebaseAuthService.instance.currentUid;
+  bool get _isHost => _room?.hostPlayerId == widget.currentPlayer.playerId;
 
   @override
   void initState() {
@@ -130,6 +130,27 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
       _show(l10n.onlineError);
     } finally {
       if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  /// Timer callback: the host advances the phase; other players only react to
+  /// the synchronized phase change pushed down from Firestore.
+  Future<void> _endDiscussionFromTimer() async {
+    if (!_isHost) return;
+    try {
+      await OnlineGameService.instance
+          .hostEndDiscussion(_room!.id, _round!.id);
+    } catch (error) {
+      debugPrint('Failed to auto-end discussion: $error');
+    }
+  }
+
+  Future<void> _endVotingFromTimer() async {
+    if (!_isHost) return;
+    try {
+      await OnlineGameService.instance.hostEndVoting(_room!.id, _round!.id);
+    } catch (error) {
+      debugPrint('Failed to auto-end voting: $error');
     }
   }
 
@@ -286,7 +307,16 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const SizedBox(height: 24),
+        const SizedBox(height: 16),
+        Center(
+          child: GameCountdown(
+            key: const ValueKey('discussion-timer'),
+            duration: _room!.settings.discussionTime,
+            label: l10n.timeLeft,
+            onFinished: _endDiscussionFromTimer,
+          ),
+        ),
+        const SizedBox(height: 22),
         Text(l10n.discuss.toUpperCase(), textAlign: TextAlign.center, style: AppTypography.display(context)),
         const SizedBox(height: 10),
         Text(l10n.figureOutWhosImp, textAlign: TextAlign.center, style: AppTypography.caption(context)),
@@ -301,7 +331,7 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
                       roundId: _round!.id,
                       ready: true,
                     );
-                    await OnlineGameService.instance.hostTryAdvanceDiscussion(_room!.id, _round!.id);
+                    await OnlineGameService.instance.hostAdvanceDiscussion(_room!.id, _round!.id, requireAllReady: true);
                   }),
         ),
       ],
@@ -309,13 +339,22 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
   }
 
   Widget _buildVotingPhase(AppLocalizations l10n) {
-    final myId = FirebaseAuthService.instance.currentUid;
+    final myId = widget.currentPlayer.playerId;
     final targets = _players.where((p) => p.playerId != myId).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         const SizedBox(height: 10),
+        Center(
+          child: GameCountdown(
+            key: const ValueKey('voting-timer'),
+            duration: _room!.settings.votingTime,
+            compact: true,
+            onFinished: _endVotingFromTimer,
+          ),
+        ),
+        const SizedBox(height: 14),
         Text(l10n.whoIsTheImposter, textAlign: TextAlign.center, style: AppTypography.title(context)),
         const SizedBox(height: 14),
         for (final target in targets) ...[

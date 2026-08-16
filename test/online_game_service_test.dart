@@ -209,6 +209,149 @@ void main() {
     });
   });
 
+  group('OnlineGameService timer-driven host transitions', () {
+    Future<(String, String)> advanceToDiscussion() async {
+      final (roomId, roundId, _, _) = await setupRound();
+      for (final player in [alice, bob, cara, dave]) {
+        await player.gameService.setRevealReady(
+          roomId: roomId,
+          roundId: roundId,
+          ready: true,
+        );
+      }
+      await alice.gameService.hostTryAdvanceReveal(roomId, roundId);
+      return (roomId, roundId);
+    }
+
+    Future<(String, String)> advanceToVoting() async {
+      final (roomId, roundId) = await advanceToDiscussion();
+      for (final player in [alice, bob, cara, dave]) {
+        await player.gameService.setDiscussionReady(
+          roomId: roomId,
+          roundId: roundId,
+          ready: true,
+        );
+      }
+      await alice.gameService.hostTryAdvanceDiscussion(roomId, roundId);
+      return (roomId, roundId);
+    }
+
+    test('hostEndDiscussion advances even when not everyone is ready',
+        () async {
+      final (roomId, roundId) = await advanceToDiscussion();
+
+      // No player pressed ready; the timer still ends the phase.
+      await alice.gameService.hostEndDiscussion(roomId, roundId);
+      expect(
+        (await alice.gameService.getRoomById(roomId)).gamePhase,
+        'voting',
+      );
+    });
+
+    test('hostEndDiscussion is a no-op for non-host players', () async {
+      final (roomId, roundId) = await advanceToDiscussion();
+
+      await bob.gameService.hostEndDiscussion(roomId, roundId);
+      expect(
+        (await alice.gameService.getRoomById(roomId)).gamePhase,
+        'discussion',
+      );
+    });
+
+    test('hostEndDiscussion is a no-op outside the discussion phase',
+        () async {
+      final (roomId, roundId, _, _) = await setupRound();
+
+      await alice.gameService.hostEndDiscussion(roomId, roundId);
+      expect(
+        (await alice.gameService.getRoomById(roomId)).gamePhase,
+        'role_reveal',
+      );
+    });
+
+    test('hostEndVoting finalizes with partial votes when time runs out',
+        () async {
+      final (roomId, roundId) = await advanceToVoting();
+
+      // Only one player votes before the timer expires.
+      await alice.gameService.castVote(
+        roomId: roomId,
+        roundId: roundId,
+        targetPlayerId: 'bob',
+      );
+
+      await alice.gameService.hostEndVoting(roomId, roundId);
+      expect(
+        (await alice.gameService.getRoomById(roomId)).gamePhase,
+        'vote_results',
+      );
+
+      final round = await f
+          .collection('rooms')
+          .doc(roomId)
+          .collection('rounds')
+          .doc(roundId)
+          .get();
+      expect(round.data()!['accused_player_id'], 'bob');
+
+      final totals = await alice.gameService.getVoteTotals(
+        roomId: roomId,
+        roundId: roundId,
+      );
+      expect(totals, {'bob': 1});
+    });
+
+    test('hostEndVoting with no ballots ends in a tie', () async {
+      final (roomId, roundId) = await advanceToVoting();
+
+      await alice.gameService.hostEndVoting(roomId, roundId);
+      expect(
+        (await alice.gameService.getRoomById(roomId)).gamePhase,
+        'vote_results',
+      );
+
+      final round = await f
+          .collection('rooms')
+          .doc(roomId)
+          .collection('rounds')
+          .doc(roundId)
+          .get();
+      expect(round.data()!['accused_player_id'], isNull);
+    });
+
+    test('hostEndVoting is idempotent', () async {
+      final (roomId, roundId) = await advanceToVoting();
+
+      await alice.gameService.castVote(
+        roomId: roomId,
+        roundId: roundId,
+        targetPlayerId: 'bob',
+      );
+      await alice.gameService.hostEndVoting(roomId, roundId);
+      await alice.gameService.hostEndVoting(roomId, roundId);
+
+      expect(
+        (await alice.gameService.getRoomById(roomId)).gamePhase,
+        'vote_results',
+      );
+      final totals = await alice.gameService.getVoteTotals(
+        roomId: roomId,
+        roundId: roundId,
+      );
+      expect(totals, {'bob': 1});
+    });
+
+    test('hostEndVoting is a no-op for non-host players', () async {
+      final (roomId, roundId) = await advanceToVoting();
+
+      await bob.gameService.hostEndVoting(roomId, roundId);
+      expect(
+        (await alice.gameService.getRoomById(roomId)).gamePhase,
+        'voting',
+      );
+    });
+  });
+
   group('OnlineGameService full round', () {
     test('runs reveal -> discussion -> voting -> results -> imposter guess -> winner',
         () async {

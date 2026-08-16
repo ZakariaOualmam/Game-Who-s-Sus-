@@ -529,5 +529,8 @@ class AppLocalizationsAry extends AppLocalizations {
   }
 
   @override
+  String get timeLeft => 'الوقت الباقي';
+
+  @override
   String get language => 'اللغة';
 }
