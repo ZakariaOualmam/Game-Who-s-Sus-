@@ -294,5 +294,24 @@
     }
   },
 
+  "voiceTitle": "Voice Chat",
+  "voiceHoldToTalk": "HOLD TO TALK",
+  "voiceReleaseToStop": "RELEASE TO STOP",
+  "voiceTalking": "TALKING...",
+  "voiceSpaceHint": "Hold SPACE to talk",
+  "voiceSpeaking": "Speaking",
+  "voiceMuted": "Muted",
+  "voiceConnecting": "Connecting...",
+  "voiceReconnecting": "Reconnecting...",
+  "voiceDisconnected": "Voice disconnected",
+  "voiceNotConnected": "Not connected",
+  "voicePermissionRequired": "Microphone permission is required for voice chat.",
+  "voiceMicUnavailable": "Microphone unavailable.",
+  "voiceConnectionFailed": "Voice connection failed. You can keep using text chat.",
+  "voiceNotConfigured": "Voice chat is not available right now. You can keep using text chat.",
+  "voiceAllowMicrophone": "ALLOW MICROPHONE",
+  "voiceContinueWithoutVoice": "CONTINUE WITHOUT VOICE",
+  "voiceRetry": "RETRY",
+
   "language": "Language"
 }

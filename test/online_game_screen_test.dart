@@ -16,11 +16,13 @@ import 'package:who_sus/services/chat_service.dart';
 import 'package:who_sus/services/firebase_auth_service.dart';
 import 'package:who_sus/services/online_game_service.dart';
 import 'package:who_sus/services/room_service.dart';
+import 'package:who_sus/services/voice_chat_service.dart';
 import 'package:who_sus/services/word_repository.dart';
 import 'package:who_sus/widgets/chat_panel.dart';
 import 'package:who_sus/widgets/game_countdown.dart';
 import 'package:who_sus/widgets/player_card.dart';
 
+import 'helpers/fake_voice.dart';
 import 'helpers/settling_firestore.dart';
 
 class _StubWordSource implements WordSource {
@@ -187,6 +189,9 @@ void main() {
     RoomService.instance = client.roomService;
     OnlineGameService.instance = client.gameService;
     ChatService.instance = client.chatService;
+    VoiceChatService.instance = buildFakeVoiceService(
+      authService: _authService(_authFor(client.uid)),
+    );
     await tester.pumpWidget(
       _localizedApp(OnlineGameScreen(
         roomId: created.room.id,

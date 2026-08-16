@@ -16,11 +16,14 @@ import '../../models/room_player.dart';
 import '../../services/chat_service.dart';
 import '../../services/online_game_service.dart';
 import '../../services/room_service.dart';
+import '../../services/voice_chat_service.dart';
+import '../../voice/voice_participant.dart';
 import '../../widgets/chat_panel.dart';
 import '../../widgets/game_button.dart';
 import '../../widgets/game_countdown.dart';
 import '../../widgets/game_scaffold.dart';
 import '../../widgets/player_card.dart';
+import '../../widgets/voice_panel.dart';
 import '../../models/player.dart' as game_models;
 
 class OnlineGameScreen extends StatefulWidget {
@@ -46,6 +49,7 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
   final List<ChatMessage> _chatMessages = [];
   StreamSubscription<List<ChatMessage>>? _chatSub;
   RoomSubscription? _sub;
+  late VoiceChatService _voice;
   bool _subscribedAsHost = false;
   bool _loading = true;
   bool _busy = false;
@@ -55,9 +59,15 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
   @override
   void initState() {
     super.initState();
+    _voice = VoiceChatService.instance;
+    _voice.addListener(_onVoiceChanged);
     _subscribeChat();
     _syncSubscription();
     _refreshAll();
+  }
+
+  void _onVoiceChanged() {
+    if (mounted) setState(() {});
   }
 
   /// Follows the room's discussion chat for the whole session. Rendering is
@@ -94,6 +104,8 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
 
   @override
   void dispose() {
+    _voice.removeListener(_onVoiceChanged);
+    unawaited(_voice.leaveRoom());
     _chatSub?.cancel();
     _sub?.unsubscribe();
     super.dispose();
@@ -129,6 +141,7 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
       });
 
       _syncSubscription();
+      _syncVoiceForPhase(OnlineGamePhase.fromDb(room.gamePhase));
       await _runHostAutoTransitions();
     } catch (error) {
       debugPrint('Failed to refresh online game: $error');
@@ -149,6 +162,45 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
     } else if (phase == OnlineGamePhase.voting) {
       await OnlineGameService.instance.hostTryCompleteVoting(_room!.id, _round!.id);
     }
+  }
+
+  /// Joins the voice room while the discussion is in progress and leaves as
+  /// soon as the phase changes, so the microphone is never left running
+  /// outside the discussion.
+  void _syncVoiceForPhase(OnlineGamePhase phase) {
+    final room = _room;
+    if (room == null) return;
+    if (phase == OnlineGamePhase.discussion) {
+      unawaited(_voice.joinRoom(
+        roomId: room.id,
+        playerName: widget.currentPlayer.playerName,
+      ));
+    } else {
+      unawaited(_voice.leaveRoom());
+    }
+  }
+
+  /// Merges the transport's voice participants with the room's player list so
+  /// every player gets a row, marking the ones not in voice as offline.
+  List<VoiceParticipant> _voiceParticipants() {
+    final byId = {
+      for (final p in _voice.participants) p.playerId: p,
+    };
+    final connecting = _voice.state == VoiceConnectionState.joining;
+    final reconnecting = _voice.state == VoiceConnectionState.reconnecting;
+    return [
+      for (final player in _players)
+        VoiceParticipant(
+          playerId: player.playerId,
+          name: player.playerName,
+          state: connecting
+              ? VoiceParticipantState.connecting
+              : reconnecting
+                  ? VoiceParticipantState.reconnecting
+                  : byId[player.playerId]?.state ??
+                      VoiceParticipantState.disconnected,
+        ),
+    ];
   }
 
   void _show(String message) {
@@ -380,6 +432,19 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
         Text(l10n.figureOutWhosImp, textAlign: TextAlign.center, style: AppTypography.caption(context)),
         const SizedBox(height: 12),
         Center(child: _buildDiscussionPlayersBadge(l10n)),
+        const SizedBox(height: 12),
+        VoicePanel(
+          participants: _voiceParticipants(),
+          state: _voice.state,
+          failure: _voice.failure,
+          micEnabled: _voice.micEnabled,
+          myPlayerId: widget.currentPlayer.playerId,
+          onHoldStart: () => unawaited(_voice.setMicEnabled(true)),
+          onHoldEnd: () => unawaited(_voice.setMicEnabled(false)),
+          onRetry: () => unawaited(_voice.retryJoin()),
+          onAllowMicrophone: () => unawaited(_voice.allowMicrophone()),
+          onContinueWithoutVoice: _voice.continueWithoutVoice,
+        ),
         const SizedBox(height: 12),
         ChatPanel(
           messages: _chatMessages,

@@ -560,5 +560,61 @@ class AppLocalizationsAry extends AppLocalizations {
   }
 
   @override
+  String get voiceTitle => 'المحادثة بالصوت';
+
+  @override
+  String get voiceHoldToTalk => 'بقّى مضغوط باش تهضر';
+
+  @override
+  String get voiceReleaseToStop => 'خلّيها باش توقف';
+
+  @override
+  String get voiceTalking => 'كيهضر دابا...';
+
+  @override
+  String get voiceSpaceHint => 'اضغط مسافة باش تهضر';
+
+  @override
+  String get voiceSpeaking => 'كيهضر';
+
+  @override
+  String get voiceMuted => 'صامت';
+
+  @override
+  String get voiceConnecting => 'منوصلين...';
+
+  @override
+  String get voiceReconnecting => 'منعاودو نوصلو...';
+
+  @override
+  String get voiceDisconnected => 'قطع الصوت';
+
+  @override
+  String get voiceNotConnected => 'ما متصلش';
+
+  @override
+  String get voicePermissionRequired =>
+      'خاص الإذن ديال الميكرو باش نتواصلو بالصوت.';
+
+  @override
+  String get voiceMicUnavailable => 'الميكرو ماشي متوفر.';
+
+  @override
+  String get voiceConnectionFailed =>
+      'ما توفّقش الاتصال بالصوت. تقدر تكمل بالشات.';
+
+  @override
+  String get voiceNotConfigured => 'الصوت ماشي متوفر دابا. تقدر تكمل بالشات.';
+
+  @override
+  String get voiceAllowMicrophone => 'سمح بالميكرو';
+
+  @override
+  String get voiceContinueWithoutVoice => 'كمّل بلا صوت';
+
+  @override
+  String get voiceRetry => 'عاود جرب';
+
+  @override
   String get language => 'اللغة';
 }

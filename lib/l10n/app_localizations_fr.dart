@@ -573,5 +573,62 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get voiceTitle => 'Chat vocal';
+
+  @override
+  String get voiceHoldToTalk => 'MAINTENIR POUR PARLER';
+
+  @override
+  String get voiceReleaseToStop => 'RELÂCHER POUR ARRÊTER';
+
+  @override
+  String get voiceTalking => 'EN TRAIN DE PARLER...';
+
+  @override
+  String get voiceSpaceHint => 'Maintenez ESPACE pour parler';
+
+  @override
+  String get voiceSpeaking => 'Parle';
+
+  @override
+  String get voiceMuted => 'En sourdine';
+
+  @override
+  String get voiceConnecting => 'Connexion...';
+
+  @override
+  String get voiceReconnecting => 'Reconnexion...';
+
+  @override
+  String get voiceDisconnected => 'Voix déconnectée';
+
+  @override
+  String get voiceNotConnected => 'Non connecté';
+
+  @override
+  String get voicePermissionRequired =>
+      'L\'autorisation du microphone est requise pour le chat vocal.';
+
+  @override
+  String get voiceMicUnavailable => 'Microphone indisponible.';
+
+  @override
+  String get voiceConnectionFailed =>
+      'Échec de la connexion vocale. Vous pouvez continuer avec le tchat.';
+
+  @override
+  String get voiceNotConfigured =>
+      'Le chat vocal n\'est pas disponible pour le moment. Vous pouvez continuer avec le tchat.';
+
+  @override
+  String get voiceAllowMicrophone => 'AUTORISER LE MICRO';
+
+  @override
+  String get voiceContinueWithoutVoice => 'CONTINUER SANS VOIX';
+
+  @override
+  String get voiceRetry => 'RÉESSAYER';
+
+  @override
   String get language => 'Langue';
 }

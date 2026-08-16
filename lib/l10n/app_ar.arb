@@ -245,5 +245,24 @@
     }
   },
 
+  "voiceTitle": "المحادثة الصوتية",
+  "voiceHoldToTalk": "اضغط مع الاستمرار للتحدث",
+  "voiceReleaseToStop": "ارفع إصبعك للإيقاف",
+  "voiceTalking": "جارٍ التحدث...",
+  "voiceSpaceHint": "اضغط مسافة للتحدث",
+  "voiceSpeaking": "يتحدث",
+  "voiceMuted": "كتم",
+  "voiceConnecting": "جارٍ الاتصال...",
+  "voiceReconnecting": "جارٍ إعادة الاتصال...",
+  "voiceDisconnected": "انقطع الصوت",
+  "voiceNotConnected": "غير متصل",
+  "voicePermissionRequired": "إذن الميكروفون مطلوب للمحادثة الصوتية.",
+  "voiceMicUnavailable": "الميكروفون غير متاح.",
+  "voiceConnectionFailed": "فشل الاتصال الصوتي. يمكنك متابعة الدردشة النصية.",
+  "voiceNotConfigured": "المحادثة الصوتية غير متاحة الآن. يمكنك متابعة الدردشة النصية.",
+  "voiceAllowMicrophone": "السماح بالميكروفون",
+  "voiceContinueWithoutVoice": "المتابعة بدون صوت",
+  "voiceRetry": "إعادة المحاولة",
+
   "language": "اللغة"
 }

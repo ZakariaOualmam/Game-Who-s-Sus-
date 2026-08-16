@@ -1128,6 +1128,114 @@ abstract class AppLocalizations {
   /// **'{count} players discussing'**
   String discussionPlayers(int count);
 
+  /// No description provided for @voiceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice Chat'**
+  String get voiceTitle;
+
+  /// No description provided for @voiceHoldToTalk.
+  ///
+  /// In en, this message translates to:
+  /// **'HOLD TO TALK'**
+  String get voiceHoldToTalk;
+
+  /// No description provided for @voiceReleaseToStop.
+  ///
+  /// In en, this message translates to:
+  /// **'RELEASE TO STOP'**
+  String get voiceReleaseToStop;
+
+  /// No description provided for @voiceTalking.
+  ///
+  /// In en, this message translates to:
+  /// **'TALKING...'**
+  String get voiceTalking;
+
+  /// No description provided for @voiceSpaceHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Hold SPACE to talk'**
+  String get voiceSpaceHint;
+
+  /// No description provided for @voiceSpeaking.
+  ///
+  /// In en, this message translates to:
+  /// **'Speaking'**
+  String get voiceSpeaking;
+
+  /// No description provided for @voiceMuted.
+  ///
+  /// In en, this message translates to:
+  /// **'Muted'**
+  String get voiceMuted;
+
+  /// No description provided for @voiceConnecting.
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting...'**
+  String get voiceConnecting;
+
+  /// No description provided for @voiceReconnecting.
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnecting...'**
+  String get voiceReconnecting;
+
+  /// No description provided for @voiceDisconnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice disconnected'**
+  String get voiceDisconnected;
+
+  /// No description provided for @voiceNotConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Not connected'**
+  String get voiceNotConnected;
+
+  /// No description provided for @voicePermissionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Microphone permission is required for voice chat.'**
+  String get voicePermissionRequired;
+
+  /// No description provided for @voiceMicUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Microphone unavailable.'**
+  String get voiceMicUnavailable;
+
+  /// No description provided for @voiceConnectionFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice connection failed. You can keep using text chat.'**
+  String get voiceConnectionFailed;
+
+  /// No description provided for @voiceNotConfigured.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice chat is not available right now. You can keep using text chat.'**
+  String get voiceNotConfigured;
+
+  /// No description provided for @voiceAllowMicrophone.
+  ///
+  /// In en, this message translates to:
+  /// **'ALLOW MICROPHONE'**
+  String get voiceAllowMicrophone;
+
+  /// No description provided for @voiceContinueWithoutVoice.
+  ///
+  /// In en, this message translates to:
+  /// **'CONTINUE WITHOUT VOICE'**
+  String get voiceContinueWithoutVoice;
+
+  /// No description provided for @voiceRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'RETRY'**
+  String get voiceRetry;
+
   /// No description provided for @language.
   ///
   /// In en, this message translates to:

@@ -245,5 +245,24 @@
     }
   },
 
+  "voiceTitle": "Chat vocal",
+  "voiceHoldToTalk": "MAINTENIR POUR PARLER",
+  "voiceReleaseToStop": "RELÂCHER POUR ARRÊTER",
+  "voiceTalking": "EN TRAIN DE PARLER...",
+  "voiceSpaceHint": "Maintenez ESPACE pour parler",
+  "voiceSpeaking": "Parle",
+  "voiceMuted": "En sourdine",
+  "voiceConnecting": "Connexion...",
+  "voiceReconnecting": "Reconnexion...",
+  "voiceDisconnected": "Voix déconnectée",
+  "voiceNotConnected": "Non connecté",
+  "voicePermissionRequired": "L'autorisation du microphone est requise pour le chat vocal.",
+  "voiceMicUnavailable": "Microphone indisponible.",
+  "voiceConnectionFailed": "Échec de la connexion vocale. Vous pouvez continuer avec le tchat.",
+  "voiceNotConfigured": "Le chat vocal n'est pas disponible pour le moment. Vous pouvez continuer avec le tchat.",
+  "voiceAllowMicrophone": "AUTORISER LE MICRO",
+  "voiceContinueWithoutVoice": "CONTINUER SANS VOIX",
+  "voiceRetry": "RÉESSAYER",
+
   "language": "Langue"
 }

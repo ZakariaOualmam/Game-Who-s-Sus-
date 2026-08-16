@@ -245,5 +245,24 @@
     }
   },
 
+  "voiceTitle": "المحادثة بالصوت",
+  "voiceHoldToTalk": "بقّى مضغوط باش تهضر",
+  "voiceReleaseToStop": "خلّيها باش توقف",
+  "voiceTalking": "كيهضر دابا...",
+  "voiceSpaceHint": "اضغط مسافة باش تهضر",
+  "voiceSpeaking": "كيهضر",
+  "voiceMuted": "صامت",
+  "voiceConnecting": "منوصلين...",
+  "voiceReconnecting": "منعاودو نوصلو...",
+  "voiceDisconnected": "قطع الصوت",
+  "voiceNotConnected": "ما متصلش",
+  "voicePermissionRequired": "خاص الإذن ديال الميكرو باش نتواصلو بالصوت.",
+  "voiceMicUnavailable": "الميكرو ماشي متوفر.",
+  "voiceConnectionFailed": "ما توفّقش الاتصال بالصوت. تقدر تكمل بالشات.",
+  "voiceNotConfigured": "الصوت ماشي متوفر دابا. تقدر تكمل بالشات.",
+  "voiceAllowMicrophone": "سمح بالميكرو",
+  "voiceContinueWithoutVoice": "كمّل بلا صوت",
+  "voiceRetry": "عاود جرب",
+
   "language": "اللغة"
 }

@@ -566,5 +566,62 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get voiceTitle => 'Voice Chat';
+
+  @override
+  String get voiceHoldToTalk => 'HOLD TO TALK';
+
+  @override
+  String get voiceReleaseToStop => 'RELEASE TO STOP';
+
+  @override
+  String get voiceTalking => 'TALKING...';
+
+  @override
+  String get voiceSpaceHint => 'Hold SPACE to talk';
+
+  @override
+  String get voiceSpeaking => 'Speaking';
+
+  @override
+  String get voiceMuted => 'Muted';
+
+  @override
+  String get voiceConnecting => 'Connecting...';
+
+  @override
+  String get voiceReconnecting => 'Reconnecting...';
+
+  @override
+  String get voiceDisconnected => 'Voice disconnected';
+
+  @override
+  String get voiceNotConnected => 'Not connected';
+
+  @override
+  String get voicePermissionRequired =>
+      'Microphone permission is required for voice chat.';
+
+  @override
+  String get voiceMicUnavailable => 'Microphone unavailable.';
+
+  @override
+  String get voiceConnectionFailed =>
+      'Voice connection failed. You can keep using text chat.';
+
+  @override
+  String get voiceNotConfigured =>
+      'Voice chat is not available right now. You can keep using text chat.';
+
+  @override
+  String get voiceAllowMicrophone => 'ALLOW MICROPHONE';
+
+  @override
+  String get voiceContinueWithoutVoice => 'CONTINUE WITHOUT VOICE';
+
+  @override
+  String get voiceRetry => 'RETRY';
+
+  @override
   String get language => 'Language';
 }

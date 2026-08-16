@@ -561,5 +561,62 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
+  String get voiceTitle => 'المحادثة الصوتية';
+
+  @override
+  String get voiceHoldToTalk => 'اضغط مع الاستمرار للتحدث';
+
+  @override
+  String get voiceReleaseToStop => 'ارفع إصبعك للإيقاف';
+
+  @override
+  String get voiceTalking => 'جارٍ التحدث...';
+
+  @override
+  String get voiceSpaceHint => 'اضغط مسافة للتحدث';
+
+  @override
+  String get voiceSpeaking => 'يتحدث';
+
+  @override
+  String get voiceMuted => 'كتم';
+
+  @override
+  String get voiceConnecting => 'جارٍ الاتصال...';
+
+  @override
+  String get voiceReconnecting => 'جارٍ إعادة الاتصال...';
+
+  @override
+  String get voiceDisconnected => 'انقطع الصوت';
+
+  @override
+  String get voiceNotConnected => 'غير متصل';
+
+  @override
+  String get voicePermissionRequired =>
+      'إذن الميكروفون مطلوب للمحادثة الصوتية.';
+
+  @override
+  String get voiceMicUnavailable => 'الميكروفون غير متاح.';
+
+  @override
+  String get voiceConnectionFailed =>
+      'فشل الاتصال الصوتي. يمكنك متابعة الدردشة النصية.';
+
+  @override
+  String get voiceNotConfigured =>
+      'المحادثة الصوتية غير متاحة الآن. يمكنك متابعة الدردشة النصية.';
+
+  @override
+  String get voiceAllowMicrophone => 'السماح بالميكروفون';
+
+  @override
+  String get voiceContinueWithoutVoice => 'المتابعة بدون صوت';
+
+  @override
+  String get voiceRetry => 'إعادة المحاولة';
+
+  @override
   String get language => 'اللغة';
 }
