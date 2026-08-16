@@ -20,6 +20,19 @@ service cloud.firestore {
       return roomDoc(roomId).data.host_player_id == request.auth.uid;
     }
 
+    // A non-host player may only write their own round state, and only in the
+    // fields gameplay updates. The imposter's guess must be one of the options
+    // revealed to them, so a player cannot submit the secret word directly.
+    function isOwnStateUpdate(playerId) {
+      return request.auth.uid == playerId
+        && request.resource.data.diff(resource.data)
+             .affectedKeys()
+             .hasOnly(['reveal_ready', 'discussion_ready', 'submitted_guess', 'updated_at'])
+        && (request.resource.data.submitted_guess == null
+            || (resource.data.guess_options != null
+                && request.resource.data.submitted_guess in resource.data.guess_options));
+    }
+
     // True when the room has anonymous voting enabled. Only the host may then
     // read the individual vote documents, so who voted for whom stays private.
     function anonymousVoting(roomId) {
@@ -34,11 +47,13 @@ service cloud.firestore {
     // collection-group queries; the explicit matches below (e.g.
     // `rooms/{roomId}/players/{playerId}`) do not. The app runs collection
     // group queries on `players` when locating a user's active room
-    // (create-room guard and reconnection), so that collection group needs a
-    // rule. Read is restricted to signed-in users, matching the explicit
-    // `players` read rule, so access is not widened.
+    // (create-room guard and reconnection), always filtered to the caller's
+    // own player_id, so reads are restricted to that user's own player docs.
+    // Rules are not filters: the where clause must match the rule for the
+    // query to succeed, and any result the caller could read is their own.
     match /{path=**}/players/{playerId} {
-      allow read: if isSignedIn();
+      allow read: if isSignedIn()
+        && resource.data.player_id == request.auth.uid;
     }
 
     // Room code uniqueness index. Any signed-in user may read or write it;
@@ -49,7 +64,12 @@ service cloud.firestore {
     }
 
     match /rooms/{roomId} {
-      allow read: if isSignedIn();
+      // Room reads are limited to host/members plus the lobby itself, so a
+      // room can be located by code while joining without exposing playing
+      // rooms (names, codes, settings) to arbitrary signed-in users.
+      allow read: if isSignedIn()
+        && (isHost(roomId) || isRoomMember(roomId)
+            || resource.data.status == 'lobby');
       // A user can only create a room as its host, and only in lobby status.
       allow create: if isSignedIn()
         && request.resource.data.host_player_id == request.auth.uid
@@ -65,7 +85,8 @@ service cloud.firestore {
       allow delete: if isSignedIn() && isHost(roomId);
 
       match /players/{playerId} {
-        allow read: if isSignedIn();
+        allow read: if isSignedIn()
+          && (isHost(roomId) || isRoomMember(roomId));
         allow create: if isSignedIn() && request.auth.uid == playerId;
         allow update: if isSignedIn() && isRoomMember(roomId)
           && (request.auth.uid == playerId || isHost(roomId));
@@ -80,9 +101,12 @@ service cloud.firestore {
         allow delete: if isSignedIn() && isRoomMember(roomId) && isHost(roomId);
 
         match /player_states/{playerId} {
-          allow read: if isSignedIn() && isRoomMember(roomId);
-          allow write: if isSignedIn() && isRoomMember(roomId)
+          // A player's role and secret word are private: only the host (the
+          // game master) and the player themselves may read their own state.
+          allow read: if isSignedIn() && isRoomMember(roomId)
             && (request.auth.uid == playerId || isHost(roomId));
+          allow write: if isSignedIn() && isRoomMember(roomId)
+            && (isHost(roomId) || isOwnStateUpdate(playerId));
         }
 
         match /votes/{voterId} {

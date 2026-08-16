@@ -566,11 +566,17 @@ class OnlineGameService {
     return room.hostPlayerId == uid;
   }
 
-  /// Subscribes to all Firestore data that can change during a game round.
+  /// Subscribes to Firestore data that changes during a game round.
   /// Call [RoomSubscription.unsubscribe] when done.
+  ///
+  /// The host (game master) watches the round's [player_states], [votes] and
+  /// [vote_totals] collections so it can advance phases as players act. Other
+  /// players only watch their own player state plus shared tallies; role and
+  /// secret word documents stay private under the security rules.
   RoomSubscription subscribeToGameRoom({
     required String roomId,
     required VoidCallback onAnyChange,
+    bool watchAllPlayerStates = true,
   }) {
     final roomRef = _roomRef(roomId);
     final subscriptions = <StreamSubscription<dynamic>>[];
@@ -594,7 +600,25 @@ class OnlineGameService {
       if (roundId == null) return;
 
       final roundRef = _roundRef(roomId, roundId);
-      for (final collection in ['player_states', 'votes', 'vote_totals']) {
+      final sharedCollections = <String>['vote_totals'];
+      if (watchAllPlayerStates) {
+        sharedCollections.insertAll(0, ['player_states', 'votes']);
+      } else {
+        final uid = _authService.currentUid;
+        if (uid != null) {
+          final ownSub = roundRef
+              .collection('player_states')
+              .doc(uid)
+              .snapshots()
+              .listen(
+                (_) => onAnyChange(),
+                onError: onError,
+              );
+          roundSubscriptions.add(ownSub);
+          subscriptions.add(ownSub);
+        }
+      }
+      for (final collection in sharedCollections) {
         final sub = roundRef
             .collection(collection)
             .snapshots()

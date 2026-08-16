@@ -265,4 +265,97 @@ void main() {
     expect(find.text('Bob'), findsWidgets);
     expect(find.text('1'), findsOneWidget);
   });
+
+  testWidgets('non-host screen reflects its own ready state', (tester) async {
+    await tester.runAsync(() async {
+      await alice.roomService.updateGameSettings(
+        roomId: created.room.id,
+        settings: const GameSettings(playerCount: 4),
+      );
+      final room = await alice.gameService.getRoomById(created.room.id);
+      await alice.gameService.startRoundFromCategory(
+        room: room,
+        categoryId: 'animals',
+        languageCode: 'en',
+      );
+      final fresh = await alice.gameService.getRoomById(created.room.id);
+      roundId = fresh.activeRoundId!;
+    });
+
+    await pumpScreenAs(tester, bob);
+    await _pumpUntilFound(tester, find.text("I'M READY"));
+
+    // Bob marks himself ready; his own-state subscription updates the button.
+    await tester.runAsync(() async {
+      await bob.gameService.setRevealReady(
+        roomId: created.room.id,
+        roundId: roundId,
+        ready: true,
+      );
+      await Future<void>.delayed(const Duration(milliseconds: 250));
+    });
+    await _pumpUntilFound(tester, find.text('READY'));
+
+    // As a non-host, the room must not advance to the discussion phase.
+    final room = await alice.gameService.getRoomById(created.room.id);
+    expect(
+      OnlineGamePhase.fromDb(room.gamePhase),
+      OnlineGamePhase.roleReveal,
+    );
+
+    await tester.pumpWidget(const SizedBox());
+    await tester.pump();
+  });
+
+  testWidgets(
+      'non-host client takes over host duties after the host leaves',
+      (tester) async {
+    await tester.runAsync(startRoundInDiscussion);
+
+    await pumpScreenAs(tester, bob);
+    await _pumpUntilFound(tester, find.byKey(const ValueKey('discussion-timer')));
+
+    // The original host leaves mid-game; bob becomes host.
+    await tester.runAsync(() async {
+      await alice.roomService.leaveRoom(
+        roomId: created.room.id,
+        isHost: true,
+      );
+      await Future<void>.delayed(const Duration(milliseconds: 250));
+    });
+    await tester.pumpAndSettle();
+
+    final roomAfterLeave = await bob.gameService.getRoomById(created.room.id);
+    expect(roomAfterLeave.hostPlayerId, 'bob');
+
+    // The new host presses ready, then the other players do too. Bob's
+    // subscription re-scopes to the whole round, so their ready events reach
+    // him and he advances the game to voting.
+    await tester.tap(find.text("I'M READY"));
+    await tester.pumpAndSettle();
+
+    await tester.runAsync(() async {
+      await cara.gameService.setDiscussionReady(
+        roomId: created.room.id,
+        roundId: roundId,
+        ready: true,
+      );
+      await dave.gameService.setDiscussionReady(
+        roomId: created.room.id,
+        roundId: roundId,
+        ready: true,
+      );
+      await Future<void>.delayed(const Duration(milliseconds: 250));
+    });
+    await _pumpUntilFound(tester, find.byKey(const ValueKey('voting-timer')));
+
+    final roomAdvanced = await bob.gameService.getRoomById(created.room.id);
+    expect(
+      OnlineGamePhase.fromDb(roomAdvanced.gamePhase),
+      OnlineGamePhase.voting,
+    );
+
+    await tester.pumpWidget(const SizedBox());
+    await tester.pump();
+  });
 }

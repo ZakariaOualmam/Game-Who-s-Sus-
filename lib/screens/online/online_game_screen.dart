@@ -39,6 +39,7 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
   List<RoomPlayer> _players = [];
   Map<String, int> _voteTotals = {};
   RoomSubscription? _sub;
+  bool _subscribedAsHost = false;
   bool _loading = true;
   bool _busy = false;
 
@@ -47,10 +48,23 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
   @override
   void initState() {
     super.initState();
+    _syncSubscription();
     _refreshAll();
+  }
+
+  /// Keeps the Firestore subscriptions scoped to the current player's role:
+  /// the host watches the whole round state to auto-advance phases, everyone
+  /// else only their own state plus shared tallies. Re-subscribes when the
+  /// host role transfers during a game.
+  void _syncSubscription() {
+    final wantHost = _isHost;
+    if (_sub != null && _subscribedAsHost == wantHost) return;
+    _sub?.unsubscribe();
+    _subscribedAsHost = wantHost;
     _sub = OnlineGameService.instance.subscribeToGameRoom(
       roomId: widget.roomId,
       onAnyChange: _refreshAll,
+      watchAllPlayerStates: wantHost,
     );
   }
 
@@ -89,6 +103,7 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
         _loading = false;
       });
 
+      _syncSubscription();
       await _runHostAutoTransitions();
     } catch (error) {
       debugPrint('Failed to refresh online game: $error');
