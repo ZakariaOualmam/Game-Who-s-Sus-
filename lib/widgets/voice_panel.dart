@@ -47,7 +47,8 @@ class VoicePanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (state == VoiceConnectionState.disabled) {
+    if (state == VoiceConnectionState.disabled ||
+        failure == VoiceFailure.notConfigured) {
       return const SizedBox.shrink();
     }
 

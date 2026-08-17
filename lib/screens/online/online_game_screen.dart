@@ -17,6 +17,7 @@ import '../../services/chat_service.dart';
 import '../../services/online_game_service.dart';
 import '../../services/room_service.dart';
 import '../../services/voice_chat_service.dart';
+import '../../services/ad_service.dart';
 import '../../voice/voice_participant.dart';
 import '../../widgets/chat_panel.dart';
 import '../../widgets/game_button.dart';
@@ -53,6 +54,7 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
   bool _subscribedAsHost = false;
   bool _loading = true;
   bool _busy = false;
+  bool _adInProgress = false;
 
   bool get _isHost => _room?.hostPlayerId == widget.currentPlayer.playerId;
 
@@ -690,9 +692,25 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
             label: l10n.onlineNextRound,
             icon: Icons.replay,
             colors: AppColors.crewGradient,
-            onPressed: () => _guarded(() => OnlineGameService.instance.startNextRound(_room!.id)),
+            onPressed: _adInProgress ? null : () => _guarded(_playNextRoundWithAd),
           ),
       ],
     );
+  }
+
+  Future<void> _playNextRoundWithAd() async {
+    final ad = AdService.instance;
+    ad.recordRoundCompleted();
+
+    if (ad.shouldShowAd) {
+      setState(() => _adInProgress = true);
+      final shown = await ad.showInterstitialIfAvailable();
+      if (!mounted) return;
+      if (shown) {
+        setState(() => _adInProgress = false);
+      }
+    }
+
+    await OnlineGameService.instance.startNextRound(_room!.id);
   }
 }

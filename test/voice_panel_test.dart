@@ -186,13 +186,13 @@ void main() {
     expect(continueWithoutVoice, 1);
   });
 
-  testWidgets('not-configured failure shows the unavailable copy',
+  testWidgets('not-configured failure hides the panel (no broken mic UI)',
       (tester) async {
     await tester.pumpWidget(_wrap(_panel(
       state: VoiceConnectionState.failed,
       failure: VoiceFailure.notConfigured,
     )));
-    expect(find.text(AppLocalizationsEn().voiceNotConfigured), findsOneWidget);
+    expect(find.byKey(const ValueKey('voice-panel')), findsNothing);
   });
 
   testWidgets('connected with an unavailable mic offers to recover',

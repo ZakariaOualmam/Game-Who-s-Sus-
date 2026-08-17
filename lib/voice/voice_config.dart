@@ -14,7 +14,7 @@ class VoiceNotConfiguredException implements Exception {
 @immutable
 class VoiceConfig {
   const VoiceConfig({
-    this.enabled = true,
+    this.enabled = false,
     this.livekitUrl = '',
   });
 

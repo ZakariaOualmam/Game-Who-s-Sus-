@@ -6,6 +6,10 @@
         android:label="WHO'S SUS"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <!-- Google AdMob App ID (required). -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3989726270562500~6761003941"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

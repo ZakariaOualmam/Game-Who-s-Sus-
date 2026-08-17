@@ -6,21 +6,51 @@ import '../../game/game_engine.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/player.dart';
 import '../../screens/home/home_screen.dart';
+import '../../services/ad_service.dart';
 import '../../widgets/game_button.dart';
 import '../../widgets/game_scaffold.dart';
 import '../../widgets/player_card.dart';
 import 'category_screen.dart';
 
 /// Running scores across rounds, with play-again / home actions.
-class ScoreboardScreen extends StatelessWidget {
+class ScoreboardScreen extends StatefulWidget {
   const ScoreboardScreen({super.key, required this.engine});
 
   final GameEngine engine;
 
-  void _playAgain(BuildContext context) {
-    engine.resetForNewRound();
-    Navigator.of(context).pushReplacement(
-      appRoute(CategoryScreen(engine: engine)),
+  @override
+  State<ScoreboardScreen> createState() => _ScoreboardScreenState();
+}
+
+class _ScoreboardScreenState extends State<ScoreboardScreen> {
+  bool _adInProgress = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final ad = AdService.instance;
+    ad.recordRoundCompleted();
+    ad.preloadInterstitial();
+  }
+
+  Future<void> _playAgain(BuildContext context) async {
+    if (_adInProgress) return;
+    final ad = AdService.instance;
+    final navigator = Navigator.of(context);
+
+    if (ad.shouldShowAd) {
+      setState(() => _adInProgress = true);
+      final shown = await ad.showInterstitialIfAvailable();
+      if (!mounted) return;
+      if (shown) {
+        setState(() => _adInProgress = false);
+      }
+    }
+
+    if (!mounted) return;
+    widget.engine.resetForNewRound();
+    navigator.pushReplacement(
+      appRoute(CategoryScreen(engine: widget.engine)),
     );
   }
 
@@ -34,7 +64,7 @@ class ScoreboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final sorted = [...engine.players]
+    final sorted = [...widget.engine.players]
       ..sort((a, b) => b.score.compareTo(a.score));
 
     return GameScaffold(
@@ -59,13 +89,13 @@ class ScoreboardScreen extends StatelessWidget {
             label: l10n.playAgain.toUpperCase(),
             icon: Icons.replay,
             colors: AppColors.crewGradient,
-            onPressed: () => _playAgain(context),
+            onPressed: _adInProgress ? null : () => _playAgain(context),
           ),
           const SizedBox(height: 12),
           GameButton(
             label: l10n.homeButton.toUpperCase(),
             colors: const [AppColors.surfaceHigh, AppColors.surfaceHigh],
-            onPressed: () => _goHome(context),
+            onPressed: _adInProgress ? null : () => _goHome(context),
           ),
         ],
       ),

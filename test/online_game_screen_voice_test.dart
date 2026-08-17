@@ -17,6 +17,7 @@ import 'package:who_sus/services/online_game_service.dart';
 import 'package:who_sus/services/room_service.dart';
 import 'package:who_sus/services/voice_chat_service.dart';
 import 'package:who_sus/services/word_repository.dart';
+import 'package:who_sus/voice/voice_config.dart';
 import 'package:who_sus/voice/voice_participant.dart';
 import 'package:who_sus/voice/voice_transport.dart';
 import 'package:who_sus/widgets/voice_panel.dart';
@@ -372,5 +373,79 @@ void main() {
 
     await tester.pumpWidget(const SizedBox());
     await tester.pump();
+  });
+
+  group('voice unavailable (default config, no Cloud Function)', () {
+    void installDisabledVoiceService(_PlayerContext client) {
+      VoiceChatService.instance = buildFakeVoiceService(
+        authService: client.authService,
+        config: const VoiceConfig(enabled: false),
+      );
+    }
+
+    Future<void> pumpScreenWithDisabledVoice(
+      WidgetTester tester,
+      _PlayerContext client,
+    ) async {
+      final players = await client.roomService.getPlayersInRoom(created.room.id);
+      final currentPlayer = players.firstWhere((p) => p.playerId == client.uid);
+      RoomService.instance = client.roomService;
+      OnlineGameService.instance = client.gameService;
+      ChatService.instance = client.chatService;
+      installDisabledVoiceService(client);
+      await tester.pumpWidget(
+        _localizedApp(OnlineGameScreen(
+          roomId: created.room.id,
+          currentPlayer: currentPlayer,
+        )),
+      );
+    }
+
+    testWidgets('no crash when voice is not configured', (tester) async {
+      await tester.runAsync(startRoundInDiscussion);
+      await pumpScreenWithDisabledVoice(tester, bob);
+      await tester.pumpAndSettle();
+
+      expect(VoiceChatService.instance.state, VoiceConnectionState.failed);
+      expect(VoiceChatService.instance.failure, VoiceFailure.notConfigured);
+
+      await tester.pumpWidget(const SizedBox());
+      await tester.pump();
+    });
+
+    testWidgets('voice panel is hidden when not configured', (tester) async {
+      await tester.runAsync(startRoundInDiscussion);
+      await pumpScreenWithDisabledVoice(tester, bob);
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const ValueKey('voice-panel')), findsNothing);
+      expect(find.byType(VoicePanel), findsOneWidget);
+
+      await tester.pumpWidget(const SizedBox());
+      await tester.pump();
+    });
+
+    testWidgets('text chat remains fully functional', (tester) async {
+      await tester.runAsync(startRoundInDiscussion);
+      await pumpScreenWithDisabledVoice(tester, bob);
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const ValueKey('discussion-players')), findsOneWidget);
+
+      await tester.pumpWidget(const SizedBox());
+      await tester.pump();
+    });
+
+    testWidgets('discussion phase renders normally', (tester) async {
+      await tester.runAsync(startRoundInDiscussion);
+      await pumpScreenWithDisabledVoice(tester, bob);
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const ValueKey('discussion-timer')), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().discuss.toUpperCase()), findsOneWidget);
+
+      await tester.pumpWidget(const SizedBox());
+      await tester.pump();
+    });
   });
 }
